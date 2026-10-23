@@ -1,13 +1,27 @@
-// Cloudflare Worker som serverer HUB Prosjektrom som statiske filer.
-// `wrangler deploy` kjører build-kommandoen først, som lager public/index.html fra index.html.
+// Cloudflare Worker for h-u-b.no.
+// public/ serveres som statiske filer. src/worker.js tar imot skjemaene (/api/*.php) og lagrer dem i D1.
+// `wrangler deploy` kjører build-kommandoen først, som lager public/alt/index.html fra index.html.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "hub",
+  "main": "src/worker.js",
   "compatibility_date": "2026-10-01",
   "build": {
     "command": "sh scripts/build.sh"
   },
   "assets": {
-    "directory": "./public"
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hub-skjema",
+      "database_id": "a46aabe4-3590-4442-95b7-dacf4e0cb2e3",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "observability": {
+    "enabled": true
   }
 }
