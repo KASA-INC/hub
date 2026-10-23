@@ -1,6 +1,7 @@
 #!/bin/sh
 # index.html i roten er kilden til artefakten «HUB Prosjektrom» og mangler <head>.
-# Her pakkes den inn i et fullt HTML-dokument for Cloudflare.
+# Her pakkes den inn i et fullt HTML-dokument for Cloudflare og legges på /alt/.
+# Forsiden (/) er ventelisten, som ligger ferdig i public/.
 set -e
 cd "$(dirname "$0")/.."
 {
@@ -16,7 +17,7 @@ cd "$(dirname "$0")/.."
 HEAD
   # Lenkene til artefaktene byttes ut med undersidene som ligger i public/.
   sed -e 's#https://claude.ai/artifact/VshqSEojTsJaDTS2HTKBAg#nettside/#' \
-      -e 's#https://claude.ai/artifact/4QvPFZmWr2BGTNR1iHmEKm#venteliste/#' \
+      -e 's#https://claude.ai/artifact/4QvPFZmWr2BGTNR1iHmEKm#../#' \
       -e 's#https://claude.ai/artifact/TME1bcjHSBa3e8zzyc7uTP#undersokelse/#' \
       -e 's#https://claude.ai/artifact/RHu4QoUZh7tr97v46xsQb6#rombestilling/#' \
       -e 's#https://claude.ai/artifact/3Cdux1irCS9REqwxadgxKg#forretningsplan/#' \
@@ -26,5 +27,5 @@ HEAD
       -e 's# target="_blank" rel="noopener"##' \
       index.html
   printf '\n</body>\n</html>\n'
-} > public/index.html
-echo "Bygget public/index.html"
+} > public/alt/index.html
+echo "Bygget public/alt/index.html"
