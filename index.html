@@ -1,0 +1,515 @@
+<title>HUB Prosjektrom</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" href="assets/logo/hub-logo-pink-square.svg" type="image/svg+xml">
+<style>
+/* Layout: HUB-designsystemet. Mørk ink-flate først (som nettsiden), krem i lyst tema. Én kolonne på mobil, rutenett fra 760 px.
+   Artefaktene står gruppert etter rolle: der kunden møter HUB, i rommet, planen og merket. Kvadratisk, flatt, rosa ramme som merkemotiv. */
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:500 800;font-display:swap;src:url('fonts/BricolageGrotesque-normal-500-latin-ext.woff2') format('woff2');unicode-range:U+0100-02AF,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:500 800;font-display:swap;src:url('fonts/BricolageGrotesque-normal-500-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:400 700;font-display:swap;src:url('fonts/DMSans-normal-400-latin-ext.woff2') format('woff2');unicode-range:U+0100-02AF,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:400 700;font-display:swap;src:url('fonts/DMSans-normal-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+:root {
+  /* hub-ink, hub-ink-2, hub-ink-3, hub-ink-line */
+  --bg: #17141a; --surface: #241f27; --raised: #332c36; --line: #5a4e57;
+  /* dark-text-strong, -body, -muted, -eyebrow */
+  --fg: #f6f2ee; --body: #cfc6cc; --muted: #9a8f97; --eyebrow: #e8668b;
+  /* hub-pink, hub-pink-deep, hub-cream */
+  --pink: #d0426a; --pink-hover: #a8304f; --on-pink: #f6f2ee;
+  /* Fast mørk flate bak foto, lik i begge tema */
+  --stage: #17141a; --stage-fg: #f6f2ee; --stage-body: #cfc6cc;
+  --display: 'Bricolage Grotesque', 'Archivo', system-ui, sans-serif;
+  --text: 'DM Sans', system-ui, sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  --bg: #f6f2ee; --surface: #ede6e0; --raised: #e4e1dd; --line: #d6cec8;
+  --fg: #17141a; --body: #574f55; --muted: #6b6168; --eyebrow: #a8304f;
+  --pink: #d0426a; --pink-hover: #a8304f; --on-pink: #f6f2ee; color-scheme: light } }
+:root[data-theme="light"] {
+  --bg: #f6f2ee; --surface: #ede6e0; --raised: #e4e1dd; --line: #d6cec8;
+  --fg: #17141a; --body: #574f55; --muted: #6b6168; --eyebrow: #a8304f;
+  --pink: #d0426a; --pink-hover: #a8304f; --on-pink: #f6f2ee; color-scheme: light }
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 76px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body { background: var(--bg); color: var(--body); font-family: var(--text); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+img { max-width: 100%; display: block; }
+a { color: var(--eyebrow); }
+:focus-visible { outline: 2px solid var(--pink); outline-offset: 2px; }
+
+.wrap { max-width: 1200px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); color: var(--fg); letter-spacing: -0.025em; line-height: 1.04; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(44px, 10vw, 88px); font-weight: 800; }
+h2 { font-size: clamp(32px, 6vw, 48px); font-weight: 800; }
+h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.2; }
+p { margin: 0; }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--eyebrow); line-height: 1.2; }
+.lead { font-size: 18px; max-width: 46ch; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Topplinje */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 20px; min-height: 60px; }
+.top .logo { flex: none; display: block; }
+.top .logo img { height: 24px; width: auto; }
+.nav { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; min-width: 0; margin-left: auto; }
+.nav::-webkit-scrollbar { display: none; }
+.nav a { flex: none; color: var(--body); text-decoration: none; font-size: 14px; font-weight: 500; padding: 0 12px; min-height: 44px; display: flex; align-items: center; border-bottom: 3px solid transparent; }
+.nav a:hover { color: var(--fg); }
+.nav a.on { color: var(--fg); border-bottom-color: var(--pink); }
+
+/* Hero */
+.hero { position: relative; background: var(--stage); overflow: hidden; }
+.hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(23,20,26,.25) 0%, rgba(23,20,26,.72) 50%, var(--stage) 100%); }
+.hero .wrap { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 20px; padding-block: 140px 48px; }
+.hero h1 { color: var(--stage-fg); max-width: 12ch; }
+.hero .eyebrow { color: #e8668b; }
+.hero .lead { color: var(--stage-body); }
+.illu { position: absolute; z-index: 2; right: 12px; top: 12px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--stage-fg); background: rgba(23,20,26,.7); padding: 3px 7px; }
+
+.kpis { list-style: none; margin: 12px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 3px solid var(--pink); background: rgba(23,20,26,.6); }
+.kpis li { padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; border-right: 1px solid #5a4e57; border-bottom: 1px solid #5a4e57; min-width: 0; }
+.kpis b { font-family: var(--display); font-size: clamp(28px, 6vw, 40px); font-weight: 800; color: var(--stage-fg); letter-spacing: -0.025em; line-height: 1; font-variant-numeric: tabular-nums; }
+.kpis span { font-size: 14px; color: #cfc6cc; }
+
+/* Seksjoner */
+section { padding-block: 48px; border-bottom: 1px solid var(--line); }
+.head { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+.head .lead { color: var(--body); }
+
+/* Idéen */
+.idea { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.idea > div { background: var(--surface); padding: 24px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.idea > div.frame { background: transparent; border: 3px solid var(--pink); padding: 21px; }
+.idea strong { color: var(--fg); }
+
+/* Artefaktgrupper */
+.group + .group { margin-top: 48px; }
+.group-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 3px solid var(--pink); margin-bottom: 16px; }
+.group-h h3 { font-size: 26px; }
+.group-h span { font-size: 14px; color: var(--muted); white-space: nowrap; }
+.cards { display: grid; grid-template-columns: 1fr; gap: 16px; }
+
+.card { display: flex; flex-direction: column; background: var(--surface); color: inherit; text-decoration: none; min-width: 0; outline-offset: 3px; transition: background 120ms; position: relative; }
+.card::after { content: ""; position: absolute; inset: 0; border: 3px solid transparent; pointer-events: none; transition: border-color 120ms; }
+.card:hover { background: var(--raised); }
+.card:hover::after, .card:focus-visible::after { border-color: var(--pink); }
+.card .vis { aspect-ratio: 4 / 3; max-width: 100%; overflow: hidden; background: var(--stage); position: relative; }
+.card .vis img { width: 100%; height: 100%; object-fit: cover; transition: transform 360ms cubic-bezier(.2,.7,.2,1); }
+@media (prefers-reduced-motion: no-preference) { .card:hover .vis img { transform: scale(1.04); } }
+.card .vis svg { width: 100%; height: 100%; display: block; }
+.card .body { padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.card .kind { display: inline-flex; align-self: flex-start; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg); border: 2px solid var(--line); padding: 3px 8px; }
+.card h4 { font-family: var(--display); font-size: 24px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.15; color: var(--fg); margin: 4px 0 0; text-wrap: balance; }
+.card p { font-size: 15px; }
+.card .meta { margin-top: auto; padding-top: 10px; display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); }
+.card .go { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; color: var(--fg); }
+.card .go svg { width: 16px; height: 16px; }
+.card.lead-card .vis { aspect-ratio: 16 / 9; }
+
+/* Navnebanken */
+.names { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.names > div { border-top: 3px solid var(--pink); padding-top: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.names ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.names li { padding: 6px 10px; border: 1px solid var(--line); color: var(--fg); font-size: 14px; font-weight: 500; }
+.names small { font-size: 13px; color: var(--muted); }
+.boxes { display: flex; gap: 6px; }
+.boxes span { width: 36px; height: 36px; border: 3px solid var(--pink); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 18px; color: var(--fg); line-height: 1; }
+.boxes span.x { background: var(--pink); color: var(--on-pink); }
+
+/* Tall */
+.money { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.panel { background: var(--surface); padding: 24px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 10px 0; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+td:first-child { color: var(--fg); }
+td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; padding-left: 12px; }
+.seg { display: flex; flex-direction: column; gap: 12px; }
+.seg div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; font-size: 15px; }
+.seg b { color: var(--fg); font-weight: 500; }
+.seg i { font-style: normal; color: var(--fg); font-weight: 700; font-variant-numeric: tabular-nums; }
+.seg .t { grid-column: 1 / -1; height: 8px; background: var(--raised); }
+.seg .t span { display: block; height: 100%; background: var(--pink); }
+.seg .t span.q { background: var(--muted); }
+.src { font-size: 13px; color: var(--muted); }
+
+/* Veikart */
+.road { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; border-left: 3px solid var(--line); margin-left: 7px; }
+.road li { position: relative; padding: 0 0 26px 26px; display: flex; flex-direction: column; gap: 4px; }
+.road li:last-child { padding-bottom: 0; }
+.road li::before { content: ""; position: absolute; left: -11px; top: 3px; width: 13px; height: 13px; background: var(--bg); border: 3px solid var(--line); }
+.road li.now::before { background: var(--pink); border-color: var(--pink); }
+.road li.gate::before { border-color: #c98a2b; }
+.road li.open::before { border-color: var(--pink); }
+.road .when { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.road li.now .when { color: var(--eyebrow); }
+.road .pill { font-size: 11px; letter-spacing: 0.14em; padding: 2px 7px; background: var(--pink); color: var(--on-pink); }
+.road p { font-size: 15px; max-width: 52ch; }
+
+/* Bunn */
+footer { padding-block: 48px 64px; }
+footer .wrap { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+footer img { height: 36px; width: auto; }
+footer .slogan { font-family: var(--display); font-weight: 800; font-size: clamp(28px, 6vw, 44px); color: var(--fg); letter-spacing: -0.025em; line-height: 1.04; }
+footer .small { font-size: 14px; color: var(--muted); }
+
+@media (min-width: 760px) {
+  section { padding-block: 64px; }
+  .hero .wrap { padding-block: 220px 64px; }
+  .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .kpis li { border-bottom: 0; }
+  .kpis li:last-child { border-right: 0; }
+  .idea { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cards.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .names { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+  .money { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+  .road { grid-template-columns: repeat(7, minmax(0, 1fr)); border-left: 0; border-top: 3px solid var(--line); margin-left: 0; }
+  .road li { padding: 22px 16px 0 0; }
+  .road li::before { left: 0; top: -11px; }
+}
+@media (min-width: 1040px) {
+  .idea { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .cards.two-one { grid-template-columns: 2fr 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="HUB, til toppen"><img src="assets/logo/hub-logo-pink.svg" alt="HUB" width="79" height="24"></a>
+    <nav class="nav" aria-label="Seksjoner">
+      <a href="#ideen">Idéen</a>
+      <a href="#kunden">Kunden</a>
+      <a href="#rommet">I rommet</a>
+      <a href="#planen">Planen</a>
+      <a href="#merket">Merket</a>
+      <a href="#tall">Tallene</a>
+      <a href="#veikart">Veikart</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <img src="assets/images/fasade.avif" alt="Fasaden til HUB om kvelden, med det rosa skiltet over inngangen" width="1672" height="941">
+    <p class="illu">Illustrasjon</p>
+    <div class="wrap">
+      <p class="eyebrow">Private kamprom · Oslo 2027</p>
+      <h1>Ditt eget rom for sport og spill.</h1>
+      <p class="lead">Alt vi har laget for HUB, samlet på ett sted: nettsiden, bestillingsappen, forretningsplanen, pitchen og merket.</p>
+      <ul class="kpis" aria-label="HUB i fire tall">
+        <li><b>7 rom</b><span>kamp, gaming og simracing</span></li>
+        <li><b>4,3 mill.</b><span>kr i investering</span></li>
+        <li><b>24 %</b><span>belegg for å gå i null</span></li>
+        <li><b>Aug 2027</b><span>åpning før Premier League</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="ideen">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Idéen på ett minutt</p>
+        <h2>Et opplevelsessenter, ikke en sportsbar.</h2>
+        <p class="lead">Gjengen leier et rom per time og kjøper mat og drikke. Kamper fyller helgene, gaming og simracing fyller hverdagene.</p>
+      </div>
+      <div class="idea">
+        <div><p class="eyebrow">Muligheten</p><p>Premier League koster 799 kr i måneden hjemme, og sportsbarene er fulle og bråkete. I Oslo finnes ingenting midt imellom.</p></div>
+        <div><p class="eyebrow">Kunden</p><p>Den som booker for gjengen. Vennegjenger står for rundt en tredel, gaming og simracing en firedel, resten er selskap, bedrifter og supportere.</p></div>
+        <div><p class="eyebrow">Største spørsmål</p><p>Hva visningsavtalene med Viaplay og TV 2 koster for private rom. Tilbudene må komme før lokalet signeres.</p></div>
+        <div class="frame"><p class="eyebrow">Neste steg</p><p><strong>Test før vi bygger.</strong> Venteliste, undersøkelse og pop-up i vinter. Videre eller stopp i slutten av januar.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="kunden">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Der kunden møter HUB</p>
+        <h2>Fra første klikk til booket rom.</h2>
+      </div>
+      <div class="cards two-one">
+        <a class="card lead-card" href="https://claude.ai/artifact/VshqSEojTsJaDTS2HTKBAg" target="_blank" rel="noopener">
+          <div class="vis"><img src="assets/images/room-roker-park.avif" alt="Kamprommet Roker Park med storskjerm og sofaer" loading="lazy"></div>
+          <div class="body">
+            <span class="kind">Nettside</span>
+            <h4>HUB · Book kamprom</h4>
+            <p>Hele nettsiden med kampprogram, rommene, menyen og bookingflyten. Velg kamp, rom og antall, og del regningen.</p>
+            <div class="meta"><span>Oppdatert 17. okt.</span><span class="go">Åpne <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+          </div>
+        </a>
+        <div class="cards" style="grid-template-columns:1fr">
+          <a class="card" href="https://claude.ai/artifact/4QvPFZmWr2BGTNR1iHmEKm" target="_blank" rel="noopener">
+            <div class="body">
+              <span class="kind">Landingsside</span>
+              <h4>HUB venteliste</h4>
+              <p>Påmelding før åpning, med reservasjon av 100 grunnleggerkort: betal kr 990, få kr 1 500.</p>
+              <div class="meta"><span>Oppdatert 19. okt.</span><span class="go">Åpne <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+            </div>
+          </a>
+          <a class="card" href="https://claude.ai/artifact/TME1bcjHSBa3e8zzyc7uTP" target="_blank" rel="noopener">
+            <div class="body">
+              <span class="kind">Undersøkelse</span>
+              <h4>Hjelp oss å bygge HUB</h4>
+              <p>To minutter om hvordan folk i Oslo ser kamp, gamer og kjører simracing i dag. Spørsmålene tilpasser seg svarene.</p>
+              <div class="meta"><span>Oppdatert 19. okt.</span><span class="go">Åpne <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="rommet">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">I rommet</p>
+        <h2>Bestill fra sofaen. Del regningen etterpå.</h2>
+      </div>
+      <div class="cards two-one">
+        <a class="card lead-card" href="https://claude.ai/artifact/RHu4QoUZh7tr97v46xsQb6" target="_blank" rel="noopener">
+          <div class="vis"><img src="assets/images/pizza-old-firm.avif" alt="Pizzaen Old Firm med pulled pork og cheddar" loading="lazy"></div>
+          <div class="body">
+            <span class="kind">App</span>
+            <h4>HUB Rombestilling</h4>
+            <p>Mobilappen gjestene åpner med QR-koden i rommet. Menyen med allergifilter, felles romregning, hvem som deler hva, og status fra kjøkkenet.</p>
+            <div class="meta"><span>Oppdatert 20. okt.</span><span class="go">Åpne <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+          </div>
+        </a>
+        <div class="panel" style="align-self:start">
+          <p class="eyebrow">Fra menyen</p>
+          <div class="tbl"><table>
+            <tbody>
+              <tr><td>El Clásico</td><td class="r">kr 179</td></tr>
+              <tr><td>Derby della Madonnina</td><td class="r">kr 199</td></tr>
+              <tr><td>Old Firm</td><td class="r">kr 229</td></tr>
+              <tr><td>Superclásico</td><td class="r">kr 239</td></tr>
+              <tr><td>Red Devils</td><td class="r">kr 159</td></tr>
+            </tbody>
+          </table></div>
+          <p class="src">Pizzaene heter etter derbyer, drinkene etter klubber.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="planen">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Planen</p>
+        <h2>Tallene, strategien og historien.</h2>
+      </div>
+      <div class="cards three">
+        <a class="card" href="https://claude.ai/artifact/HeysVwGtWW4X7U6pmjeq2c" target="_blank" rel="noopener">
+          <div class="vis" aria-hidden="true">
+            <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+              <rect width="400" height="300" fill="#ede6e0"/>
+              <rect x="96" y="40" width="208" height="260" fill="#f6f2ee"/>
+              <rect x="120" y="68" width="96" height="14" fill="#17141a"/>
+              <rect x="120" y="94" width="160" height="6" fill="#9a8f97"/><rect x="120" y="108" width="140" height="6" fill="#9a8f97"/><rect x="120" y="122" width="152" height="6" fill="#9a8f97"/>
+              <rect x="120" y="148" width="72" height="10" fill="#a8304f"/>
+              <rect x="120" y="168" width="160" height="6" fill="#9a8f97"/><rect x="120" y="182" width="128" height="6" fill="#9a8f97"/>
+              <rect x="120" y="206" width="160" height="70" fill="none" stroke="#d0426a" stroke-width="3"/>
+              <rect x="136" y="244" width="18" height="22" fill="#d0426a"/><rect x="162" y="232" width="18" height="34" fill="#d0426a"/><rect x="188" y="222" width="18" height="44" fill="#d0426a"/><rect x="214" y="236" width="18" height="30" fill="#6b6168"/><rect x="240" y="226" width="18" height="40" fill="#6b6168"/>
+            </svg>
+          </div>
+          <div class="body">
+            <span class="kind">Dokument</span>
+            <h4>HUB – forretningsplan</h4>
+            <p>Hele planen i faner: marked, drift, økonomi, risiko og veikart, med alle forutsetninger og kilder.</p>
+            <div class="meta"><span>Oppdatert 17. okt.</span><span class="go">Åpne <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+          </div>
+        </a>
+        <a class="card" href="https://claude.ai/artifact/3Cdux1irCS9REqwxadgxKg" target="_blank" rel="noopener">
+          <div class="vis" aria-hidden="true">
+            <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+              <rect width="400" height="300" fill="#17141a"/>
+              <line x1="40" y1="250" x2="360" y2="250" stroke="#5a4e57" stroke-width="2"/>
+              <line x1="40" y1="190" x2="360" y2="190" stroke="#332c36" stroke-width="2"/><line x1="40" y1="130" x2="360" y2="130" stroke="#332c36" stroke-width="2"/><line x1="40" y1="70" x2="360" y2="70" stroke="#332c36" stroke-width="2"/>
+              <polyline points="40,226 80,214 120,202 160,191 200,178 240,166 280,154 320,141 360,128" fill="none" stroke="#9a8f97" stroke-width="4"/>
+              <polyline points="40,250 80,224 120,198 160,172 200,146 240,120 280,94 320,68 360,42" fill="none" stroke="#d0426a" stroke-width="5"/>
+              <line x1="150" y1="40" x2="150" y2="250" stroke="#cfc6cc" stroke-width="2" stroke-dasharray="6 6"/>
+              <rect x="143" y="171" width="14" height="14" fill="#17141a" stroke="#f6f2ee" stroke-width="3"/>
+              <text x="160" y="56" fill="#f6f2ee" font-family="DM Sans, sans-serif" font-size="18" font-weight="700">24 %</text>
+            </svg>
+          </div>
+          <div class="body">
+            <span class="kind">Nettversjon</span>
+            <h4>HUB forretningsplan</h4>
+            <p>Planen som én side med nullpunktsgraf, kundereise, vekstscenarier og sjekklisten for de neste 30 dagene.</p>
+            <div class="meta"><span>Oppdatert 18. okt.</span><span class="go">Åpne <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+          </div>
+        </a>
+        <a class="card" href="https://claude.ai/artifact/SwNBp77qfbgR2o3JEsHFYN" target="_blank" rel="noopener">
+          <div class="vis"><img src="assets/images/room-highbury.avif" alt="Kamprommet Highbury" loading="lazy"></div>
+          <div class="body">
+            <span class="kind">Presentasjon</span>
+            <h4>HUB pitch</h4>
+            <p>13 lysbilder i fire deler: konseptet og navnet, hvorfor folk vil booke, hvordan HUB tjener penger hele uka, og pilot og neste steg.</p>
+            <div class="meta"><span>Oppdatert 14. okt.</span><span class="go">Åpne <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="merket">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Merket</p>
+        <h2>Kvadratisk, flatt og varmt.</h2>
+        <p class="lead">Rosa fra logoen, nesten-svart ink som hovedflate og krem som lys flate. Merkemotivet er rammen rundt bokstaven.</p>
+      </div>
+      <div class="cards">
+        <a class="card" href="https://claude.ai/artifact/2s11nGqnJBAuCAVLZPa4AP" target="_blank" rel="noopener">
+          <div class="vis" aria-hidden="true">
+            <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+              <rect width="400" height="300" fill="#17141a"/>
+              <g transform="translate(200 150)">
+                <circle r="128" fill="none" stroke="#5a4e57" stroke-width="2"/>
+                <circle r="96" fill="none" stroke="#5a4e57" stroke-width="2"/>
+                <circle r="64" fill="none" stroke="#d0426a" stroke-width="3"/>
+                <circle r="32" fill="#d0426a"/>
+                <g stroke="#5a4e57" stroke-width="2"><line x1="0" y1="-128" x2="0" y2="-64"/><line x1="0" y1="64" x2="0" y2="128"/><line x1="-128" y1="0" x2="-64" y2="0"/><line x1="64" y1="0" x2="128" y2="0"/></g>
+                <text y="7" text-anchor="middle" fill="#f6f2ee" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="20">HUB</text>
+              </g>
+            </svg>
+          </div>
+          <div class="body">
+            <span class="kind">Lerret</span>
+            <h4>HUB – merkevarehjul</h4>
+            <p>Merkevarehjulet fra kjerne til uttrykk, med en egen tavle som forklarer hvordan hjulet leses.</p>
+            <div class="meta"><span>Oppdatert 18. okt.</span><span class="go">Åpne <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+          </div>
+        </a>
+        <a class="card" href="https://claude.ai/artifact/V8ddTPpJp8EihrKYyC8Mo7" target="_blank" rel="noopener">
+          <div class="vis" aria-hidden="true">
+            <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+              <rect width="400" height="300" fill="#f6f2ee"/>
+              <rect x="0" y="0" width="160" height="300" fill="#17141a"/>
+              <rect x="160" y="0" width="160" height="160" fill="#d0426a"/>
+              <rect x="320" y="0" width="80" height="80" fill="#a8304f"/>
+              <rect x="160" y="160" width="240" height="80" fill="#f6dfe5"/>
+              <rect x="208" y="40" width="64" height="64" fill="none" stroke="#f6f2ee" stroke-width="3"/>
+              <g fill="none" stroke="#e8668b" stroke-width="3"><rect x="28" y="28" width="28" height="28"/><rect x="68" y="28" width="28" height="28"/><rect x="108" y="28" width="28" height="28"/><rect x="28" y="68" width="28" height="28"/><rect x="68" y="68" width="28" height="28"/><rect x="108" y="68" width="28" height="28"/></g>
+              <text x="28" y="268" fill="#f6f2ee" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="64" letter-spacing="-2">Aa</text>
+              <text x="180" y="280" fill="#17141a" font-family="DM Sans, sans-serif" font-weight="700" font-size="14" letter-spacing="2.5">BRICOLAGE · DM SANS</text>
+            </svg>
+          </div>
+          <div class="body">
+            <span class="kind">Designsystem</span>
+            <h4>HUB</h4>
+            <p>Farger, typografi, logoer, bilder og 20 komponenter som RoomCard, Stepper og LetterBox. Denne siden er bygget på det.</p>
+            <div class="meta"><span>Oppdatert 17. okt.</span><span class="go">Åpne <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+          </div>
+        </a>
+      </div>
+
+      <h3 style="margin: 56px 0 20px">Navnebanken</h3>
+      <div class="names">
+        <div>
+          <div class="boxes" aria-hidden="true"><span>K</span></div>
+          <p><strong style="color:var(--fg)">Kamprommene</strong> heter etter stadioner som forsvant.</p>
+          <ul><li>Roker Park</li><li>Highfield Road</li><li>Filbert Street</li><li>Maine Road</li><li>Upton Park</li><li>Highbury</li></ul>
+        </div>
+        <div>
+          <div class="boxes" aria-hidden="true"><span>G</span></div>
+          <p><strong style="color:var(--fg)">Gaming og simracing</strong> heter etter spillklassikere og baner.</p>
+          <ul><li>Street Fighter II</li><li>Doom</li><li>Tomb Raider</li><li>Crash Bandicoot</li><li>Silverstone</li><li>Monza</li></ul>
+        </div>
+        <div>
+          <div class="boxes" aria-hidden="true"><span class="x">P</span></div>
+          <p><strong style="color:var(--fg)">Pizzaene</strong> heter etter derbyer.</p>
+          <ul><li>El Clásico</li><li>Old Firm</li><li>Revierderby</li><li>Superclásico</li><li>Derby della Capitale</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tall">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Tallene</p>
+        <h2>Null ved 24 % belegg.</h2>
+        <p class="lead">Kostnadene er nesten faste, mens inntektene følger belegget. Hvert femte prosentpoeng er verdt rundt 1,1 mill. kr i året.</p>
+      </div>
+      <div class="money">
+        <div class="panel">
+          <h3>Ett år ved 30 % belegg</h3>
+          <div class="tbl"><table>
+            <thead><tr><th>Mill. kr eks. mva.</th><th class="r"></th></tr></thead>
+            <tbody>
+              <tr><td>Omsetning</td><td class="r">9,16</td></tr>
+              <tr><td>Varekost</td><td class="r">−1,24</td></tr>
+              <tr><td>Personal</td><td class="r">−3,33</td></tr>
+              <tr><td>Husleie</td><td class="r">−0,90</td></tr>
+              <tr><td>Rettigheter og lisenser</td><td class="r">−0,43</td></tr>
+              <tr><td>Markedsføring, gebyrer, drift</td><td class="r">−1,30</td></tr>
+              <tr><td>Avskrivninger</td><td class="r">−0,59</td></tr>
+              <tr><td style="font-weight:700">Resultat før skatt</td><td class="r" style="color:var(--fg);font-weight:700">1,37</td></tr>
+            </tbody>
+          </table></div>
+          <p class="src">Kilde: forretningsplanen, egen modell.</p>
+        </div>
+        <div class="panel">
+          <h3>Hvem som booker</h3>
+          <div class="seg">
+            <div><b>Vennegjengen</b><i>35 %</i><span class="t"><span style="width:100%"></span></span></div>
+            <div><b>Gaming og simracing</b><i>25 %</i><span class="t"><span class="q" style="width:71.4%"></span></span></div>
+            <div><b>Private selskap</b><i>15 %</i><span class="t"><span class="q" style="width:42.9%"></span></span></div>
+            <div><b>Bedrifter</b><i>15 %</i><span class="t"><span class="q" style="width:42.9%"></span></span></div>
+            <div><b>Supportere</b><i>10 %</i><span class="t"><span class="q" style="width:28.6%"></span></span></div>
+          </div>
+          <p class="src">Mål for andel av bookingene.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="veikart">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Veikart</p>
+        <h2>Fra test i vinter til åpning i august.</h2>
+      </div>
+      <ol class="road">
+        <li class="now"><p class="when">Okt–des 2026 <span class="pill">Nå</span></p><h3>Test etterspørselen</h3><p>Venteliste, undersøkelse, pop-up og simracingkveld.</p></li>
+        <li><p class="when">Jan–mar 2027</p><h3>Team og rettigheter</h3><p>Medgründer, tilbud fra Viaplay og TV 2, finansiering.</p></li>
+        <li class="gate"><p class="when">Slutten av jan.</p><h3>Videre eller stopp</h3><p>300 på ventelisten og avtaler under 400 000 kr.</p></li>
+        <li><p class="when">Feb–apr 2027</p><h3>Signere lokale</h3><p>Rundt 270 m², minst 50 meter fra bolig.</p></li>
+        <li><p class="when">Apr–jul 2027</p><h3>Bygge og ansette</h3><p>Bevilling, ombygging og rekruttering.</p></li>
+        <li class="open"><p class="when">Aug 2027</p><h3>Åpning</h3><p>Før Premier League starter.</p></li>
+        <li><p class="when">Feb 2028</p><h3>Evaluering</h3><p>Seks måneder med ekte tall.</p></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <img src="assets/logo/hub-logo-pink.svg" alt="HUB" width="119" height="36">
+    <p class="slogan">Hjemme. Uavgjort. Borte.</p>
+    <p class="small">Ni artefakter, ett prosjekt. Bildene er illustrasjoner.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  var secs = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  function onScroll() {
+    var y = window.scrollY + 120, cur = -1;
+    secs.forEach(function (s, i) { if (s && s.offsetTop <= y) cur = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
