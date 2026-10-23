@@ -1,0 +1,38 @@
+html,body{overflow-x:hidden}
+@media (max-width:1023px){
+.hub-split{grid-template-columns:minmax(0,1fr)!important;gap:24px!important}
+.hub-split>.hub-aside{position:static!important}
+}
+@media (max-width:767px){
+.hub-hdr{flex-wrap:wrap!important;height:auto!important;gap:12px 16px!important;padding-top:12px!important}
+.hub-hdr>img{margin-right:auto}
+.hub-nav{order:3;flex:0 0 100%!important;gap:20px!important;padding-bottom:10px;scrollbar-width:none}
+.hub-nav::-webkit-scrollbar{display:none}
+.hub-nav>a{padding:6px 0 4px!important}
+.hub-hide-sm{display:none!important}
+.hub-matchrow{grid-template-columns:64px 40px minmax(0,1fr)!important;gap:12px!important;padding:14px 0!important}
+.hub-matchrow>button{display:none!important}
+.hub-matchrow .hub-logo{width:40px!important;height:40px!important}
+.hub-matchrow .hub-logo img{max-width:36px!important;max-height:32px!important}
+.hub-matchrow .hub-mtitle{font-size:18px!important}
+.hub-hero{min-height:440px!important}
+.hub-sec{padding-top:48px!important;padding-bottom:56px!important}
+.hub-bar{gap:10px 16px!important;padding-top:10px!important;padding-bottom:12px!important}
+.hub-bar>.hub-bar-info{flex:0 0 100%!important}
+.hub-bar>button{flex:1}
+.hub-steps{gap:28px!important}
+.hub-step-list{max-height:none!important}
+button[aria-label="Færre"],button[aria-label="Flere"]{width:40px!important;height:40px!important}
+.hub-toast{left:16px!important;right:16px!important;bottom:16px!important}
+}
+@media (max-width:479px){
+.hub-2col{grid-template-columns:minmax(0,1fr)!important}
+.hub-food>div{flex-wrap:wrap}
+.hub-pkg{flex-direction:column;align-items:flex-start!important;gap:4px!important}
+.hub-pkg>div:last-child{text-align:left!important}
+.hub-actions>*{flex:1 1 100%}
+}
+.hub-noscroll::-webkit-scrollbar{display:none}
+@media (prefers-reduced-motion:no-preference){.hub-sheet{animation:hubSheetIn var(--duration-slow) var(--ease-out)}@keyframes hubSheetIn{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}}
+@media (min-width:768px){@media (prefers-reduced-motion:no-preference){.hub-sheet{animation-name:hubSheetInSide}@keyframes hubSheetInSide{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}}}
+.hub-qb{--bk-pad:var(--page-margin)}@media (min-width:768px){.hub-qb{--bk-pad:0px}}

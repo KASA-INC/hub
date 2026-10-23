@@ -1,0 +1,560 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>HUB forretningsplan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: mørk HUB-side, sticky meny med faner, seksjoner i én kolonne på mobil og to på bred skjerm. Kvadratisk, flatt, rosa ramme som merkemotiv. */
+:root {
+  --bg: #17141a; --surface: #241f27; --raised: #332c36; --line: #5a4e57;
+  --fg: #f6f2ee; --body: #cfc6cc; --muted: #9a8f97; --eyebrow: #e8668b;
+  --pink: #d0426a; --pink-strong: #e8668b; --on-pink: #f6f2ee;
+  --good: #3f8f5f; --warn: #c98a2b; --bad: #c23a3a;
+  --display: 'Bricolage Grotesque', 'Archivo', system-ui, sans-serif;
+  --text: 'DM Sans', system-ui, sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  --bg: #f6f2ee; --surface: #ede6e0; --raised: #e4e1dd; --line: #d6cec8;
+  --fg: #17141a; --body: #574f55; --muted: #6b6168; --eyebrow: #a8304f;
+  --pink: #d0426a; --pink-strong: #a8304f; --on-pink: #f6f2ee; color-scheme: light } }
+:root[data-theme="light"] {
+  --bg: #f6f2ee; --surface: #ede6e0; --raised: #e4e1dd; --line: #d6cec8;
+  --fg: #17141a; --body: #574f55; --muted: #6b6168; --eyebrow: #a8304f;
+  --pink: #d0426a; --pink-strong: #a8304f; --on-pink: #f6f2ee; color-scheme: light }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--body); font-family: var(--text); font-size: 16px; line-height: 1.55; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); color: var(--fg); letter-spacing: -0.025em; line-height: 1.04; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(40px, 8vw, 80px); font-weight: 800; }
+h2 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; }
+h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.2; }
+p { margin: 0; max-width: 66ch; }
+a { color: var(--pink-strong); }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--pink); outline-offset: 2px; }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--eyebrow); }
+strong { color: var(--fg); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Topplinje */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 16px; padding-block: 10px; }
+.logo { display: flex; gap: 4px; text-decoration: none; flex: none; }
+.logo span { width: 28px; height: 28px; border: 2px solid var(--pink); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 15px; color: var(--fg); }
+.nav { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+.nav::-webkit-scrollbar { display: none; }
+.nav a { flex: none; color: var(--body); text-decoration: none; font-size: 14px; font-weight: 500; padding: 10px 12px; min-height: 44px; display: flex; align-items: center; border-bottom: 3px solid transparent; }
+.nav a:hover { color: var(--fg); }
+.nav a.on { color: var(--fg); border-bottom-color: var(--pink); }
+
+section { padding-block: 64px; border-bottom: 1px solid var(--line); scroll-margin-top: 72px; }
+.head { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.lead { font-size: 18px; color: var(--body); }
+
+/* Hero */
+.hero { padding-block: 56px 48px; }
+.hero .stack { display: flex; flex-direction: column; gap: 20px; }
+.boxes { display: flex; gap: 6px; }
+.boxes span { width: 44px; height: 44px; border: 3px solid var(--pink); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 22px; color: var(--fg); }
+.boxes span.x { background: var(--pink); color: var(--on-pink); }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 0; margin-top: 16px; border: 3px solid var(--pink); }
+.kpi { padding: 20px 24px; display: flex; flex-direction: column; gap: 4px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); min-width: 0; }
+.kpi b { font-family: var(--display); font-size: 40px; font-weight: 800; color: var(--fg); letter-spacing: -0.025em; line-height: 1; font-variant-numeric: tabular-nums; }
+.kpi span { font-size: 14px; color: var(--muted); }
+
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+.card { background: var(--surface); padding: 24px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.card.frame { border: 3px solid var(--pink); }
+.quote { border: 3px solid var(--pink); padding: 28px; font-size: 19px; line-height: 1.5; color: var(--fg); }
+.quote p { max-width: 70ch; }
+
+/* ERRC */
+.errc { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; }
+.errc .card ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+
+/* Tabeller */
+.tbl { overflow-x: auto; border: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 700; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; background: var(--surface); white-space: nowrap; }
+td { color: var(--body); }
+td:first-child { color: var(--fg); font-weight: 500; }
+td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.sum td { color: var(--fg); font-weight: 700; border-top: 2px solid var(--fg); }
+
+/* Segmenter */
+.bars { display: flex; flex-direction: column; gap: 14px; }
+.bar { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; }
+.bar .lbl { color: var(--fg); font-weight: 500; }
+.bar .val { font-variant-numeric: tabular-nums; color: var(--fg); font-weight: 700; }
+.bar .track { grid-column: 1 / -1; height: 10px; background: var(--raised); }
+.bar .fill { height: 100%; background: var(--pink); }
+.bar .fill.q { background: var(--muted); }
+.bar small { grid-column: 1 / -1; color: var(--muted); font-size: 14px; }
+
+/* Diagrammer */
+figure { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+figcaption { font-size: 13px; color: var(--muted); }
+.chart { width: 100%; overflow-x: auto; }
+.chart svg { display: block; width: 100%; min-width: 520px; height: auto; }
+
+/* Chips */
+.chip { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border: 2px solid currentColor; white-space: nowrap; }
+.chip.h { color: var(--pink-strong); }
+.chip.m { color: var(--warn); }
+.chip.l { color: var(--muted); }
+
+/* Tidslinje */
+.timeline { display: flex; flex-direction: column; border-left: 3px solid var(--line); margin-left: 6px; }
+.step { position: relative; padding: 0 0 24px 24px; display: flex; flex-direction: column; gap: 4px; }
+.step::before { content: ""; position: absolute; left: -10px; top: 4px; width: 14px; height: 14px; background: var(--bg); border: 3px solid var(--line); }
+.step.gate::before { border-color: var(--warn); }
+.step.go::before { background: var(--pink); border-color: var(--pink); }
+.step .when { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-variant-numeric: tabular-nums; }
+.step.go .when { color: var(--pink-strong); }
+
+/* Sjekkliste */
+.todo { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); }
+.todo label { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; border-bottom: 1px solid var(--line); cursor: pointer; color: var(--fg); min-height: 44px; }
+.todo label:last-child { border-bottom: 0; }
+.todo input { appearance: none; flex: none; width: 22px; height: 22px; border: 2px solid var(--pink); margin: 1px 0 0; display: grid; place-items: center; background: transparent; cursor: pointer; }
+.todo input:checked { background: var(--pink); }
+.todo input:checked::after { content: ""; width: 10px; height: 6px; border-left: 2px solid var(--on-pink); border-bottom: 2px solid var(--on-pink); transform: rotate(-45deg) translate(1px, -1px); }
+.todo input:checked + span { color: var(--muted); text-decoration: line-through; }
+.progress { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+footer { padding-block: 48px 64px; display: flex; flex-direction: column; gap: 12px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 0 24px; background: var(--pink); color: var(--on-pink); font-weight: 700; text-decoration: none; border: 0; font-size: 16px; align-self: flex-start; }
+.btn:hover { background: var(--pink-strong); }
+.btn.ghost { background: transparent; color: var(--fg); border: 2px solid var(--fg); }
+.btns { display: flex; flex-wrap: wrap; gap: 12px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#oversikt" aria-label="HUB, til toppen"><span>H</span><span>U</span><span>B</span></a>
+    <nav class="nav" aria-label="Seksjoner">
+      <a href="#oversikt">Oversikt</a>
+      <a href="#strategi">Strategi</a>
+      <a href="#marked">Marked og kunder</a>
+      <a href="#drift">Drift og salg</a>
+      <a href="#okonomi">Økonomi</a>
+      <a href="#vekst">Vekst</a>
+      <a href="#risiko">Risiko</a>
+      <a href="#veikart">Veikart</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section id="oversikt" class="hero">
+  <div class="wrap stack">
+    <div class="boxes" aria-hidden="true"><span>H</span><span class="x">U</span><span>B</span></div>
+    <p class="eyebrow">Forretningsplan · oktober 2026</p>
+    <h1>Ditt eget rom for sport og spill.</h1>
+    <p class="lead">HUB er et opplevelsessenter i Oslo med private rom for kamp, gaming og simracing. Planen er å åpne med sju rom i august 2027, etter en test i vinter som avgjør om det er etterspørsel nok.</p>
+    <div class="kpis" role="list">
+      <div class="kpi" role="listitem"><b>4,3 mill.</b><span>kr i investering for sju rom</span></div>
+      <div class="kpi" role="listitem"><b>24 %</b><span>belegg for å gå i null</span></div>
+      <div class="kpi" role="listitem"><b>1,4 mill.</b><span>kr i resultat ved 30 % belegg</span></div>
+      <div class="kpi" role="listitem"><b>Aug 2027</b><span>mål for åpning, før Premier League starter</span></div>
+    </div>
+    <div class="grid2" style="margin-top: 16px">
+      <div class="card"><p class="eyebrow">Muligheten</p><p>Å se sport hjemme er dyrt og kan ikke lenger deles: Premier League koster 799 kr i måneden. Sportsbarene er fulle og bråkete. I Oslo finnes ingenting midt imellom.</p></div>
+      <div class="card"><p class="eyebrow">Modellen</p><p>Gjengen leier et rom per time og kjøper mat og drikke. Kamper fyller helgene, gaming og simracing fyller hverdagene.</p></div>
+      <div class="card"><p class="eyebrow">Største spørsmål</p><p>Hva visningsavtalene med Viaplay og TV 2 koster for private rom. Tilbudene må komme før lokalet signeres.</p></div>
+      <div class="card frame"><p class="eyebrow">Anbefaling</p><p><strong>Test før du bygger.</strong> Kjør en pop-up eller et samarbeid i vinter, og bestem i slutten av januar om HUB skal videre.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="strategi">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Strategi</p>
+      <h2>Et opplevelsessenter, ikke en sportsbar.</h2>
+      <p class="lead">HUB konkurrerer om kvelden til gjengen, på linje med bowling, gokart og karaoke. Det gjør prisen per person naturlig og åpner for bedrifter, familier og gamere.</p>
+    </div>
+    <div class="quote"><p>For vennegjenger, kolleger og lag i Oslo som vil oppleve kampen eller spillet sammen, er HUB opplevelsessenteret for sport og spill som gir dere et eget rom med storskjerm, konsoller og servering. I motsetning til sportsbaren må dere ikke kjempe om plassen, og i motsetning til sofaen hjemme trenger ingen å være vert.</p></div>
+
+    <h3 style="margin: 48px 0 16px">Blå hav: fjerne, redusere, øke, skape</h3>
+    <div class="errc">
+      <div class="card"><p class="eyebrow">Fjerne</p><ul><li>Kampen om plassen</li><li>Abonnement og binding</li><li>Vertsjobben</li><li>Fremmede ved bordet</li></ul></div>
+      <div class="card"><p class="eyebrow">Redusere</p><ul><li>Ventetid ved baren</li><li>Koordineringen i gjengen</li><li>Avhengigheten av kamptidene</li></ul></div>
+      <div class="card"><p class="eyebrow">Øke</p><ul><li>Privatliv og kontroll</li><li>Bilde og lyd</li><li>Bredde i innhold</li></ul></div>
+      <div class="card frame"><p class="eyebrow">Skape</p><ul><li>Sport og spill i samme rom</li><li>Simracing med ligaer og rundetider</li><li>Faste sesongrom</li><li>«Ledig nå» til lavere pris</li><li>Tippekupong-nostalgi</li></ul></div>
+    </div>
+
+    <h3 style="margin: 48px 0 16px">Konkurrentene</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Alternativ</th><th>Styrke</th><th>Svakhet sett fra HUB</th></tr></thead>
+      <tbody>
+        <tr><td>Sportsbarer</td><td>Stemning og gratis inngang</td><td>Ingen garantert plass, støy, du velger ikke kamp</td></tr>
+        <tr><td>Hjemme</td><td>Billig når abonnementet er betalt</td><td>Dyrt, kan ikke deles, vertsjobben</td></tr>
+        <tr><td>SYNG karaoke</td><td>Bevist modell med private rom siden 2012</td><td>Ikke sport, men kan legge det til</td></tr>
+        <tr><td>Oche, Røør, Spillbaren</td><td>Bookbare spillsoner</td><td>Halvprivat og ikke kamp</td></tr>
+        <tr><td>Simracing</td><td>Fungerer i utlandet</td><td>Ingen egne steder funnet i Oslo</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section id="marked">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Marked og kunder</p>
+      <h2>Bookeren er den egentlige kunden.</h2>
+      <p class="lead">HUB trenger rundt 16 000 gjestebesøk i året, drøyt 2 % av Oslos befolkning én gang. Kampene alene gir et rom rundt sju bookinger i uka, så minst en tredel må komme fra annet enn kamp.</p>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>Hvem som booker</h3>
+        <p style="color: var(--muted); font-size: 14px">Mål for andel av bookingene</p>
+        <div class="bars" id="segments"></div>
+      </div>
+      <div class="card">
+        <h3>Rettighetene</h3>
+        <div class="tbl"><table>
+          <thead><tr><th>Turnering</th><th>Hvem</th><th class="r">Til</th></tr></thead>
+          <tbody>
+            <tr><td>Premier League</td><td>Viaplay</td><td class="r">2027/28</td></tr>
+            <tr><td>Champions League</td><td>TV 2</td><td class="r">2030/31</td></tr>
+            <tr><td>LaLiga</td><td>TV 2</td><td class="r">2030</td></tr>
+            <tr><td>Eliteserien</td><td>TV 2</td><td class="r">2034</td></tr>
+            <tr><td>Formel 1</td><td>Viaplay</td><td class="r">2029</td></tr>
+            <tr><td>NHL</td><td>Viaplay</td><td class="r">2031</td></tr>
+          </tbody>
+        </table></div>
+        <p style="font-size: 14px; color: var(--muted)">Viaplay og TV 2 dekker det meste. Premier League etter 2028 er ukjent.</p>
+      </div>
+    </div>
+
+    <figure style="margin-top: 48px">
+      <h3>Kvelden vinnes eller tapes ved booking, ankomst og regningen</h3>
+      <div class="chart" id="journey"></div>
+      <figcaption>Vennegjengens stemning gjennom kundereisen, 1 er dårlig og 5 er topp. Rosa punkter er de kritiske øyeblikkene. Skjønnsmessig vurdering.</figcaption>
+    </figure>
+
+    <div class="grid2" style="margin-top: 48px">
+      <div class="card"><p class="eyebrow">Gaming og simracing</p><h3>Fyller timene uten kamp</h3><p>En konsoll gjør hvert sportsrom til et gamingrom. Simracing ser ut til å være ledig i Oslo, og firmacup er lett å selge på dagtid.</p></div>
+      <div class="card"><p class="eyebrow">E-sport</p><h3>Bygg det selv først</h3><p>Utgiverne bestemmer om store turneringer kan vises kommersielt. Egne turneringer i EA Sports FC, Rocket League og simracing er enklere og gir innhold og sponsorer.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="drift">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Drift og salg</p>
+      <h2>Tre prisnivåer, og billig heller enn tomt.</h2>
+      <p class="lead">Romleien gir marginen. Prisen følger etterspørselen, med faste lavtider på hverdager og topppris på de største kampene.</p>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Rom, per time</th><th class="r">Lav</th><th class="r">Standard</th><th class="r">Topp</th></tr></thead>
+      <tbody>
+        <tr><td>Sportsrom for 4</td><td class="r">kr 450</td><td class="r">kr 600</td><td class="r">kr 800</td></tr>
+        <tr><td>Sportsrom for 6</td><td class="r">kr 600</td><td class="r">kr 850</td><td class="r">kr 1 150</td></tr>
+        <tr><td>Sportsrom for 8</td><td class="r">kr 750</td><td class="r">kr 1 050</td><td class="r">kr 1 450</td></tr>
+        <tr><td>Sportsrom for 12</td><td class="r">kr 950</td><td class="r">kr 1 350</td><td class="r">kr 1 850</td></tr>
+        <tr><td>Gamingrom for 4</td><td class="r">kr 350</td><td class="r">kr 450</td><td class="r">kr 600</td></tr>
+        <tr><td>Gamingrom for 6</td><td class="r">kr 450</td><td class="r">kr 600</td><td class="r">kr 800</td></tr>
+        <tr><td>Simracing, per rigg</td><td class="r">kr 199</td><td class="r">kr 279</td><td class="r">kr 349</td></tr>
+      </tbody>
+    </table></div>
+    <p style="margin-top: 12px; font-size: 14px; color: var(--muted)">Priser inkl. mva. Lav er hverdager på dagtid og sene kvelder, topp er de største kampene og fredag og lørdag kveld.</p>
+
+    <h3 style="margin: 48px 0 16px">Dynamisk prising: fire regler</h3>
+    <div class="errc">
+      <div class="card"><p class="eyebrow">Et gulv</p><p>Aldri under halv standardpris. Heller et minstebeløp i mat og drikke.</p></div>
+      <div class="card"><p class="eyebrow">Faste tider</p><p>Rabatt til faste lavtider, ikke i siste liten, så kundene ikke venter med å booke.</p></div>
+      <div class="card"><p class="eyebrow">Åpen pris</p><p>Prisen låses når du booker, og tidlig booking lønner seg.</p></div>
+      <div class="card"><p class="eyebrow">Data først</p><p>Enkle regler de første månedene. Algoritmen kommer når bookingdataene finnes.</p></div>
+    </div>
+
+    <div class="grid2" style="margin-top: 48px">
+      <div class="card"><p class="eyebrow">Lokalet</p><h3>Rundt 270 m², minst 50 meter fra bolig</h3><p>Avstanden til bolig avgjør hvor lenge HUB kan holde åpent. Lydisolering og ventilasjon er de dyreste delene av ombyggingen.</p></div>
+      <div class="card"><p class="eyebrow">Før åpning</p><h3>Bevilling og visningsavtaler</h3><p>Skjenkebevillingen kan ta fire måneder. HUB trenger en medgründer eller daglig leder med erfaring fra utelivet.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="okonomi">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Økonomi</p>
+      <h2>Null ved 24 % belegg.</h2>
+      <p class="lead">Kostnadene er nesten faste, mens inntektene følger belegget. Hvert femte prosentpoeng er verdt rundt 1,1 mill. kr i året.</p>
+    </div>
+    <figure>
+      <div class="chart" id="breakeven"></div>
+      <figcaption>Omsetning og kostnader per år, mill. kr eks. mva., etter andel av åpningstimene rommene er booket. Egen modell.</figcaption>
+    </figure>
+    <div class="grid2" style="margin-top: 48px">
+      <div class="card">
+        <h3>Investering</h3>
+        <div class="tbl"><table><tbody>
+          <tr><td>Fire sportsrom</td><td class="r">1,20</td></tr>
+          <tr><td>To gamingrom</td><td class="r">0,40</td></tr>
+          <tr><td>Simracingrom, seks rigger</td><td class="r">0,57</td></tr>
+          <tr><td>Fellesareal og kjøkken</td><td class="r">1,25</td></tr>
+          <tr><td>Booking, IT og merkevare</td><td class="r">0,15</td></tr>
+          <tr><td>Depositum</td><td class="r">0,23</td></tr>
+          <tr><td>Buffer</td><td class="r">0,50</td></tr>
+          <tr class="sum"><td>Totalt, mill. kr</td><td class="r">4,30</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="card">
+        <h3>Ett år ved 30 % belegg</h3>
+        <div class="tbl"><table><tbody>
+          <tr><td>Omsetning</td><td class="r">9,16</td></tr>
+          <tr><td>Varekost</td><td class="r">−1,24</td></tr>
+          <tr><td>Personal</td><td class="r">−3,33</td></tr>
+          <tr><td>Husleie</td><td class="r">−0,90</td></tr>
+          <tr><td>Rettigheter og lisenser</td><td class="r">−0,43</td></tr>
+          <tr><td>Markedsføring, gebyrer, drift</td><td class="r">−1,30</td></tr>
+          <tr><td>Avskrivninger</td><td class="r">−0,59</td></tr>
+          <tr class="sum"><td>Resultat før skatt, mill. kr</td><td class="r">1,37</td></tr>
+        </tbody></table></div>
+      </div>
+    </div>
+    <p style="margin-top: 16px; font-size: 14px; color: var(--muted)">Kapitalbehov med buffer: rundt 4,5 mill. kr fra gründerne, en driftspartner, bryggeri og bank.</p>
+  </div>
+</section>
+
+<section id="vekst">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Vekst</p>
+      <h2>Fra ett rom i Oslo til fem byer.</h2>
+      <p class="lead">Hvert nytt lokale er en kopi av piloten. Med fem lokaler i Norge kan HUB omsette for rundt 47 mill. kr og ha et driftsresultat på rundt 9 mill. kr i 2031.</p>
+    </div>
+    <figure>
+      <div class="chart" id="growth"></div>
+      <figcaption>Driftsresultat før avskrivninger (EBITDA) etter hovedkontor, mill. kr per år. Prognoser bygget på pilotens tall, ikke budsjett.</figcaption>
+    </figure>
+    <div class="tbl" style="margin-top: 32px"><table>
+      <thead><tr><th>Scenario</th><th class="r">Lokaler</th><th class="r">Omsetning 2032</th><th class="r">Driftsresultat 2032</th><th class="r">Hentes utenfra</th></tr></thead>
+      <tbody>
+        <tr><td>Forsiktig: Oslo og Bergen</td><td class="r">3</td><td class="r">30 mill.</td><td class="r">6,6 mill.</td><td class="r">ca. 7 mill.</td></tr>
+        <tr><td>Basis: fem norske byer</td><td class="r">5</td><td class="r">47 mill.</td><td class="r">9,1 mill.</td><td class="r">ca. 8 mill.</td></tr>
+        <tr><td>Nordisk: pluss Stockholm og København</td><td class="r">7</td><td class="r">63 mill.</td><td class="r">9,6 mill.</td><td class="r">ca. 10 mill.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="timeline" style="margin-top: 48px">
+      <div class="step go"><p class="when">2027</p><h3>Oslo 1</h3><p>Piloten. Alt annet bygger på tallene herfra.</p></div>
+      <div class="step"><p class="when">2029</p><h3>Oslo 2 og Bergen</h3><p>Oslo 2 deler ledelse og innkjøp. Bergen har sterk fotballkultur.</p></div>
+      <div class="step"><p class="when">2030</p><h3>Trondheim og Stavanger</h3><p>Studenter og gaming i Trondheim, bedrifter og kjøpekraft i Stavanger.</p></div>
+      <div class="step gate"><p class="when">2031</p><h3>Stockholm og København</h3><p>Bare når de norske lokalene går med overskudd.</p></div>
+    </div>
+
+    <h3 style="margin: 48px 0 16px">Internasjonalt gjennom franchise</h3>
+    <div class="grid2">
+      <div class="card"><p class="eyebrow">Bevist vei</p><p>Oche startet i Oslo og har kommet til seks andre land gjennom franchise. I Storbritannia har kjedene innen «competitive socialising» gått fra rundt 275 lokaler i 2018 til over 500 i 2025.</p></div>
+      <div class="card"><p class="eyebrow">Ledig plass</p><p>Ingen kjede selger private rom for både sport og gaming. Merket reiser godt, siden rommene allerede heter etter engelske stadioner.</p></div>
+      <div class="card"><p class="eyebrow">Lav investering</p><p>Partneren bygger og driver lokalet. HUB leverer merke, bookingsystem og konseptbok, og får en andel av omsetningen.</p></div>
+      <div class="card frame"><p class="eyebrow">Først når</p><p>Oslo 1 har gått med overskudd i ett år, og et andre lokale har nådd samme tall uten at gründerne driver det selv.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="risiko">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Risiko</p>
+      <h2>Alt det viktigste kan testes før du signerer.</h2>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Risiko</th><th>Konsekvens</th><th>Tiltak</th></tr></thead>
+      <tbody>
+        <tr><td>For få bookinger utenom kamp</td><td><span class="chip h">Høy</span></td><td>Test etterspørselen, gaming og bedriftssalg fra start</td></tr>
+        <tr><td>Dyre visningsavtaler</td><td><span class="chip h">Høy</span></td><td>Skriftlige tilbud før lokalet signeres</td></tr>
+        <tr><td>Mangler erfaring fra uteliv</td><td><span class="chip h">Høy</span></td><td>Medgründer eller driftspartner før investorer</td></tr>
+        <tr><td>Premier League bytter kanal i 2028</td><td><span class="chip m">Middels</span></td><td>Avtaler med flere rettighetshavere</td></tr>
+        <tr><td>Spill er bare lisensiert for privat bruk</td><td><span class="chip m">Middels</span></td><td>Kommersielle avtaler før åpning</td></tr>
+        <tr><td>Kopiering fra sportsbarer eller SYNG</td><td><span class="chip m">Middels</span></td><td>Åpne raskt og bygg faste kunder</td></tr>
+        <tr><td>Kunder venter på rabatt</td><td><span class="chip m">Middels</span></td><td>Rabatt til faste tider og prisgulv</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section id="veikart">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Veikart</p>
+      <h2>Fra test i vinter til åpning i august.</h2>
+      <p class="lead">Lokalet er den kritiske veien: bevillingen kan ikke søkes før leiekontrakten er signert.</p>
+    </div>
+    <div class="grid2">
+      <div class="timeline">
+        <div class="step"><p class="when">Okt–des 2026</p><h3>Test etterspørselen</h3><p>Landingsside, venteliste, pop-up og simracingkveld.</p></div>
+        <div class="step"><p class="when">Jan–mar 2027</p><h3>Team, rettigheter og penger</h3><p>Medgründer, tilbud fra Viaplay og TV 2, finansiering.</p></div>
+        <div class="step gate"><p class="when">Slutten av januar</p><h3>Videre eller stopp</h3><p>Under 400 000 kr for avtalene, 60 % fullt i helgene, 300 på venteliste og en partner som har sagt ja.</p></div>
+        <div class="step"><p class="when">Feb–apr 2027</p><h3>Finne og signere lokale</h3></div>
+        <div class="step"><p class="when">Apr–jul 2027</p><h3>Bevilling, ombygging og rekruttering</h3></div>
+        <div class="step go"><p class="when">August 2027</p><h3>Åpning før Premier League starter</h3></div>
+        <div class="step"><p class="when">Februar 2028</p><h3>Evaluering etter seks måneder</h3></div>
+      </div>
+      <div class="card">
+        <h3>De neste 30 dagene</h3>
+        <p class="progress" id="progress"></p>
+        <div class="todo" id="todo"></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="wrap">
+  <p class="eyebrow">Merket</p>
+  <h2>Se også merkevarehjulet.</h2>
+  <p>Merkevarehjulet viser hva HUB står for, og hvordan merket skal oppføre seg.</p>
+  <div class="btns">
+    <a class="btn" href="../merkevarehjul/">Se merkevarehjulet</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs, text) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; }
+  var fmt = function (v) { return v.toFixed(1).replace('.', ','); };
+
+  // Segmenter
+  var seg = [['Vennegjengen', 35, 'Lørdag, søndag og kampkvelder'], ['Gaming og simracing', 25, 'Hverdagskvelder og søndager'], ['Private selskap', 15, 'Fredag og lørdag kveld'], ['Bedrifter', 15, 'Hverdager på dagtid og afterwork'], ['Supportere', 10, 'Store kamper og derbyer']];
+  var sb = document.getElementById('segments');
+  seg.forEach(function (s, i) {
+    var d = document.createElement('div'); d.className = 'bar';
+    d.innerHTML = '<span class="lbl"></span><span class="val"></span><div class="track"><div class="fill"></div></div><small></small>';
+    d.querySelector('.lbl').textContent = s[0];
+    d.querySelector('.val').textContent = s[1] + ' %';
+    d.querySelector('.fill').style.width = (s[1] / 35 * 100) + '%';
+    if (i > 0) d.querySelector('.fill').classList.add('q');
+    d.querySelector('small').textContent = s[2];
+    sb.appendChild(d);
+  });
+
+  // Kundereise
+  var j = [['Behov', 3, 'Nysgjerrig', 0], ['Vurdering', 2, 'Usikker på pris', 0], ['Booking', 4, 'Lettet', 1], ['Før besøket', 4, 'Gleder seg', 0], ['Ankomst', 3, 'Spent', 1], ['I rommet', 5, 'Høydepunktet', 0], ['Regningen', 2, 'Hvem skylder hva?', 1], ['Etterpå', 4, 'Vil tilbake', 0]];
+  (function () {
+    var W = 760, H = 300, L = 60, R = 700, T = 40, B = 220;
+    var X = function (i) { return L + i * (R - L) / (j.length - 1); };
+    var Y = function (v) { return B - (v - 1) / 4 * (B - T); };
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Stemningskurve gjennom kundereisen' });
+    svg.appendChild(el('line', { x1: L - 20, x2: R + 20, y1: Y(3), y2: Y(3), stroke: 'var(--line)', 'stroke-dasharray': '4 4' }));
+    var d = j.map(function (p, i) { return (i ? 'L' : 'M') + X(i) + ' ' + Y(p[1]); }).join('');
+    svg.appendChild(el('path', { d: d, fill: 'none', stroke: 'var(--muted)', 'stroke-width': 3 }));
+    j.forEach(function (p, i) {
+      var nb = j.filter(function (_, k) { return k === i - 1 || k === i + 1; });
+      var avg = nb.reduce(function (s, q) { return s + q[1]; }, 0) / nb.length;
+      var below = avg > p[1];
+      svg.appendChild(el('rect', { x: X(i) - (p[3] ? 8 : 5), y: Y(p[1]) - (p[3] ? 8 : 5), width: p[3] ? 16 : 10, height: p[3] ? 16 : 10, fill: p[3] ? 'var(--pink)' : 'var(--muted)' }));
+      svg.appendChild(el('text', { x: X(i), y: below ? Y(p[1]) + 28 : Y(p[1]) - 16, 'text-anchor': 'middle', 'font-size': 15, 'font-weight': p[3] ? 700 : 400, fill: p[3] ? 'var(--fg)' : 'var(--body)', 'font-family': 'DM Sans, sans-serif' }, p[2]));
+      svg.appendChild(el('text', { x: X(i), y: H - 30, 'text-anchor': 'middle', 'font-size': 15, 'font-weight': 700, fill: 'var(--fg)', 'font-family': 'DM Sans, sans-serif' }, p[0]));
+      svg.appendChild(el('text', { x: X(i), y: H - 12, 'text-anchor': 'middle', 'font-size': 14, fill: 'var(--muted)', 'font-family': 'DM Sans, sans-serif' }, String(i + 1)));
+    });
+    document.getElementById('journey').appendChild(svg);
+  })();
+
+  // Nullpunkt
+  (function () {
+    var occ = [10, 15, 20, 25, 30, 35, 40, 45, 50];
+    var rev = [3.05, 4.58, 6.11, 7.64, 9.16, 10.69, 12.22, 13.75, 15.27];
+    var cost = [6.31, 6.68, 7.05, 7.41, 7.80, 8.23, 8.65, 9.08, 9.51];
+    var W = 760, H = 340, L = 56, R = 640, T = 24, B = 286, ymax = 16;
+    var X = function (o) { return L + (o - 10) / 40 * (R - L); };
+    var Y = function (v) { return B - v / ymax * (B - T); };
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Omsetning og kostnader etter belegg. Nullpunkt ved 24 prosent.' });
+    for (var t = 0; t <= ymax; t += 4) {
+      svg.appendChild(el('line', { x1: L, x2: R, y1: Y(t), y2: Y(t), stroke: 'var(--line)', 'stroke-width': t ? 1 : 1.5 }));
+      svg.appendChild(el('text', { x: L - 10, y: Y(t) + 4, 'text-anchor': 'end', 'font-size': 14, fill: 'var(--muted)', 'font-family': 'DM Sans, sans-serif' }, String(t)));
+    }
+    occ.forEach(function (o) { svg.appendChild(el('text', { x: X(o), y: B + 22, 'text-anchor': 'middle', 'font-size': 14, fill: 'var(--muted)', 'font-family': 'DM Sans, sans-serif' }, o + ' %')); });
+    // nullpunkt
+    var i0 = 0; for (var i = 0; i < occ.length - 1; i++) { if (rev[i] - cost[i] < 0 && rev[i + 1] - cost[i + 1] >= 0) i0 = i; }
+    var d0 = rev[i0] - cost[i0], d1 = rev[i0 + 1] - cost[i0 + 1];
+    var be = occ[i0] + (0 - d0) / (d1 - d0) * (occ[i0 + 1] - occ[i0]);
+    var bv = rev[i0] + (rev[i0 + 1] - rev[i0]) * (be - occ[i0]) / (occ[i0 + 1] - occ[i0]);
+    svg.appendChild(el('line', { x1: X(be), x2: X(be), y1: T, y2: B, stroke: 'var(--muted)', 'stroke-dasharray': '4 4' }));
+    svg.appendChild(el('text', { x: X(be) + 8, y: T + 12, 'font-size': 15, 'font-weight': 700, fill: 'var(--fg)', 'font-family': 'DM Sans, sans-serif' }, 'Nullpunkt ' + Math.round(be) + ' %'));
+    function line(vals, color, w, name) {
+      svg.appendChild(el('path', { d: vals.map(function (v, i) { return (i ? 'L' : 'M') + X(occ[i]) + ' ' + Y(v); }).join(''), fill: 'none', stroke: color, 'stroke-width': w }));
+      vals.forEach(function (v, i) { var c = el('rect', { x: X(occ[i]) - 4, y: Y(v) - 4, width: 8, height: 8, fill: color }); c.appendChild(el('title', {}, name + ', ' + occ[i] + ' %: ' + fmt(v) + ' mill. kr')); svg.appendChild(c); });
+      svg.appendChild(el('text', { x: R + 12, y: Y(vals[vals.length - 1]) + 5, 'font-size': 14, 'font-weight': 700, fill: 'var(--fg)', 'font-family': 'DM Sans, sans-serif' }, name + ' ' + fmt(vals[vals.length - 1])));
+    }
+    line(cost, 'var(--muted)', 3, 'Kostnader');
+    line(rev, 'var(--pink)', 3, 'Omsetning');
+    svg.appendChild(el('rect', { x: X(be) - 6, y: Y(bv) - 6, width: 12, height: 12, fill: 'var(--bg)', stroke: 'var(--fg)', 'stroke-width': 2 }));
+    [[20, 'Lavt'], [30, 'Middels'], [40, 'Høyt']].forEach(function (s) {
+      var k = occ.indexOf(s[0]); var r = rev[k] - cost[k];
+      svg.appendChild(el('text', { x: X(s[0]), y: B - 10, 'text-anchor': 'middle', 'font-size': 14, fill: 'var(--body)', 'font-family': 'DM Sans, sans-serif' }, s[1] + ': ' + (r < 0 ? '−' : '+') + fmt(Math.abs(r))));
+    });
+    document.getElementById('breakeven').appendChild(svg);
+  })();
+
+  // Vekst
+  (function () {
+    var years = [2027, 2028, 2029, 2030, 2031, 2032];
+    var sc = [
+      ['Forsiktig', [0.3, 1.9, 2.8, 5.5, 6.6, 6.6], 'var(--muted)', '2 4', 2],
+      ['Nordisk', [0.3, 1.9, 2.8, 5.9, 7.6, 9.6], 'var(--body)', '7 5', 2],
+      ['Basis', [0.3, 1.9, 2.8, 5.9, 9.1, 9.1], 'var(--pink)', '', 3.5]
+    ];
+    var W = 760, H = 330, L = 50, R = 620, T = 44, B = 286, ymax = 10;
+    var X = function (i) { return L + i * (R - L) / (years.length - 1); };
+    var Y = function (v) { return B - v / ymax * (B - T); };
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Driftsresultat per år i tre vekstscenarier frem til 2032' });
+    for (var t = 0; t <= ymax; t += 2) {
+      svg.appendChild(el('line', { x1: L, x2: R, y1: Y(t), y2: Y(t), stroke: 'var(--line)', 'stroke-width': t ? 1 : 1.5 }));
+      svg.appendChild(el('text', { x: L - 10, y: Y(t) + 5, 'text-anchor': 'end', 'font-size': 14, fill: 'var(--muted)', 'font-family': 'DM Sans, sans-serif' }, String(t)));
+    }
+    years.forEach(function (y, i) { svg.appendChild(el('text', { x: X(i), y: B + 24, 'text-anchor': 'middle', 'font-size': 14, fill: 'var(--muted)', 'font-family': 'DM Sans, sans-serif' }, String(y))); });
+    [[2, 'Oslo 2 og Bergen'], [3, 'Trondheim og Stavanger'], [4, 'Stockholm og København']].forEach(function (o, k) {
+      svg.appendChild(el('line', { x1: X(o[0]), x2: X(o[0]), y1: T - 26 + k * 0, y2: B, stroke: 'var(--line)', 'stroke-dasharray': '3 4' }));
+    });
+    sc.forEach(function (s) {
+      var attrs = { d: s[1].map(function (v, i) { return (i ? 'L' : 'M') + X(i) + ' ' + Y(v); }).join(''), fill: 'none', stroke: s[2], 'stroke-width': s[4] };
+      if (s[3]) attrs['stroke-dasharray'] = s[3];
+      svg.appendChild(el('path', attrs));
+      s[1].forEach(function (v, i) { var r = el('rect', { x: X(i) - 4, y: Y(v) - 4, width: 8, height: 8, fill: s[2] }); r.appendChild(el('title', {}, s[0] + ', ' + years[i] + ': ' + fmt(v) + ' mill. kr')); svg.appendChild(r); });
+      var last = s[1][s[1].length - 1];
+      var dy = s[0] === 'Nordisk' ? -4 : s[0] === 'Basis' ? 18 : 6;
+      svg.appendChild(el('text', { x: R + 12, y: Y(last) + dy, 'font-size': 15, 'font-weight': s[0] === 'Basis' ? 700 : 400, fill: 'var(--fg)', 'font-family': 'DM Sans, sans-serif' }, s[0] + ' ' + fmt(last)));
+    });
+    svg.appendChild(el('text', { x: X(2) + 6, y: T - 14, 'font-size': 13, fill: 'var(--muted)', 'font-family': 'DM Sans, sans-serif' }, '+ 2 lokaler'));
+    svg.appendChild(el('text', { x: X(3) + 6, y: T - 14, 'font-size': 13, fill: 'var(--muted)', 'font-family': 'DM Sans, sans-serif' }, '+ 2 lokaler'));
+    svg.appendChild(el('text', { x: X(4) + 6, y: T - 14, 'font-size': 13, fill: 'var(--muted)', 'font-family': 'DM Sans, sans-serif' }, '+ 2 i Norden'));
+    document.getElementById('growth').appendChild(svg);
+  })();
+
+  // Sjekkliste
+  var todos = ['Be Viaplay og TV 2 om tilbud på visningsavtale for fire sportsrom', 'Ta film ut av nettsiden og legg inn de nye prisene', 'Spør Sony, Microsoft, Nintendo og utgiverne om kommersielle lisenser', 'Undersøk bookingsystemer med prisregler og «ledig nå»', 'Spør SYNG eller en sportsbar om en kamptest i vinter', 'Arranger en åpen simracingkveld med to lånte rigger', 'Legg ut landingssiden med venteliste', 'Snakk med fem til ti mulige medgründere eller driftspartnere', 'Kontakt supporterklubber, bedrifter og e-sportmiljøer', 'Søk om figurmerke for logoen', 'Ta kunnskapsprøven for skjenkebevilling'];
+  var key = 'hub-plan-todo', done = {};
+  try { done = JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (e) { done = {}; }
+  var box = document.getElementById('todo'), prog = document.getElementById('progress');
+  function update() { var n = todos.filter(function (_, i) { return done[i]; }).length; prog.textContent = n + ' av ' + todos.length + ' gjort'; }
+  todos.forEach(function (t, i) {
+    var l = document.createElement('label'); var c = document.createElement('input'); c.type = 'checkbox'; c.id = 'todo-' + i; c.checked = !!done[i];
+    var s = document.createElement('span'); s.textContent = t; l.appendChild(c); l.appendChild(s); box.appendChild(l);
+    c.addEventListener('change', function () { done[i] = c.checked; try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {} update(); });
+  });
+  update();
+
+  // Aktiv meny
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  var secs = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  function onScroll() {
+    var y = window.scrollY + 120, cur = 0;
+    secs.forEach(function (s, i) { if (s && s.offsetTop <= y) cur = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+})();
+</script>
+
+</body></html>

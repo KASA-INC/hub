@@ -1,0 +1,7 @@
+html{-webkit-font-smoothing:antialiased}
+body{margin:0;font-family:var(--font-body);color:var(--text-strong);background:var(--surface-page)}
+a{color:var(--hub-pink-deep);text-decoration:underline;text-underline-offset:3px}
+a:hover{color:var(--hub-pink)}
+.hub-dark a{color:var(--hub-pink-light)}
+.hub-dark a:hover{color:var(--hub-cream)}
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}

@@ -1,0 +1,58 @@
+:root{
+/* Brand pink (sampled from logo SVG + pitch) */
+--hub-pink:#d0426a;
+--hub-pink-deep:#a8304f;   /* eyebrows/labels on cream */
+--hub-pink-light:#e8668b;  /* eyebrows/numbers on ink */
+--hub-pink-tint:#f6dfe5;
+/* Ink (dark surfaces) */
+--hub-ink:#17141a;
+--hub-ink-2:#241f27;
+--hub-ink-3:#332c36;
+--hub-ink-line:#5a4e57;
+/* Cream (light surfaces) */
+--hub-cream:#f6f2ee;
+--hub-cream-2:#ede6e0;
+--hub-cream-3:#e4e1dd;
+--hub-cream-line:#d6cec8;
+/* Text tones */
+--hub-grey-700:#574f55;
+--hub-grey-600:#6b6168;
+--hub-grey-400:#9a8f97;
+--hub-grey-300:#cfc6cc;
+--hub-white:#ffffff;
+/* Semantic support (not in pitch; tuned to palette) */
+--hub-green:#3f8f5f;
+--hub-amber:#c98a2b;
+--hub-red:#c23a3a;
+
+/* Semantic aliases — light (cream) context */
+--surface-page:var(--hub-cream);
+--surface-card:var(--hub-cream-2);
+--surface-sunken:var(--hub-cream-3);
+--surface-inverse:var(--hub-ink);
+--surface-brand:var(--hub-pink);
+--text-strong:var(--hub-ink);
+--text-body:var(--hub-grey-700);
+--text-muted:var(--hub-grey-600);
+--text-eyebrow:var(--hub-pink-deep);
+--text-on-brand:var(--hub-cream);
+--text-on-inverse:var(--hub-cream);
+--border-default:var(--hub-cream-line);
+--border-brand:var(--hub-pink);
+--accent:var(--hub-pink);
+--focus-ring:var(--hub-pink);
+
+/* Semantic aliases — dark (ink) context */
+--dark-surface-page:var(--hub-ink);
+--dark-surface-card:var(--hub-ink-2);
+--dark-surface-raised:var(--hub-ink-3);
+--dark-text-strong:var(--hub-cream);
+--dark-text-body:var(--hub-grey-300);
+--dark-text-muted:var(--hub-grey-400);
+--dark-text-eyebrow:var(--hub-pink-light);
+--dark-border-default:var(--hub-ink-line);
+
+--status-success:var(--hub-green);
+--status-warning:var(--hub-amber);
+--status-danger:var(--hub-red);
+}

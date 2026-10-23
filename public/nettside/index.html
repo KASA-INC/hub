@@ -1,0 +1,40 @@
+<!DOCTYPE html><html lang="nb"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HUB · Book kamprom</title>
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="responsive.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="ds_bundle.js"></script>
+<script src="js/data.js"></script>
+<style>body{background:var(--hub-ink);color:var(--hub-cream)}*{box-sizing:border-box}</style></head><body class="hub-dark"><div id="root"></div>
+<script type="text/babel" src="js/Header.babel.js"></script>
+<script type="text/babel" src="js/Home.babel.js"></script>
+<script type="text/babel" src="js/Menu.babel.js"></script>
+<script type="text/babel" src="js/BookingFlow.babel.js"></script>
+<script type="text/babel" src="js/Rooms.babel.js"></script>
+<script type="text/babel" src="js/Inquiry.babel.js"></script>
+<script type="text/babel" src="js/Gaming.babel.js"></script>
+<script type="text/babel" src="js/Sport.babel.js"></script>
+<script type="text/babel">
+function App() {
+  const [s, setS] = React.useState(() => { try { const v = JSON.parse(localStorage.getItem('hub-kit-state')); return v && ['home','menu','roomsInfo','gaming','sim','bedrift','selskap','sport'].includes(v.view) ? v : { view: 'home' }; } catch (e) { return { view: 'home' }; } });
+  React.useEffect(() => { try { localStorage.setItem('hub-kit-state', JSON.stringify(s)); } catch (e) {} window.scrollTo(0, 0); }, [s.view]);
+  const nav = v => v.startsWith('book') ? window.hubBook({ kind: v.split(':')[1] || undefined }) : setS({ view: v });
+  const [login, setLogin] = React.useState(false);
+  const { Dialog, Input, Button } = window.HUBDesignSystem_d87c4c;
+  return <>
+    <Header view={s.view} onNav={nav} onLogin={() => setLogin(true)} />
+    {s.view === 'menu' && <Menu onBook={() => nav('book')} />}
+    {s.view === 'roomsInfo' && <Rooms />}
+    {(s.view === 'gaming' || s.view === 'sim') && <Gaming />}
+    {['bedrift', 'selskap'].includes(s.view) && <Inquiry kind={s.view} onKind={nav} />}
+    {s.view === 'sport' && <Sport onPick={m => window.hubBook({ match: m.id })} />}
+    {s.view === 'home' && <Home onNav={nav} />}
+    <BookingHost />
+    <Dialog open={login} onClose={() => setLogin(false)} eyebrow="Min side" title="Logg inn" footer={<Button fullWidth onClick={() => setLogin(false)}>Send innloggingslenke</Button>}>
+      <p style={{ margin: '0 0 16px', fontSize: 15, lineHeight: 1.5, color: 'var(--hub-grey-700)' }}>Se bookingene dine, del regningen og inviter gjengen. Vi sender en lenke på e-post, ingen passord.</p>
+      <Input label="E-post" placeholder="navn@epost.no" icon="mail" />
+    </Dialog>
+  </>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script></body></html>

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>HUB designsystem</title>
+<link rel="icon" href="../assets/logo/hub-logo-pink-square.svg" type="image/svg+xml">
+<style>
+@font-face{font-family:'Bricolage Grotesque';font-weight:500 800;font-display:swap;src:url('../fonts/BricolageGrotesque-normal-500-latin.woff2') format('woff2')}
+@font-face{font-family:'DM Sans';font-weight:400 700;font-display:swap;src:url('../fonts/DMSans-normal-400-latin.woff2') format('woff2')}
+:root{--ink:#17141a;--ink2:#241f27;--line:#5a4e57;--cream:#f6f2ee;--body:#cfc6cc;--muted:#9a8f97;--pinkl:#e8668b;--pink:#d0426a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--body);font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:1.55}
+.wrap{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar{border-bottom:1px solid #332c36}
+.bar .wrap{display:flex;align-items:center;min-height:60px}
+.bar a{color:var(--body);text-decoration:none;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;min-height:44px}
+.bar a:hover{color:var(--cream)}
+.bar img{height:20px}
+:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+main{padding-block:48px 72px}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--pinkl);margin:0}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;color:var(--cream);letter-spacing:-.025em;line-height:1.04;margin:0;text-wrap:balance}
+h1{font-size:clamp(44px,9vw,80px);font-weight:800;margin:12px 0 20px}
+h2{font-size:28px;font-weight:700;margin:56px 0 16px;padding-bottom:10px;border-bottom:3px solid var(--pink)}
+p{margin:0 0 12px;max-width:68ch}
+.lead{font-size:19px;color:var(--cream)}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;max-width:72ch}
+code{font-size:.88em;background:var(--ink2);color:var(--cream);padding:1px 6px}
+.swatches{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;max-width:none}
+.swatches li{background:var(--ink2);display:flex;flex-direction:column;gap:2px;padding-bottom:12px;font-size:14px}
+.swatches .chip{display:block;height:72px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+.swatches b,.swatches code{padding:0 12px;background:none}
+.swatches b{color:var(--cream);font-weight:500}
+.swatches code{color:var(--muted)}
+.logos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.logos div{display:grid;place-items:center;height:140px;padding:24px}
+.logos img{max-height:56px;width:auto}
+.type{display:grid;gap:16px}
+.type .d{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:56px;color:var(--cream);letter-spacing:-.025em;line-height:1}
+.type .b{font-size:18px;color:var(--cream)}
+.box{display:flex;gap:6px}
+.box span{width:56px;height:56px;border:3px solid var(--pink);display:grid;place-items:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:28px;color:var(--cream)}
+.box span.x{background:var(--pink)}
+</style>
+</head>
+<body>
+<div class="bar"><div class="wrap"><a href="../"><img src="logo/hub-logo-pink.svg" alt="HUB"> Til prosjektsiden</a></div></div>
+<main class="wrap">
+<p class="eyebrow">Designsystem</p>
+<h1>HUB</h1>
+<p class="lead">HUB er private kamprom og gamingrom i Oslo: ditt eget rom med storskjerm, mat og drikke – book det med gjengen. Merket er kvadratisk, flatt og varmt: rosa fra logoen, nesten-svart ink som hovedflate og krem som lys flate.</p>
+<h2 id="stemmeogtekst">Stemme og tekst</h2>
+<ul>
+<li>Skriv norsk bokmål, kort og muntlig. Snakk til gjengen med «dere» og «du», om HUB med «vi».</li>
+<li>Overskrifter er påstander med punktum eller korte fraser: «Ditt eget kamprom. Book det med gjengen.», «Pizza du kommer tilbake for», «Finn rommet som passer gjengen».</li>
+<li>Eyebrows står over hver tittel, i versaler, maks fire ord: «PRIVATE KAMPROM», «GAMING OG SIMRACING», «MAT OG DRIKKE».</li>
+<li>Knapper er verb i imperativ: «Book rom», «Se hele menyen», «Send innloggingslenke».</li>
+<li>Konkret framfor superlativer: «Fire gamingrom oppkalt etter spillklassikere, og to simracingrom med seks rigger hver. Alt er satt opp når dere kommer.»</li>
+<li>Navngiving: kamprommene heter etter nedlagte stadioner (Roker Park, Highfield Road, Filbert Street, Maine Road, Upton Park, Highbury), gamingrommene etter spillklassikere, pizzaene etter derbyer (El Clásico, Old Firm, Derby della Madonnina). Hold mønsteret når noe nytt skal ha navn.</li>
+<li>Priser skrives «kr 179» med mellomrom som tusenskille. Ingen emoji.</li>
+</ul>
+<h2 id="farge">Farge</h2>
+<ul>
+<li>Nettsiden kjører mørk: <code>hub-ink</code> som side, <code>hub-ink-2</code> for kort, <code>hub-ink-3</code> for hevede flater og hover. Lyse seksjoner, dialoger og trykk bruker <code>hub-cream</code> med <code>hub-cream-2</code> for kort.</li>
+<li><code>hub-pink</code> er merket. Bruk det på én ting per visning: primærknapp, valgt tilstand, merkerammen eller en stor fargeflate. Rosa er aldri brødtekst.</li>
+<li>Tekstfarger følger konteksten: på krem <code>text-strong</code> (ink), <code>text-body</code> (<code>hub-grey-700</code>), <code>text-muted</code> (<code>hub-grey-600</code>) og <code>text-eyebrow</code> (<code>hub-pink-deep</code>). På ink <code>dark-text-strong</code> (krem), <code>dark-text-body</code> (<code>hub-grey-300</code>), <code>dark-text-muted</code> (<code>hub-grey-400</code>) og <code>dark-text-eyebrow</code> (<code>hub-pink-light</code>).</li>
+<li>Krem på <code>hub-pink</code> er 4.04:1. Det holder for stor eller fet tekst (24px+, eller 19px+ fet) og fete knappetekster, ikke for liten brødtekst på rosa.</li>
+<li>Statusfarger (<code>status-success</code>, <code>status-warning</code>, <code>status-danger</code>) står alltid sammen med et ord eller ikon («Ledig», «2 plasser», «Utsolgt»).</li>
+<li>Hårstrekene <code>hub-cream-line</code> og <code>hub-ink-line</code> er dekorative. Kontroller skilles ut med flate (hvitt felt på krem, <code>hub-ink-2</code> på ink) og etikett, ikke bare med kanten.</li>
+</ul>
+<h2 id="typografi">Typografi</h2>
+<ul>
+<li>Display og overskrifter: Bricolage Grotesque (<code>--font-display</code>), 800 for display og 700 for titler, tett sporing (<code>tracking-display</code>, -0.025em) og tett linjeavstand (<code>leading-tight</code>, 1.04).</li>
+<li>Brødtekst og kontroller: DM Sans (<code>--font-body</code>), 400 for tekst, 500 for etiketter og 700 for knapper og eyebrows.</li>
+<li>Web-skala: <code>display-hero</code> 88, <code>display-xl</code> 64, <code>heading-1</code> 48, <code>heading-2</code> 36, <code>heading-3</code> 28, <code>heading-4</code> 22, <code>body-lg</code> 18, <code>body</code> 16, <code>body-sm</code> 14, <code>eyebrow</code> 13 og <code>caption</code> 12.</li>
+<li>Presentasjoner (1920×1080) bruker slide-skalaen: <code>slide-hero</code> 104, <code>slide-title</code> 68, <code>slide-card-title</code> 38, <code>slide-body</code> 32, <code>slide-eyebrow</code> 26 og <code>slide-footer</code> 24, med <code>page-margin</code> 128px.</li>
+<li>Eyebrows og badges settes i versaler med <code>tracking-eyebrow</code> (0.18em).</li>
+<li>Fontene er stand-ins fra Google Fonts (OFL), fordi pitch-PDF-en var rastrert. Bytt til lisensierte originaler hvis de finnes.</li>
+</ul>
+<h2 id="formflaterogrom">Form, flater og rom</h2>
+<ul>
+<li>HUB er kvadratisk: <code>radius-none</code> på knapper, kort, felt, dialoger og bilder. Den eneste sirkelen er Radio.</li>
+<li>Merkemotivet er rammen: <code>border-frame</code> (3px) i <code>hub-pink</code> rundt kort, valgte romkort og LetterBox – samme kvadratiske ramme som i logoen.</li>
+<li>Flatt: ingen skygger, unntatt <code>shadow-float</code> på Dialog og Toast. <code>shadow-glow</code> er neonskiltet og brukes sparsomt på ink.</li>
+<li>Avstander følger <code>space-1</code>–<code>space-10</code> (4–128px). Kort har 24px polstring (<code>space-5</code>), seksjoner har 64px (<code>space-8</code>) og 48px på mobil. Sidemarg er <code>page-margin</code>, innhold maks <code>content-max</code> (1200px).</li>
+<li>Kontrollhøyder: <code>control-h-sm</code> 36, <code>control-h-md</code> 44 og <code>control-h-lg</code> 56.</li>
+<li>Bevegelse er rask og rolig: <code>duration-fast</code> for hover, <code>duration-base</code> for brytere, <code>duration-slow</code> med <code>ease-out</code> for bildezoom.</li>
+<li>Fokus: 2px <code>focus-ring</code> med 2px avstand på alt som kan fokuseres.</li>
+</ul>
+<h2 id="bilder">Bilder</h2>
+<ul>
+<li>Rommene fotograferes eller visualiseres varme og dempede, med storskjermen som lyskilde og klubbfarger i interiøret. Fasaden har neon og regnvåt gate.</li>
+<li>Bilder er alltid rettvinklet beskåret, 4:3 i romkort, og står på ink. Se gruppen «Bilder».</li>
+</ul>
+<h2 id="logo">Logo</h2>
+<ul>
+<li>Tre versjoner: rosa (standard på ink og krem), hvit (på rosa og foto) og sort (på krem, trykk i én farge). Filene ligger i gruppen «Logo».</li>
+<li>Logoen er en ordmerke-SVG og vises som <code>&lt;img&gt;</code>. Fargen kan ikke endres i CSS – velg filen.</li>
+</ul>
+<h2 id="ikoner">Ikoner</h2>
+<ul>
+<li>Bruk <code>Icon</code>: HUBs egne ikoner (<code>device-tv</code>, <code>game-controller</code>, <code>movie</code>, <code>flame</code>, <code>leaf</code>, <code>vegan</code>) og ellers Lucide (lucide-static 0.460.0) etter navn. Strek 1.5–2px, arver tekstfargen.</li>
+<li>Ikoner står ved siden av ord. Ingen emoji.</li>
+</ul>
+<h2 id="komponenter">Komponenter</h2>
+<p>Alle komponentene ligger i <code>window.HUBDesignSystem_d87c4c</code> (React 18). De fleste tar <code>tone="light"</code> på krem og <code>tone="dark"</code> på ink. Knapper og kontroller er fet DM Sans med 2px kanter. Bestillingsflyten bygges av Tabs → RoomCard → Stepper/Checkbox/Radio → Button, med Toast som bekreftelse.</p>
+<h2>Farger</h2>
+<ul class="swatches">
+<li><span class="chip" style="background:#d0426a"></span><b>hub-pink</b><code>#d0426a</code></li>
+<li><span class="chip" style="background:#a8304f"></span><b>hub-pink-deep</b><code>#a8304f</code></li>
+<li><span class="chip" style="background:#e8668b"></span><b>hub-pink-light</b><code>#e8668b</code></li>
+<li><span class="chip" style="background:#f6dfe5"></span><b>hub-pink-tint</b><code>#f6dfe5</code></li>
+<li><span class="chip" style="background:#17141a"></span><b>hub-ink</b><code>#17141a</code></li>
+<li><span class="chip" style="background:#241f27"></span><b>hub-ink-2</b><code>#241f27</code></li>
+<li><span class="chip" style="background:#332c36"></span><b>hub-ink-3</b><code>#332c36</code></li>
+<li><span class="chip" style="background:#5a4e57"></span><b>hub-ink-line</b><code>#5a4e57</code></li>
+<li><span class="chip" style="background:#f6f2ee"></span><b>hub-cream</b><code>#f6f2ee</code></li>
+<li><span class="chip" style="background:#ede6e0"></span><b>hub-cream-2</b><code>#ede6e0</code></li>
+<li><span class="chip" style="background:#e4e1dd"></span><b>hub-cream-3</b><code>#e4e1dd</code></li>
+<li><span class="chip" style="background:#d6cec8"></span><b>hub-cream-line</b><code>#d6cec8</code></li>
+<li><span class="chip" style="background:#574f55"></span><b>hub-grey-700</b><code>#574f55</code></li>
+<li><span class="chip" style="background:#6b6168"></span><b>hub-grey-600</b><code>#6b6168</code></li>
+<li><span class="chip" style="background:#9a8f97"></span><b>hub-grey-400</b><code>#9a8f97</code></li>
+<li><span class="chip" style="background:#cfc6cc"></span><b>hub-grey-300</b><code>#cfc6cc</code></li>
+<li><span class="chip" style="background:#ffffff"></span><b>hub-white</b><code>#ffffff</code></li>
+<li><span class="chip" style="background:#3f8f5f"></span><b>hub-green</b><code>#3f8f5f</code></li>
+<li><span class="chip" style="background:#c98a2b"></span><b>hub-amber</b><code>#c98a2b</code></li>
+<li><span class="chip" style="background:#c23a3a"></span><b>hub-red</b><code>#c23a3a</code></li>
+</ul>
+<h2>Typografi</h2>
+<div class="type">
+<div class="d">Ditt eget kamprom.</div>
+<p class="b">Bricolage Grotesque 800 for display, DM Sans for tekst og knapper.</p>
+<div class="box" aria-hidden="true"><span>H</span><span class="x">U</span><span>B</span></div>
+</div>
+<h2>Logoer</h2>
+<div class="logos">
+<div style="background:#17141a;border:1px solid var(--line)"><img src="logo/hub-logo-pink.svg" alt="HUB-logo, rosa"></div>
+<div style="background:#d0426a"><img src="logo/hub-logo-white.svg" alt="HUB-logo, hvit"></div>
+<div style="background:#f6f2ee"><img src="logo/hub-logo-black.svg" alt="HUB-logo, sort"></div>
+</div>
+</main>
+</body>
+</html>

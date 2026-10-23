@@ -1,0 +1,552 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>HUB venteliste</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" href="assets/logo/hub-logo-pink-square.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap"><style>/* HUB venteliste. Mobil først: én kolonne, bredere oppsett fra 760 px. Mørk ink-flate, rosa merkeramme, kvadratisk. */
+:root {
+  --bg: #17141a; --surface: #241f27; --raised: #332c36; --line: #5a4e57;
+  --fg: #f6f2ee; --body: #cfc6cc; --muted: #9a8f97; --eyebrow: #e8668b;
+  --pink: #d0426a; --pink-hover: #a8304f; --on-pink: #f6f2ee; --error: #ff8a8a; --ok: #7fd6a0;
+  --display: 'Bricolage Grotesque', 'Archivo', system-ui, sans-serif;
+  --text: 'DM Sans', system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 72px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; background: var(--bg); color: var(--body); font-family: var(--text); font-size: 17px; line-height: 1.55; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+img { max-width: 100%; display: block; }
+[hidden] { display: none !important; }
+a { color: var(--eyebrow); }
+:focus-visible { outline: 2px solid var(--pink); outline-offset: 2px; }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); color: var(--fg); letter-spacing: -0.025em; line-height: 1.04; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(44px, 11vw, 88px); font-weight: 800; }
+h2 { font-size: clamp(32px, 7vw, 48px); font-weight: 800; }
+h3 { font-size: 24px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.2; }
+p { margin: 0; }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--eyebrow); }
+.lead { font-size: 19px; color: var(--body); max-width: 34ch; }
+section { padding-block: 56px; border-bottom: 1px solid var(--line); }
+.head { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.note { margin-top: 16px; font-size: 14px; color: var(--muted); max-width: 60ch; }
+
+/* Knapper */
+.btns { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 0 24px; background: var(--pink); color: var(--on-pink); font-family: var(--text); font-size: 17px; font-weight: 700; text-decoration: none; border: 0; cursor: pointer; transition: background 120ms; }
+.btn:hover { background: var(--pink-hover); }
+.btn.ghost { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 2px var(--fg); }
+.btn.ghost:hover { background: rgba(246, 242, 238, 0.1); }
+.btn.sm { min-height: 44px; padding: 0 16px; font-size: 15px; }
+.btn.full { width: 100%; }
+.btn[disabled] { opacity: 0.6; cursor: wait; }
+
+/* Topplinje */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 10px; }
+.logo, .boxes { display: flex; gap: 4px; text-decoration: none; }
+.logo span, .boxes span { width: 30px; height: 30px; border: 2px solid var(--pink); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 16px; color: var(--fg); }
+.boxes span { width: 40px; height: 40px; border-width: 3px; font-size: 20px; }
+.boxes span.x { background: var(--pink); color: var(--on-pink); }
+
+/* Hero */
+.hero { position: relative; padding-block: 0; overflow: hidden; }
+.hero-img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(23, 20, 26, 0.35) 0%, rgba(23, 20, 26, 0.7) 45%, var(--bg) 100%); }
+.hero-text { position: relative; display: flex; flex-direction: column; gap: 18px; padding-block: 200px 48px; }
+.illu { position: absolute; right: 12px; top: 12px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg); background: rgba(23, 20, 26, 0.7); padding: 3px 7px; }
+
+/* USP */
+.usp { padding-block: 32px; }
+.usp-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; border: 3px solid var(--pink); }
+.usp-list li { padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid var(--line); }
+.usp-list li:last-child { border-bottom: 0; }
+.usp-list b { font-family: var(--display); font-size: 20px; color: var(--fg); letter-spacing: -0.01em; }
+.usp-list span { font-size: 15px; color: var(--body); }
+
+/* Rom */
+.rooms { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.room { background: var(--surface); display: flex; flex-direction: column; }
+.room-img { position: relative; aspect-ratio: 4 / 3; max-width: 100%; overflow: hidden; background: var(--raised); }
+.room-img img { width: 100%; height: 100%; object-fit: cover; }
+.room-body { padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 8px; }
+.room-body p:last-child { font-size: 16px; }
+
+/* Steg */
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; display: grid; gap: 0; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 52px 1fr; column-gap: 16px; row-gap: 4px; padding: 18px 0; border-top: 1px solid var(--line); }
+.steps li::before { content: counter(s); grid-row: span 2; width: 44px; height: 44px; border: 3px solid var(--pink); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 20px; color: var(--fg); }
+.steps b { font-family: var(--display); font-size: 20px; color: var(--fg); }
+.steps span { font-size: 16px; }
+
+/* Tags */
+.tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.tags li { padding: 8px 12px; border: 1px solid var(--line); color: var(--fg); font-size: 15px; font-weight: 500; }
+
+/* Bedrift */
+.biz { background: var(--surface); }
+.grid2 { display: grid; grid-template-columns: 1fr; gap: 28px; }
+
+/* Venteliste */
+.signup { background: var(--bg); }
+.perks { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.perks li { padding-left: 28px; position: relative; color: var(--fg); }
+.perks li::before { content: ""; position: absolute; left: 0; top: 5px; width: 14px; height: 14px; background: var(--pink); }
+.form { background: var(--surface); border: 3px solid var(--pink); padding: 24px 20px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.field { display: flex; flex-direction: column; gap: 6px; border: 0; margin: 0; padding: 0; min-width: 0; }
+label, legend { color: var(--fg); font-weight: 500; font-size: 15px; padding: 0; }
+.opt { color: var(--muted); font-weight: 400; font-size: 13px; }
+input[type="email"], input[type="text"], input[type="tel"] { width: 100%; min-height: 48px; padding: 10px 12px; background: var(--bg); color: var(--fg); border: 2px solid var(--line); border-radius: 0; font: inherit; font-size: 16px; }
+input::placeholder { color: var(--muted); }
+input:focus { border-color: var(--pink); outline: none; }
+input[aria-invalid="true"] { border-color: var(--error); }
+.row2 { display: grid; grid-template-columns: 1fr; gap: 18px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.chip { position: relative; cursor: pointer; }
+.chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.chip span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border: 2px solid var(--line); color: var(--fg); font-weight: 500; font-size: 15px; }
+.chip input:checked + span { background: var(--pink); border-color: var(--pink); color: var(--on-pink); }
+.chip input:focus-visible + span { outline: 2px solid var(--pink); outline-offset: 2px; }
+.consent { display: grid; grid-template-columns: 24px 1fr; gap: 12px; align-items: start; font-weight: 400; font-size: 14px; color: var(--body); cursor: pointer; }
+.consent input { appearance: none; width: 24px; height: 24px; margin: 0; border: 2px solid var(--pink); background: transparent; display: grid; place-items: center; cursor: pointer; }
+.consent input:checked { background: var(--pink); }
+.consent input:checked::after { content: ""; width: 11px; height: 6px; border-left: 2px solid var(--on-pink); border-bottom: 2px solid var(--on-pink); transform: rotate(-45deg) translate(1px, -1px); }
+.err { color: var(--error); font-size: 14px; }
+.status { font-size: 14px; color: var(--muted); min-height: 1em; }
+.status.bad { color: var(--error); }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.done { background: var(--surface); border: 3px solid var(--pink); padding: 28px 20px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+
+/* FAQ */
+.faq details { border-top: 1px solid var(--line); }
+.faq details:last-child { border-bottom: 1px solid var(--line); }
+.faq summary { cursor: pointer; list-style: none; padding: 18px 40px 18px 0; position: relative; font-family: var(--display); font-weight: 700; font-size: 20px; color: var(--fg); min-height: 44px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 4px; top: 14px; font-size: 26px; color: var(--eyebrow); font-family: var(--text); }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { padding: 0 0 20px; max-width: 62ch; }
+
+/* Bunn */
+.foot { padding-block: 48px 64px; }
+.foot .wrap { display: flex; flex-direction: column; gap: 14px; }
+.foot .small { font-size: 14px; color: var(--muted); }
+
+/* Grunnleggerkort */
+.founder { background: var(--surface); }
+.card-founder { background: var(--bg); border: 3px solid var(--pink); padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; }
+.founder-check { background: var(--bg); border: 2px solid var(--line); padding: 14px; }
+.founder-check b { color: var(--fg); }
+
+/* Samarbeid */
+select, textarea { width: 100%; min-height: 48px; padding: 10px 12px; background: var(--bg); color: var(--fg); border: 2px solid var(--line); border-radius: 0; font: inherit; font-size: 16px; }
+select:focus, textarea:focus { border-color: var(--pink); outline: none; }
+textarea { min-height: 140px; resize: vertical; }
+.who { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.who li { padding: 16px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+.who b { font-family: var(--display); font-size: 20px; color: var(--fg); letter-spacing: -0.01em; }
+.who span { font-size: 16px; }
+
+/* Undersøkelse */
+.top .stepcount { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.progress { height: 4px; background: var(--raised); }
+.progress span { display: block; height: 100%; width: 0; background: var(--pink); transition: width 200ms; }
+.survey { padding-block: 32px 64px; }
+.survey .wrap, .results .wrap { max-width: 640px; }
+.survey form { display: flex; flex-direction: column; gap: 24px; }
+.step { display: flex; flex-direction: column; gap: 28px; }
+.intro { gap: 18px; padding-top: 16px; }
+.intro h1 { font-size: clamp(36px, 9vw, 56px); }
+.facts { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.facts li { padding: 8px 12px; border: 1px solid var(--line); color: var(--fg); font-size: 15px; font-weight: 500; }
+.q { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.q legend { font-family: var(--display); font-size: clamp(24px, 6vw, 30px); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; color: var(--fg); margin-bottom: 4px; }
+.q legend:focus { outline: none; }
+.hint { font-size: 14px; color: var(--muted); }
+.opts { display: flex; flex-direction: column; gap: 8px; }
+.opt-row { position: relative; cursor: pointer; }
+.opt-row input, .scale-opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.opt-row span { display: flex; align-items: center; min-height: 52px; padding: 12px 16px 12px 48px; border: 2px solid var(--line); background: var(--surface); color: var(--fg); font-size: 16px; line-height: 1.35; position: relative; }
+.opt-row span::before { content: ""; position: absolute; left: 16px; top: 50%; width: 18px; height: 18px; margin-top: -9px; border: 2px solid var(--muted); }
+.opt-row input[type="radio"] + span::before { border-radius: 50%; }
+.opt-row input:checked + span { border-color: var(--pink); }
+.opt-row input:checked + span::before { border-color: var(--pink); background: var(--pink); box-shadow: inset 0 0 0 3px var(--surface); }
+.opt-row input:focus-visible + span, .scale-opt input:focus-visible + span { outline: 2px solid var(--pink); outline-offset: 2px; }
+.opt-row input:disabled + span, .chip input:disabled + span { opacity: 0.45; cursor: not-allowed; }
+.scale { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.scale-opt { cursor: pointer; position: relative; }
+.scale-opt span { display: grid; place-items: center; height: 56px; border: 2px solid var(--line); background: var(--surface); font-family: var(--display); font-weight: 800; font-size: 22px; color: var(--fg); }
+.scale-opt input:checked + span { background: var(--pink); border-color: var(--pink); color: var(--on-pink); }
+.scale-ends { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
+.q textarea { width: 100%; min-height: 110px; padding: 10px 12px; background: var(--bg); color: var(--fg); border: 2px solid var(--line); border-radius: 0; font: inherit; font-size: 16px; resize: vertical; }
+.q textarea:focus { border-color: var(--pink); outline: none; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.nav { display: flex; gap: 12px; position: sticky; bottom: 0; padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)); background: var(--bg); border-top: 1px solid var(--line); }
+.nav .btn { flex: 1; }
+.nav #back { flex: 0 0 auto; }
+.survey .done h2 { font-size: clamp(32px, 8vw, 44px); }
+
+/* Resultater */
+.results { padding-block: 32px 64px; }
+.login { max-width: 420px; margin: 32px auto 0; }
+.res-title { font-size: clamp(36px, 8vw, 52px); }
+.res-head { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+.chip-link { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border: 2px solid var(--line); color: var(--fg); text-decoration: none; font-weight: 500; font-size: 15px; }
+.chip-link.on { background: var(--pink); border-color: var(--pink); color: var(--on-pink); }
+.res-q { padding-block: 28px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+.res-q h2 { font-size: 22px; line-height: 1.2; letter-spacing: -0.015em; }
+.avg { font-family: var(--display); font-weight: 800; font-size: 28px; color: var(--fg); }
+.bars { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.bars li { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "label num" "track track"; gap: 4px 12px; font-size: 15px; }
+.bar-label { grid-area: label; color: var(--fg); }
+.bar-num { grid-area: num; font-variant-numeric: tabular-nums; color: var(--fg); font-weight: 700; }
+.bar-num small { color: var(--muted); font-weight: 400; }
+.bar-track { grid-area: track; height: 10px; background: var(--raised); }
+.bar-fill { display: block; height: 100%; background: var(--pink); }
+.quotes { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.quotes li { padding: 12px 14px; background: var(--surface); border-left: 3px solid var(--pink); color: var(--fg); }
+
+/* Personvernside */
+.legal { padding-block: 48px 64px; }
+.legal .wrap { max-width: 760px; display: flex; flex-direction: column; gap: 16px; }
+.legal h2 { font-size: 26px; margin-top: 16px; }
+.legal ul { margin: 0; padding-left: 20px; }
+
+@media (min-width: 760px) {
+  section { padding-block: 80px; }
+  .hero-text { padding-block: 280px 72px; }
+  .usp-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .usp-list li { border-bottom: 0; border-right: 1px solid var(--line); }
+  .usp-list li:last-child { border-right: 0; }
+  .rooms { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .grid2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 56px; align-items: start; }
+  .row2 { grid-template-columns: 1fr 1fr; }
+  .form { padding: 32px; }
+  .card-founder { padding: 32px; }
+}
+
+/* Logo: kun de offisielle logofilene i assets/logo */
+.logo { display: inline-flex; align-items: center; }
+.logo img { display: block; height: 30px; width: auto; }
+.logo-mark { display: block; height: 40px; width: auto; align-self: flex-start; }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#" aria-label="HUB, til toppen"><img src="assets/logo/hub-logo-pink.svg" alt="HUB" width="99" height="30"></a>
+    <a class="btn sm" href="#venteliste">Sett meg på listen</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <img class="hero-img" src="assets/img/fasade.avif" alt="Fasaden til HUB om kvelden, med det rosa HUB-skiltet over inngangen" width="1672" height="941">
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="wrap hero-text">
+      <p class="eyebrow">Åpner i Oslo i 2027</p>
+      <h1>Ditt eget rom for sport og spill.</h1>
+      <p class="lead">Se kampen, spill eller kjør simracing med gjengen, i et rom som er bare deres. Med storskjerm, lyd og mat inn døra.</p>
+      <div class="btns">
+        <a class="btn" href="#venteliste">Sett meg på ventelisten</a>
+        <a class="btn ghost" href="#rommene">Se rommene</a>
+      </div>
+    </div>
+    <p class="illu">Illustrasjon</p>
+  </section>
+
+  <section class="usp">
+    <div class="wrap">
+      <ul class="usp-list">
+        <li><b>Garantert plass</b><span>Hele gjengen, ingen kø og ingen fremmede ved bordet.</span></li>
+        <li><b>Ingen vertsjobb</b><span>Dere tar med stemningen. Vi tar mat, drikke og oppvask.</span></li>
+        <li><b>Kamp og konsoll</b><span>Storskjerm og konsoll i samme rom. FIFA i pausen.</span></li>
+        <li><b>Del regningen</b><span>Én booker, alle betaler sin del med Vipps.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="rommene">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Rommene</p>
+        <h2>Tre typer rom. Alt er klart når dere kommer.</h2>
+      </div>
+      <div class="rooms">
+        <article class="room">
+          <div class="room-img"><img src="assets/img/room-roker-park.avif" alt="Kamprommet Roker Park med storskjerm og sofaer" loading="lazy" width="1672" height="941"><span class="illu">Illustrasjon</span></div>
+          <div class="room-body">
+            <p class="eyebrow">Kamprom</p>
+            <h3>Fra 4 til 12 personer</h3>
+            <p>Storskjerm, surroundlyd og sofaer. Rommene heter etter stadioner som forsvant, som Roker Park, Maine Road og Highbury.</p>
+          </div>
+        </article>
+        <article class="room">
+          <div class="room-img"><img src="assets/img/room-street-fighter-ii.avif" alt="Gamingrommet Street Fighter II med konsoller og skjermer" loading="lazy" width="1672" height="941"><span class="illu">Illustrasjon</span></div>
+          <div class="room-body">
+            <p class="eyebrow">Gamingrom</p>
+            <h3>PS5, Xbox, Switch og PC</h3>
+            <p>Gjengens egen LAN-kveld, med EA Sports FC, Mario Kart, Rocket League og spillklassikere.</p>
+          </div>
+        </article>
+        <article class="room">
+          <div class="room-img"><img src="assets/img/room-silverstone.avif" alt="Simracingrommet Silverstone med seks rigger side om side" loading="lazy" width="1672" height="941"><span class="illu">Illustrasjon</span></div>
+          <div class="room-body">
+            <p class="eyebrow">Simracing</p>
+            <h3>Seks rigger. Én vinner.</h3>
+            <p>Ratt, pedaler og ekte baner. Kjør mot hverandre eller jakt rundetiden på Spa.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Slik funker det</p>
+        <h2>Book på mobilen. Møt opp. Heia.</h2>
+      </div>
+      <ol class="steps">
+        <li><b>Velg kamp eller tid</b><span>Finn kampen dere vil se, eller en ledig kveld til spill og simracing.</span></li>
+        <li><b>Book og del regningen</b><span>Velg rom og antall. Alle betaler sin del med Vipps.</span></li>
+        <li><b>Kom og kos dere</b><span>Kampen står på, og mat og drikke bestilles fra skjermen i rommet.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">På skjermen</p>
+        <h2>Alt fra derbyet til finalekvelden.</h2>
+      </div>
+      <ul class="tags" aria-label="Eksempler på sport vi planlegger å vise">
+        <li>Premier League</li><li>Champions League</li><li>Eliteserien</li><li>LaLiga</li><li>Bundesliga</li><li>Serie A</li><li>Formel 1</li><li>NHL</li><li>NFL</li><li>Håndball</li><li>Tennis</li><li>Dart</li><li>Alpint</li><li>E-sport</li>
+      </ul>
+      <p class="note">Hvilke kanaler vi viser avhenger av avtalene med rettighetshaverne. Endelig liste kommer før åpning.</p>
+    </div>
+  </section>
+
+  <section class="biz">
+    <div class="wrap grid2">
+      <div class="head">
+        <p class="eyebrow">For bedrifter og selskap</p>
+        <h2>Teambuilding med ett podium.</h2>
+      </div>
+      <div class="stack">
+        <p>Firmacup i simracing, møte med storskjerm, kamp etter jobb, bursdag eller utdrikningslag. Kryss av for <b>Jobb</b> eller <b>Selskap</b> i skjemaet, så tar vi kontakt når vi nærmer oss åpning.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="grunnlegger" class="founder">
+    <div class="wrap grid2">
+      <div class="stack">
+        <p class="eyebrow">Grunnleggerkort</p>
+        <h2>100 kort. Betal kr 990, få kr 1 500.</h2>
+        <p>For dem som vil være med fra start. Kortet selges bare før åpning, og bare til dem som har reservert.</p>
+        <p class="note">Ingen betaling nå. Reserver et kort når du melder deg på ventelisten, så får du kjøpe før alle andre når salget åpner. Åpner ikke HUB, får du pengene tilbake.</p>
+      </div>
+      <div class="card-founder">
+        <img class="logo-mark" src="assets/logo/hub-logo-pink.svg" alt="" width="132" height="40">
+        <ul class="perks">
+          <li>Kr 1 500 å bruke på rom</li>
+          <li>Første rett til å booke åpningshelgen</li>
+          <li>Invitasjon til åpningsfesten</li>
+          <li>Navnet ditt på grunnleggerveggen</li>
+        </ul>
+        <a class="btn full" href="#venteliste" id="reserve-link">Reserver grunnleggerkort</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="venteliste" class="signup">
+    <div class="wrap grid2">
+      <div class="stack">
+        <p class="eyebrow">Ventelisten</p>
+        <h2>Bli med fra første kamp.</h2>
+        <ul class="perks">
+          <li>Du får booke før alle andre.</li>
+          <li>Du kan reservere et av 100 grunnleggerkort.</li>
+          <li>Du kan bli invitert til testkvelder i Oslo.</li>
+        </ul>
+      </div>
+
+      <form id="signup-form" class="form" novalidate>
+        <div class="field">
+          <label for="email">E-post</label>
+          <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required placeholder="navn@eksempel.no">
+          <p class="err" id="email-err" hidden>Skriv inn en gyldig e-postadresse.</p>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="name">Fornavn <span class="opt">valgfritt</span></label>
+            <input id="name" name="name" type="text" autocomplete="given-name" maxlength="60">
+          </div>
+          <div class="field">
+            <label for="phone">Mobil <span class="opt">valgfritt</span></label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="For SMS når booking åpner">
+          </div>
+        </div>
+        <fieldset class="field">
+          <legend>Hva vil du bruke HUB til?</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="interest" value="kamp" id="i-kamp"><span>Se kamp</span></label>
+            <label class="chip"><input type="checkbox" name="interest" value="gaming" id="i-gaming"><span>Gaming</span></label>
+            <label class="chip"><input type="checkbox" name="interest" value="simracing" id="i-sim"><span>Simracing</span></label>
+            <label class="chip"><input type="checkbox" name="interest" value="selskap" id="i-selskap"><span>Selskap</span></label>
+            <label class="chip"><input type="checkbox" name="interest" value="jobb" id="i-jobb"><span>Jobb</span></label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="team">Hvem holder du med? <span class="opt">valgfritt</span></label>
+          <input id="team" name="team" type="text" maxlength="60" placeholder="For eksempel Arsenal eller Vålerenga">
+        </div>
+        <label class="consent founder-check" for="founder">
+          <input id="founder" name="founder" type="checkbox">
+          <span><b>Reserver et grunnleggerkort.</b> Kr 990 for kr 1 500 å bruke på rom. Ingen betaling nå, og reservasjonen er ikke bindende.</span>
+        </label>
+        <div class="hp" aria-hidden="true">
+          <label for="website">La dette feltet stå tomt</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <label class="consent" for="consent">
+          <input id="consent" name="consent" type="checkbox" required>
+          <span>Ja, HUB kan sende meg e-post og SMS om åpning og tilbud. Jeg kan melde meg av når som helst. Les <a href="personvern.html">personvernerklæringen</a>.</span>
+        </label>
+        <p class="err" id="consent-err" hidden>Kryss av for å bli med på listen.</p>
+        <button class="btn full" type="submit" id="submit">Sett meg på listen</button>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="done" id="done" hidden tabindex="-1">
+        <img class="logo-mark" src="assets/logo/hub-logo-pink.svg" alt="" width="132" height="40">
+        <h3>Du står på listen.</h3>
+        <p id="done-text">Vi sier fra når booking åpner. Har du en gjeng som også bør være med?</p>
+        <button class="btn" type="button" id="share">Del med gjengen</button>
+        <p class="status" id="share-status" role="status" aria-live="polite"></p>
+        <p>Har du to minutter til? <a href="undersokelse.html?ref=venteliste">Svar på undersøkelsen</a> og hjelp oss å bestemme hva HUB skal bli.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Spørsmål og svar</p>
+        <h2>Det folk lurer på.</h2>
+      </div>
+      <details><summary>Hvor ligger HUB?</summary><p>Sentralt i Oslo, nær T-banen. Adressen kommer så snart lokalet er klart, og de på ventelisten får vite det først.</p></details>
+      <details><summary>Når åpner dere?</summary><p>Vi planlegger å åpne i 2027. Før det holder vi testkvelder, og de på ventelisten blir invitert først.</p></details>
+      <details><summary>Hva koster det?</summary><p>Dere leier rommet per time og deler prisen på gjengen, med mat og drikke i tillegg. Jo flere dere er, jo billigere blir det per person. Endelige priser kommer før åpning.</p></details>
+      <details><summary>Hvor mange kan vi være?</summary><p>Kamprommene har plass til 4 til 12 personer. Gamingrommene passer for 4 til 6, og simracingrommet har seks rigger.</p></details>
+      <details><summary>Er det aldersgrense?</summary><p>Om kvelden og der det serveres alkohol blir det aldersgrense. Gaming og simracing skal også passe for yngre på dagtid. Detaljene kommer før åpning.</p></details>
+      <details><summary>Hva er et grunnleggerkort?</summary><p>Et kort du kjøper før åpning for kr 990, og som gir kr 1 500 å bruke på rom, første rett til å booke åpningshelgen og invitasjon til åpningsfesten. Det finnes 100 kort. Du reserverer nå uten å betale, og får kjøpe når salget åpner. Åpner ikke HUB, får du pengene tilbake.</p></details>
+      <details><summary>Kan bedrifter booke?</summary><p>Ja. Vi lager pakker for teambuilding, møter og kundekvelder. Kryss av for Jobb i skjemaet, så tar vi kontakt.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <img class="logo-mark" src="assets/logo/hub-logo-pink.svg" alt="" width="132" height="40">
+    <p>Hjemme. Uavgjort. Borte. Ditt eget rom for sport og spill i Oslo.</p>
+    <p><a href="samarbeid.html">Investorer, gårdeiere og samarbeidspartnere: ta kontakt</a></p>
+    <p class="small">© 2026 HUB · <a href="personvern.html">Personvern</a> · Bildene er illustrasjoner.</p>
+  </div>
+</footer>
+<script>window.HUB_PREVIEW = true;</script>
+<script>(function () {
+  var form = document.getElementById('signup-form');
+  if (!form) return;
+  var email = document.getElementById('email');
+  var consent = document.getElementById('consent');
+  var emailErr = document.getElementById('email-err');
+  var consentErr = document.getElementById('consent-err');
+  var status = document.getElementById('status');
+  var submit = document.getElementById('submit');
+  var done = document.getElementById('done');
+  var founderBox = document.getElementById('founder');
+  var reserve = document.getElementById('reserve-link');
+  if (reserve && founderBox) reserve.addEventListener('click', function () { founderBox.checked = true; });
+  var isPreview = location.protocol === 'file:' || /claude\.(ai|com)$|claudeusercontent/.test(location.hostname) || window.HUB_PREVIEW === true;
+
+  function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+
+  email.addEventListener('input', function () { if (validEmail(email.value.trim())) { email.removeAttribute('aria-invalid'); emailErr.hidden = true; } });
+  consent.addEventListener('change', function () { if (consent.checked) consentErr.hidden = true; });
+
+  function showDone() {
+    if (founderBox && founderBox.checked) document.getElementById('done-text').textContent = 'Grunnleggerkortet ditt er reservert. Vi sier fra når salget åpner, før booking åpner for alle. Har du en gjeng som også bør være med?';
+    form.hidden = true;
+    done.hidden = false;
+    done.focus();
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    status.textContent = ''; status.classList.remove('bad');
+    var ok = true;
+    if (!validEmail(email.value.trim())) { email.setAttribute('aria-invalid', 'true'); emailErr.hidden = false; ok = false; }
+    if (!consent.checked) { consentErr.hidden = false; ok = false; }
+    if (!ok) { (validEmail(email.value.trim()) ? consent : email).focus(); return; }
+
+    var interests = Array.prototype.slice.call(form.querySelectorAll('input[name="interest"]:checked')).map(function (i) { return i.value; });
+    var payload = {
+      email: email.value.trim(),
+      name: document.getElementById('name').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      interests: interests,
+      team: document.getElementById('team').value.trim(),
+      consent: true,
+      founder: founderBox ? founderBox.checked : false,
+      website: document.getElementById('website').value,
+      source: new URLSearchParams(location.search).get('utm_content') || new URLSearchParams(location.search).get('ref') || ''
+    };
+
+    if (isPreview) {
+      showDone();
+      document.getElementById('share-status').textContent = 'Dette er en forhåndsvisning. Påmeldingen lagres først når siden ligger på hubrom.no.';
+      return;
+    }
+
+    submit.disabled = true; submit.textContent = 'Sender …';
+    fetch('api/venteliste.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
+      .then(function (res) {
+        if (res && res.ok) { showDone(); return; }
+        throw new Error(res && res.error ? res.error : 'feil');
+      })
+      .catch(function (err) {
+        status.textContent = err && err.message === 'ugyldig_epost' ? 'E-postadressen ser ikke riktig ut. Sjekk den og prøv igjen.' : 'Vi fikk ikke lagret påmeldingen. Prøv igjen om litt.';
+        status.classList.add('bad');
+        submit.disabled = false; submit.textContent = 'Sett meg på listen';
+      });
+  });
+
+  var share = document.getElementById('share');
+  var shareStatus = document.getElementById('share-status');
+  var url = location.origin && location.protocol.indexOf('http') === 0 ? location.origin + location.pathname : 'https://hubrom.no';
+  share.addEventListener('click', function () {
+    var text = 'Bli med på ventelisten til HUB: eget rom for kamp, gaming og simracing i Oslo.';
+    if (navigator.share) {
+      navigator.share({ title: 'HUB', text: text, url: url }).catch(function () {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () { shareStatus.textContent = 'Lenken er kopiert. Lim den inn i gruppechatten.'; })
+        .catch(function () { shareStatus.textContent = 'Del denne lenken: ' + url; });
+    } else {
+      shareStatus.textContent = 'Del denne lenken: ' + url;
+    }
+  });
+})();
+</script>
+
+</body></html>

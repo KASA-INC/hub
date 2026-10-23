@@ -1,0 +1,1092 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>HUB Rombestilling</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#17141a">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="HUB Bestilling">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+/* Layout: one thumb-driven column (max 560px). Sticky header + category rail on top, dock with nav and cart at the bottom, everything else in bottom sheets. Dark by design: the rooms are dim. */
+:root{
+  --ink:#17141a; --ink-2:#241f27; --ink-3:#332c36; --line:#3a3139; --line-2:#5a4e57;
+  --cream:#f6f2ee; --body:#cfc6cc; --muted:#9a8f97;
+  --pink:#d0426a; --pink-l:#e8668b; --pink-d:#a8304f; --pink-t:rgba(208,66,106,.16);
+  --ok:var(--pink-l); --warn:var(--pink-l);
+  --f-display:'Bricolage Grotesque','Arial Narrow',system-ui,sans-serif;
+  --f-body:'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --gl:max(16px, env(safe-area-inset-left,0px)); --gr:max(16px, env(safe-area-inset-right,0px));
+  --top:env(safe-area-inset-top,0px); --bot:env(safe-area-inset-bottom,0px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--ink)}
+body{background:var(--ink);color:var(--cream);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:var(--top);z-index:30;background:var(--ink)}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;border-radius:0}
+input,textarea,select{font:inherit;color:var(--cream);border-radius:0}
+:focus-visible{outline:2px solid var(--pink-l);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);margin:0;letter-spacing:-.025em;text-wrap:balance}
+.num{font-variant-numeric:tabular-nums}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--pink-l)}
+.muted{color:var(--muted)}
+.wrap{max-width:560px;margin:0 auto;padding-left:var(--gl);padding-right:var(--gr)}
+
+/* Header */
+#top{position:sticky;top:var(--top);z-index:20;background:var(--ink);border-bottom:1px solid var(--line)}
+.hdr{display:flex;align-items:center;gap:12px;height:60px}
+.hdr .logo{height:22px;width:auto;flex:none}
+.hdr .room{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.15;padding-left:12px;border-left:1px solid var(--line)}
+.hdr .room b{font-family:var(--f-display);font-size:17px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr .room span{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* LetterBox from the HUB design system: the logo's letter-in-a-box. Others = outline, you = filled. */
+.av{width:23px;height:23px;flex:none;display:inline-grid;place-items:center;border:2px solid var(--pink);color:var(--pink);background:transparent;font-family:var(--f-display);font-weight:800;font-size:17px;line-height:1;letter-spacing:0;padding-top:1px;overflow:hidden}
+.av.me{background:var(--pink);color:var(--cream)}
+.av.sm{width:17px;height:17px;font-size:13px;border-width:2px}
+.who{display:flex;align-items:center;gap:8px;min-height:44px;padding-left:4px}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:8px 0 10px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:36px;padding:0 14px;border:1px solid var(--line-2);font-size:14px;font-weight:600;color:var(--body);white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-current="true"]{background:var(--cream);border-color:var(--cream);color:var(--ink)}
+.chip.flt{border-style:dashed}
+.chip.flt.on{border-style:solid;border-color:var(--pink);color:var(--cream);background:var(--pink-t)}
+
+/* Main */
+main{padding-block:18px calc(170px + var(--bot))}
+.hello{display:flex;flex-direction:column;gap:4px;margin-bottom:18px}
+.hello h1{font-size:30px;font-weight:800;line-height:1.05}
+.hello p{margin:0;color:var(--body);font-size:15px}
+.again{display:flex;align-items:center;gap:12px;padding:12px;border:3px solid var(--pink);margin-bottom:8px}
+.again .t{flex:1;min-width:0}
+.again b{display:block;font-size:15px}
+.again span{font-size:13px;color:var(--muted)}
+.notice{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--body);background:var(--ink-2);padding:10px 12px;margin-bottom:8px}
+.notice svg{flex:none;margin-top:2px;color:var(--warn)}
+section.cat{scroll-margin-top:calc(124px + var(--top));padding-top:22px}
+.cat h2{font-size:24px;font-weight:700;padding-bottom:8px;border-bottom:3px solid var(--pink);display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.cat h2 small{font-family:var(--f-body);font-size:12.5px;font-weight:500;color:var(--muted);letter-spacing:0}
+.cat .note{font-size:13.5px;color:var(--muted);margin:8px 0 0}
+.hidden-n{font-size:13px;color:var(--muted);padding:10px 0;border-bottom:1px solid var(--line)}
+.item{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.thumb{width:76px;height:76px;flex:none;background:var(--ink-2);overflow:hidden;position:relative;display:grid;place-items:center}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .ph{font-family:var(--f-display);font-weight:800;font-size:22px;color:var(--pink-l);letter-spacing:-.02em}
+.item .info{flex:1;min-width:0}
+.item .nm{font-weight:700;font-size:15.5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;line-height:1.25}
+.item .ds{font-size:13.5px;color:var(--body);margin-top:2px;line-height:1.35}
+.item .og{font-size:12px;color:var(--muted);margin-top:3px}
+.item .fit{font-size:12px;color:var(--pink-l);font-weight:600;margin-top:3px}
+.item .pr{font-weight:700;font-size:15px;margin-top:4px}
+.tag{display:inline-flex}
+.addc{flex:none;display:flex;align-items:center}
+.plus{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--line-2);color:var(--cream)}
+.plus:active{background:var(--pink);border-color:var(--pink)}
+.step{display:flex;align-items:center;border:1px solid var(--pink);background:var(--pink-t)}
+.step button{width:40px;height:44px;display:grid;place-items:center}
+.step span{min-width:22px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.foot-note{font-size:13px;color:var(--muted);margin-top:28px;line-height:1.5}
+
+/* Dock */
+#dock{position:fixed;left:0;right:0;bottom:0;z-index:25;background:linear-gradient(to top,var(--ink) 78%,rgba(23,20,26,0));padding-bottom:var(--bot)}
+#dock .wrap{display:flex;flex-direction:column;gap:8px;padding-top:16px}
+.cta{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:54px;padding:0 18px;background:var(--pink);color:#fff;font-weight:700;font-size:16px;width:100%}
+.cta:disabled{opacity:.45;cursor:not-allowed}
+.cta .cnt{display:inline-grid;place-items:center;min-width:26px;height:26px;padding:0 6px;background:rgba(0,0,0,.22);font-size:14px;margin-right:10px}
+.cta.ghost{background:transparent;border:1px solid var(--line-2);color:var(--cream)}
+.cta.center{justify-content:center}
+.pill{display:flex;align-items:center;gap:10px;min-height:46px;padding:0 14px;background:var(--ink-3);font-size:14px;width:100%;text-align:left}
+.pill .dot{width:8px;height:8px;background:var(--warn);flex:none;animation:pulse 1.4s infinite}
+.pill .dot.ok{background:var(--ok);animation:none}
+@keyframes pulse{50%{opacity:.25}}
+.nav{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);background:var(--ink)}
+.nav button{min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:12px;font-weight:600;color:var(--muted)}
+.nav button[aria-current="true"]{color:var(--cream);box-shadow:inset 0 3px 0 var(--pink)}
+.nav .amt{font-variant-numeric:tabular-nums}
+
+/* Tab view */
+.tab-hero{display:flex;flex-direction:column;gap:6px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.big{font-family:var(--f-display);font-size:46px;font-weight:800;line-height:1;letter-spacing:-.03em}
+.bar{height:8px;background:var(--ink-3);margin-top:10px;position:relative}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--pink)}
+.split{display:flex;justify-content:space-between;font-size:14px;color:var(--body)}
+.btns{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:14px}
+.h3{font-family:var(--f-display);font-size:19px;font-weight:700;margin:26px 0 4px;display:flex;flex-direction:column;gap:2px}
+.h3 small{font-family:var(--f-body);font-weight:500;font-size:13px;color:var(--muted)}
+.prow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);width:100%;text-align:left}
+.prow .t{flex:1;min-width:0}
+.prow .t b{font-size:15px}
+.prow .t span{display:block;font-size:13px;color:var(--muted)}
+.st{font-size:12.5px;font-weight:700;padding:3px 8px;white-space:nowrap}
+.st.ok{color:var(--ok);border:1px solid var(--ok)}
+.st.due{color:var(--cream);background:var(--ink-3)}
+.lrow{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;align-items:baseline;width:100%;text-align:left}
+.lrow .q{width:28px;flex:none;color:var(--muted);font-variant-numeric:tabular-nums}
+.lrow .t{flex:1;min-width:0}
+.lrow .t span{display:block;font-size:12.5px;color:var(--muted)}
+.lrow .p{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lrow.paid .t b,.lrow.paid .p{text-decoration:line-through;color:var(--muted)}
+.ord{padding:12px 0;border-bottom:1px solid var(--line)}
+.ord-h{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--body);margin-bottom:4px}
+.ord-h b{color:var(--cream)}
+.ord-h .st{margin-left:auto}
+.ord .lrow{border:0;padding:3px 0}
+.rule{font-size:13px;color:var(--muted);line-height:1.5;margin-top:22px;padding:12px;border:1px solid var(--line)}
+.link{color:var(--pink-l);font-weight:600;text-decoration:underline;text-underline-offset:3px;min-height:44px;display:inline-flex;align-items:center}
+
+/* Sheets */
+.scrim{position:fixed;inset:0;z-index:40;background:rgba(10,8,12,.62);display:flex;align-items:flex-end;justify-content:center}
+.scrim.in{animation:fade .18s ease-out}
+.sheet{width:100%;max-width:560px;max-height:calc(100% - 28px - var(--top));background:var(--ink-2);border-top:3px solid var(--pink);display:flex;flex-direction:column;box-shadow:0 -18px 50px rgba(0,0,0,.5)}
+.scrim.in .sheet{animation:up .26s cubic-bezier(.2,.8,.2,1)}
+@keyframes up{from{transform:translateY(40px);opacity:.4}}
+@keyframes fade{from{opacity:0}}
+.sh-head{display:flex;align-items:center;gap:12px;padding:14px var(--gr) 10px var(--gl)}
+.sh-head h2{flex:1;font-size:22px;font-weight:800;min-width:0}
+.x{width:44px;height:44px;display:grid;place-items:center;flex:none;margin-right:-10px}
+.sh-body{overflow-y:auto;padding:0 var(--gr) 16px var(--gl);overscroll-behavior:contain;flex:1}
+.sh-foot{padding:12px var(--gr) calc(12px + var(--bot)) var(--gl);border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.hero-img{margin:0 calc(-1 * var(--gr)) 14px calc(-1 * var(--gl));aspect-ratio:5/3.4;max-width:none;background:var(--ink);overflow:hidden}
+.hero-img img{width:100%;height:100%;object-fit:cover;display:block}
+.lbl{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{min-height:44px;padding:0 14px;border:1px solid var(--line-2);font-weight:600;font-size:14.5px;display:inline-flex;align-items:center;gap:6px}
+.seg button[aria-pressed="true"]{border-color:var(--pink);background:var(--pink-t);color:var(--cream)}
+.seg.col{flex-direction:column}
+.seg.col button{width:100%;justify-content:space-between;text-align:left;padding:10px 14px}
+.seg .sub{display:block;font-size:12.5px;font-weight:500;color:var(--muted)}
+.allg{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.allg span{font-size:12px;font-weight:600;line-height:22px;padding:0 7px;border:1px solid var(--line-2);color:var(--body)}
+textarea,input[type=text],input[type=email]{width:100%;background:var(--ink);border:1px solid var(--line-2);padding:12px;font-size:16px}
+textarea{min-height:64px;resize:vertical}
+.qtyrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;width:100%;text-align:left;border-bottom:1px solid var(--line)}
+.sw .t{flex:1;min-width:0}
+.sw .t span{display:block;font-size:13px;color:var(--muted)}
+.tog{width:46px;height:28px;background:var(--ink-3);border:1px solid var(--line-2);position:relative;flex:none}
+.tog::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;background:var(--muted);transition:transform .15s}
+[aria-checked="true"] .tog{background:var(--pink);border-color:var(--pink)}
+[aria-checked="true"] .tog::after{transform:translateX(18px);background:#fff}
+.cline{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.cline .thumb{width:56px;height:56px}
+.cline .t{flex:1;min-width:0}
+.cline .t b{font-size:15px}
+.cline .t .o{font-size:12.5px;color:var(--muted)}
+.cline .row2{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;flex-wrap:wrap}
+.mini{min-height:34px;padding:0 10px;border:1px solid var(--line-2);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.mini.on{border-color:var(--pink);background:var(--pink-t)}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1px solid var(--line-2);width:100%;text-align:left}
+.opt+.opt{margin-top:8px}
+.opt[aria-checked="true"]{border:3px solid var(--pink);padding:12px}
+.opt .rd{width:20px;height:20px;border:2px solid var(--line-2);flex:none;margin-top:2px;display:grid;place-items:center}
+.opt[aria-checked="true"] .rd{border-color:var(--pink)}
+.opt[aria-checked="true"] .rd::after{content:"";width:10px;height:10px;background:var(--pink)}
+.opt .t{flex:1;min-width:0}
+.opt .t b{font-size:15.5px;display:block}
+.opt .t > span:not(.inner){font-size:13px;color:var(--muted);display:block}
+.inner .total-line{font-size:13px}
+.opt .a{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.opt .a.dim{color:var(--muted);font-weight:500}
+.inner{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.stepper{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14.5px}
+.stepper .step{border-color:var(--line-2);background:none}
+.claim{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.claim .lrow{cursor:pointer;align-items:center}
+.cb{width:22px;height:22px;border:2px solid var(--line-2);flex:none;display:grid;place-items:center}
+.lrow[aria-checked="true"] .cb{background:var(--pink);border-color:var(--pink)}
+.frac{display:flex;gap:4px;flex-wrap:wrap;padding:0 0 10px 32px}
+.frac button{min-height:32px;padding:0 10px;border:1px solid var(--line-2);font-size:12.5px;font-weight:600}
+.frac button[aria-pressed="true"]{border-color:var(--pink);background:var(--pink-t)}
+.total-line{display:flex;justify-content:space-between;font-size:14px;color:var(--body)}
+.total-line b{color:var(--cream)}
+.done{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:8px 0 4px}
+.check{width:64px;height:64px;background:var(--pink);display:grid;place-items:center;color:var(--cream)}
+.spin{width:44px;height:44px;border:4px solid var(--ink-3);border-top-color:var(--pink);animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.steps{display:flex;flex-direction:column;gap:0;margin-top:14px}
+.steps div{display:flex;gap:12px;align-items:center;padding:10px 0;border-left:3px solid var(--ink-3);padding-left:14px;color:var(--muted);font-weight:600;position:relative}
+.steps div.on{color:var(--cream);border-left-color:var(--pink)}
+.steps div.now::before{content:"";position:absolute;left:-8px;width:13px;height:13px;background:var(--pink);animation:pulse 1.2s infinite}
+.qr{background:#fff;padding:14px;width:max-content;max-width:100%;margin:6px 0 12px}
+.qr img,.qr canvas{display:block;width:180px;height:180px}
+.copy{display:flex;gap:0}
+.copy input{flex:1;min-width:0;font-size:14px}
+.copy button{flex:none;padding:0 16px;background:var(--cream);color:var(--ink);font-weight:700;min-height:46px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid2 button{min-height:64px;border:1px solid var(--line-2);text-align:left;padding:10px 12px;font-weight:600;font-size:14.5px;display:flex;flex-direction:column;gap:4px;justify-content:center}
+.grid2 button[aria-pressed="true"]{border:3px solid var(--pink);padding:8px 10px}
+.grid2 button span{font-size:12px;color:var(--muted);font-weight:500}
+
+/* Join */
+#join{position:fixed;inset:0;z-index:50;background:var(--ink);overflow-y:auto}
+.jhero{position:relative;min-height:300px;display:flex;align-items:flex-end;background:var(--ink-2)}
+.jhero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.75}
+.jhero::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(23,20,26,.35) 0%,rgba(23,20,26,.1) 35%,var(--ink) 100%)}
+.jhero .wrap{position:relative;z-index:1;width:100%;padding-block:calc(18px + var(--top)) 6px;display:flex;flex-direction:column;gap:6px}
+.jhero .logo{height:26px;width:auto;position:absolute;z-index:2;top:calc(18px + var(--top));left:var(--gl)}
+.jhero h1{font-size:52px;font-weight:800;line-height:.95}
+.jbody{padding-block:14px calc(28px + var(--bot));display:flex;flex-direction:column;gap:14px}
+.jmeta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;color:var(--body)}
+.jmeta span{display:inline-flex;align-items:center;gap:6px}
+.jcard{border:3px solid var(--pink);padding:16px;display:flex;flex-direction:column;gap:12px;background:var(--ink)}
+.jcard label{font-family:var(--f-display);font-weight:700;font-size:20px}
+.here{display:flex;flex-wrap:wrap;gap:6px}
+.here button{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 10px 0 7px;border:1px solid var(--line-2);font-weight:600;font-size:14px}
+.err{color:var(--pink-l);font-size:13.5px;font-weight:600}
+.how{display:grid;gap:10px;margin-top:4px}
+.how div{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--body)}
+.how b{font-family:var(--f-display);color:var(--pink-l);font-size:18px;width:18px;flex:none;line-height:1.2}
+
+#toast{position:fixed;left:0;right:0;top:calc(68px + var(--top));z-index:60;display:flex;justify-content:center;pointer-events:none;padding-left:var(--gl);padding-right:var(--gr)}
+#toast div{max-width:528px;width:100%;background:var(--cream);color:var(--ink);font-weight:600;font-size:14.5px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.45);animation:up .22s ease-out;display:flex;gap:10px;align-items:center}
+@media (min-width:600px){main,#dock .wrap,.hdr,.chips{border-left:1px solid var(--line);border-right:1px solid var(--line)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div id="app">
+  <header id="top"></header>
+  <main class="wrap" id="view" aria-live="polite"></main>
+  <div id="dock"></div>
+</div>
+<div id="sheet"></div>
+<div id="join" hidden></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const kr = n => 'kr ' + Math.round(n).toLocaleString('nb-NO');
+const hm = t => { const d = new Date(t); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+const MIN = 60e3;
+const slug = s => s.toLowerCase().replace(/ı/g, 'i').replace(/ø/g, 'o').replace(/æ/g, 'ae').replace(/å/g, 'a').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const ICON = {
+  plus: '<path d="M12 5v14M5 12h14"/>', minus: '<path d="M5 12h14"/>', x: '<path d="M6 6l12 12M18 6L6 18"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>', menu: '<path d="M4 7h16M4 12h16M4 17h10"/>',
+  receipt: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"/>', bell: '<path d="M6 16V11a6 6 0 0112 0v5l2 2H4zM10 21h4"/>',
+  flame: '<path d="M12 3c1 4 5 5.5 5 10a5 5 0 01-10 0c0-2.5 1.5-3.5 2-5 1 1.5 1.5 2.5 3 2.5 0-3-1-5 0-7.5z"/>',
+  leaf: '<path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14zM5 19l7-7"/>', clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  users: '<circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c.6-3.3 2.8-5 5.5-5s4.9 1.7 5.5 5M15.5 6.2a3 3 0 010 5.6M17.5 14.3c1.6.6 2.7 2.2 3 4.7"/>',
+  share: '<path d="M12 3v12M7 8l5-5 5 5M5 13v7h14v-7"/>', info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8v.5"/>',
+  chev: '<path d="M9 6l6 6-6 6"/>', tv: '<rect x="3" y="5" width="18" height="12"/><path d="M8 21h8"/>', qr: '<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2zM14 18h2M18 14h2"/>'
+};
+const ico = (n, s = 20, extra = '') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true" ${extra}>${ICON[n]}</svg>`;
+const TAGI = { hot: ['flame', 'Sterk', 'var(--pink-l)'], veg: ['leaf', 'Vegetar', 'var(--pink-l)'], vegan: ['leaf', 'Vegansk', 'var(--pink-l)'] };
+
+/* ---------- menu (from the HUB website menu) ---------- */
+const CATS = [
+  { id: 'pizza', name: 'Pizza', note: 'Steinovnsbakt, 30 cm. Holder til to. Glutenfri bunn uten tillegg.', food: 1 },
+  { id: 'burger', name: 'Burgere og retter', short: 'Burgere', food: 1 },
+  { id: 'side', name: 'Tilbehør', food: 1 },
+  { id: 'snacks', name: 'Snacks og søtt', short: 'Snacks', note: 'Kommer på bordet når du vil.', food: 1 },
+  { id: 'beer', name: 'Øl og cider', short: 'Øl' },
+  { id: 'drinks', name: 'Drinker', note: 'Hver drink er oppkalt etter en klubb.' },
+  { id: 'wine', name: 'Vin' },
+  { id: 'soft', name: 'Alkoholfritt' },
+];
+// [cat, name, desc, price, img, origin, allergens, alternatives, tags, share-by-default, age]
+const RAW = [
+  ['pizza', 'El Clásico', 'Tomatsaus, mozzarella og basilikum', 179, 'el-clasico', 'Real Madrid – Barcelona', ['Gluten', 'Melk'], ['Glutenfri', 'Laktosefri', 'Vegansk'], ['veg'], 1],
+  ['pizza', 'Hudson River Derby', 'Tomatsaus, mozzarella og pepperoni', 199, 'hudson-river-derby', 'New York Red Bulls – NYCFC', ['Gluten', 'Melk'], ['Glutenfri', 'Laktosefri'], [], 1],
+  ['pizza', 'Derby della Madonnina', 'Salami Milano, mozzarella og chili', 199, 'derby-della-madonnina', 'Inter – AC Milan', ['Gluten', 'Melk'], ['Glutenfri', 'Laktosefri'], ['hot'], 1],
+  ['pizza', 'Kıtalararası Derbi', 'Kebabkjøtt, rødløk, jalapeños og hvitløksdressing', 219, 'kitalararasi-derbi', 'Fenerbahçe – Galatasaray', ['Gluten', 'Melk', 'Egg', 'Sennep'], ['Glutenfri', 'Laktosefri', 'Eggfri'], ['hot'], 1],
+  ['pizza', 'El Tráfico', 'Krydret kjøttdeig, mais, nachos og rømme', 219, 'el-trafico', 'LA Galaxy – LAFC', ['Gluten', 'Melk', 'Selleri'], ['Glutenfri', 'Laktosefri'], ['hot'], 1],
+  ['pizza', 'Revierderby', 'Currywurst, karriketchup og sprøstekt løk', 209, 'revierderby', 'Dortmund – Schalke', ['Gluten', 'Melk', 'Sennep', 'Selleri'], ['Glutenfri', 'Laktosefri'], [], 1],
+  ['pizza', 'Old Firm', 'Pulled pork, whisky-BBQ, rødløk og cheddar', 229, 'old-firm', 'Celtic – Rangers', ['Gluten', 'Melk', 'Sennep'], ['Glutenfri', 'Laktosefri'], [], 1],
+  ['pizza', 'Derby della Capitale', 'Carbonara med guanciale, pecorino og eggeplomme', 229, 'derby-della-capitale', 'Roma – Lazio', ['Gluten', 'Melk', 'Egg'], ['Glutenfri', 'Laktosefri'], [], 1],
+  ['pizza', 'Superclásico', 'Biff, chimichurri, rødløk og mozzarella', 239, 'superclasico', 'Boca Juniors – River Plate', ['Gluten', 'Melk'], ['Glutenfri', 'Laktosefri'], [], 1],
+  ['pizza', 'Derby della Lanterna', 'Pesto, grillede grønnsaker og mozzarella', 209, 'derby-della-lanterna', 'Genoa – Sampdoria', ['Gluten', 'Melk', 'Nøtter'], ['Glutenfri', 'Laktosefri', 'Vegansk', 'Nøttefri'], ['veg'], 1],
+  ['pizza', 'Tyne-Wear Derby', 'Sprøstekt kylling, ostesaus, cheddar og vårløk', 219, 'tyne-wear-derby', 'Newcastle – Sunderland', ['Gluten', 'Melk', 'Egg'], ['Glutenfri', 'Laktosefri'], [], 1],
+  ['burger', 'Smashburger', 'Cheddar, sylteagurk og husets dressing, med pommes', 189, 'smashburger', null, ['Gluten', 'Melk', 'Egg', 'Sennep', 'Sesam'], ['Glutenfri', 'Laktosefri', 'Sesamfri'], [], 0],
+  ['burger', 'Dobbel smash', 'To burgere, bacon og cheddar, med pommes', 229, 'dobbel-smash', null, ['Gluten', 'Melk', 'Egg', 'Sennep', 'Sesam'], ['Glutenfri', 'Laktosefri', 'Sesamfri'], [], 0],
+  ['burger', 'Halloumiburger', 'Coleslaw og chilimajones, med pommes', 179, 'halloumiburger', null, ['Gluten', 'Melk', 'Egg', 'Sennep', 'Sesam'], ['Glutenfri', 'Vegansk'], ['veg', 'hot'], 0],
+  ['burger', 'Kyllingvinger', '12 stk, BBQ eller hot', 179, 'kyllingvinger', null, ['Sennep', 'Selleri'], [], ['hot'], 1],
+  ['side', 'Loaded fries', 'Cheddar, jalapeños og rømme', 129, 'loaded-fries', null, ['Melk'], ['Laktosefri', 'Vegansk'], ['veg', 'hot'], 1],
+  ['side', 'Løkringer', 'Med aioli', 89, 'lokringer', null, ['Gluten', 'Egg', 'Melk'], ['Glutenfri'], ['veg'], 1],
+  ['side', 'Hvitløksbrød', 'Med smeltet ost', 79, 'hvitloksbrod', null, ['Gluten', 'Melk'], ['Glutenfri', 'Laktosefri'], ['veg'], 1],
+  ['side', 'Ekstra dressing', 'Hvitløksdressing eller chiliolje', 25, 'hvitloksdressing', null, ['Egg', 'Sennep'], ['Vegansk'], [], 0],
+  ['snacks', 'Nachos', 'Ost, salsa, guacamole og rømme', 159, 'nachos', null, ['Melk'], ['Laktosefri', 'Vegansk'], ['veg'], 1],
+  ['snacks', 'Popcorn', 'Stor bolle, salt eller karamell', 59, 'popcorn', null, ['Melk'], ['Laktosefri'], ['veg'], 1],
+  ['snacks', 'Chips og dip', 'To poser og to dipper', 79, 'chips-og-dip', null, ['Melk'], ['Laktosefri'], ['veg'], 1],
+  ['snacks', 'Nøttemiks', 'Saltede nøtter', 49, 'nottemiks', null, ['Peanøtter', 'Nøtter'], [], ['vegan'], 1],
+  ['snacks', 'Godteskål', 'Blandet smågodt til bordet', 99, 'godteskal', null, ['Gluten', 'Melk', 'Soya'], ['Glutenfri', 'Vegansk'], [], 1],
+  ['snacks', 'Sorbet', 'Tre kuler: mango, bringebær og sitron', 89, null, null, [], [], ['vegan'], 0],
+  ['snacks', 'Brownies', '4 stk', 109, null, null, ['Gluten', 'Melk', 'Egg', 'Soya', 'Nøtter'], ['Glutenfri', 'Nøttefri'], ['veg'], 1],
+  ['beer', 'Carlsberg', 'Pils fra fat, 0,5 l', 109, 'pils-fra-fat-1', null, ['Gluten'], [], [], 0, 18],
+  ['beer', 'Heineken', 'Pils fra fat, 0,5 l', 115, 'pils-fra-fat-2', null, ['Gluten'], [], [], 0, 18],
+  ['beer', 'Ringnes', 'Pils fra fat, 0,5 l', 105, 'pils-fra-fat-3', null, ['Gluten'], [], [], 0, 18],
+  ['beer', 'Guinness', 'Stout fra fat, 0,5 l', 129, null, null, ['Gluten'], [], [], 0, 18],
+  ['beer', 'Bøtte', '6 valgfrie flasker på is', 499, 'botte', null, ['Gluten'], [], [], 1, 18],
+  ['beer', 'Newcastle Brown Ale', 'Brown ale, flaske 0,33 l', 109, 'newcastle-brown-ale', null, ['Gluten'], [], [], 0, 18],
+  ['beer', 'Amstel', 'Lager, flaske 0,33 l', 95, null, null, ['Gluten'], [], [], 0, 18],
+  ['beer', 'Bitburger', 'Pils, flaske 0,33 l', 99, null, null, ['Gluten'], [], [], 0, 18],
+  ['beer', 'Brahma', 'Lager, flaske 0,35 l', 95, null, null, ['Gluten'], [], [], 0, 18],
+  ['beer', 'Estrella Damm', 'Lager, flaske 0,33 l', 99, null, null, ['Gluten'], [], [], 0, 18],
+  ['beer', 'Peroni Nastro Azzurro', 'Lager, flaske 0,33 l', 99, null, null, ['Gluten'], [], [], 0, 18],
+  ['beer', 'Daura Damm', 'Glutenfri lager, flaske 0,33 l', 99, null, null, [], [], [], 0, 18],
+  ['beer', 'Cider', '0,33 l', 99, 'cider', null, ['Sulfitt'], [], [], 0, 18],
+  ['drinks', 'Red Devils', 'Tequila, blodappelsin, lime og chili', 159, 'red-devils', 'Manchester United', [], [], ['hot'], 0, 20],
+  ['drinks', 'Sky Blues', 'Vodka, blå curaçao, sitron og tonic', 149, 'sky-blues', 'Manchester City', [], [], [], 0, 20],
+  ['drinks', 'The Toffees', 'Bourbon, toffeesirup, sitron og eggehvite', 159, 'the-toffees', 'Everton', ['Egg'], ['Vegansk'], [], 0, 20],
+  ['drinks', 'The Magpies', 'Vodka, kaffelikør og espresso med hvitt skum', 159, 'the-magpies', 'Newcastle United', [], [], [], 0, 20],
+  ['drinks', 'Black Cats', 'Mørk rom, ingefærøl og lime', 149, 'black-cats', 'Sunderland', [], [], [], 0, 20],
+  ['drinks', 'The Cherries', 'Gin, kirsebærlikør og sitron', 149, 'the-cherries', 'Bournemouth', [], [], [], 0, 20],
+  ['drinks', 'The Canaries', 'Limoncello, prosecco og soda', 149, 'the-canaries', 'Norwich City', ['Sulfitt'], [], [], 0, 20],
+  ['drinks', 'Galácticos', 'Cava med ferskenpuré og gullglitter', 159, 'galacticos', 'Real Madrid', ['Sulfitt'], [], [], 0, 18],
+  ['drinks', 'Blaugrana', 'Vodka, blåbær og granateple', 149, 'blaugrana', 'Barcelona', [], [], [], 0, 20],
+  ['drinks', 'Rossoneri', 'Campari, rød vermut og soda', 149, 'rossoneri', 'AC Milan', ['Sulfitt'], [], [], 0, 20],
+  ['drinks', 'La Vecchia Signora', 'Old fashioned med bourbon, bitter og appelsin', 169, 'la-vecchia-signora', 'Juventus', [], [], [], 0, 20],
+  ['drinks', 'Schwarzgelben', 'Jägermeister, ananas og lime', 149, 'schwarzgelben', 'Borussia Dortmund', [], [], [], 0, 20],
+  ['drinks', 'Les Phocéens', 'Pastis, mynte, sitron og isvann', 139, 'les-phoceens', 'Marseille', [], [], [], 0, 20],
+  ['wine', 'Hvitvin', 'Glass, 15 cl', 129, 'hvitvin', null, ['Sulfitt'], [], [], 0, 18],
+  ['wine', 'Rødvin', 'Glass, 15 cl', 129, 'rodvin', null, ['Sulfitt'], [], [], 0, 18],
+  ['wine', 'Rosé', 'Glass, 15 cl', 129, 'rose', null, ['Sulfitt'], [], [], 0, 18],
+  ['wine', 'Prosecco', 'Glass, 12 cl', 139, 'prosecco', null, ['Sulfitt'], [], [], 0, 18],
+  ['wine', 'Hvitvin, flaske', '75 cl', 549, 'hvitvin-flaske', null, ['Sulfitt'], [], [], 1, 18],
+  ['wine', 'Rødvin, flaske', '75 cl', 549, 'rodvin-flaske', null, ['Sulfitt'], [], [], 1, 18],
+  ['wine', 'Prosecco, flaske', '75 cl', 599, 'prosecco-flaske', null, ['Sulfitt'], [], [], 1, 18],
+  ['soft', 'Brus', '0,5 l', 45, 'brus', null, [], [], [], 0],
+  ['soft', 'Erdinger Alkoholfrei', 'Alkoholfri hvete, 0,5 l', 79, null, null, ['Gluten'], [], [], 0],
+  ['soft', 'Energidrikk', '0,33 l', 49, null, null, [], [], [], 0],
+  ['soft', 'Kaffe', 'Kanne til bordet', 89, 'kaffe', null, [], [], [], 1],
+];
+const CHOICES = {
+  'Kyllingvinger': [['Saus', ['BBQ', 'Hot']]],
+  'Popcorn': [['Smak', ['Salt', 'Karamell']]],
+  'Ekstra dressing': [['Dressing', ['Hvitløksdressing', 'Chiliolje']]],
+  'Brus': [['Type', ['Cola', 'Cola Zero', 'Fanta', 'Sprite']]],
+  'Bøtte': [['Flasker', ['Miks', 'Amstel', 'Bitburger', 'Brahma', 'Estrella Damm', 'Peroni']]],
+};
+const ITEMS = RAW.map(r => ({ cat: r[0], name: r[1], desc: r[2], price: r[3], img: r[4], origin: r[5], al: r[6] || [], alts: r[7] || [], tags: r[8] || [], share: !!r[9], age: r[10] || 0, id: slug(r[1]), choices: CHOICES[r[1]] || [] }));
+const BY = Object.fromEntries(ITEMS.map(i => [i.id, i]));
+const BYNAME = Object.fromEntries(ITEMS.map(i => [i.name, i]));
+const FOODCATS = new Set(CATS.filter(c => c.food).map(c => c.id));
+const isDrink = it => !FOODCATS.has(it.cat);
+
+const FILTERS = [
+  { id: 'gluten', label: 'Gluten', has: 'Gluten', ok: ['Glutenfri'] },
+  { id: 'laktose', label: 'Laktose', has: 'Melk', ok: ['Laktosefri', 'Vegansk'] },
+  { id: 'melk', label: 'Melkeprotein', has: 'Melk', ok: ['Vegansk'] },
+  { id: 'egg', label: 'Egg', has: 'Egg', ok: ['Eggfri', 'Vegansk'] },
+  { id: 'notter', label: 'Nøtter', has: 'Nøtter', ok: ['Nøttefri'] },
+  { id: 'peanott', label: 'Peanøtter', has: 'Peanøtter', ok: [] },
+  { id: 'sesam', label: 'Sesam', has: 'Sesam', ok: ['Sesamfri'] },
+  { id: 'sennep', label: 'Sennep', has: 'Sennep', ok: [] },
+  { id: 'selleri', label: 'Selleri', has: 'Selleri', ok: [] },
+  { id: 'soya', label: 'Soya', has: 'Soya', ok: [] },
+  { id: 'sulfitt', label: 'Sulfitt', has: 'Sulfitt', ok: [] },
+];
+const DIETS = [{ id: 'veg', label: 'Bare vegetar' }, { id: 'alko', label: 'Uten alkohol' }];
+
+/* ---------- state ---------- */
+const KEY = 'hub-rombestilling-v1';
+const ROOM = { no: 3, name: 'Roker Park', club: 'Sunderland', img: 'img/roker-park.webp', cap: 12, code: 'RP3-8F2K', perHour: 1690, match: 'Arsenal – Tottenham' };
+const LINK = 'hubrom.no/r/' + ROOM.code;
+let D, lid = 0;
+const ui = { view: 'menu', sheet: null, joinErr: '', cat: 'pizza' };
+
+function seed() {
+  const t0 = Date.now();
+  const L = (oid, by, name, qty, share) => { const it = BYNAME[name]; return { id: 'l' + (++lid), oid, by, itemId: it.id, name: it.name, opts: '', qty, unit: it.price, share: !!share, among: null, claimed: 0 }; };
+  lid = 0;
+  const lines = [L(44, 'p1', 'Carlsberg', 4, 1), L(45, 'p2', 'Old Firm', 1, 1), L(45, 'p2', 'El Clásico', 1, 1), L(45, 'p2', 'Smashburger', 1, 0), L(46, 'p3', 'Red Devils', 1, 0), L(46, 'p3', 'Nachos', 1, 1)];
+  return {
+    v: 1, t0, me: null, lid,
+    people: [{ id: 'p1', name: 'Kristian', booker: true, c: 1 }, { id: 'p2', name: 'Martin', c: 2 }, { id: 'p3', name: 'Jonas', c: 3 }],
+    orders: [{ id: 44, by: 'p1', at: t0 - 58 * MIN, when: 'asap' }, { id: 45, by: 'p2', at: t0 - 41 * MIN, when: 'asap' }, { id: 46, by: 'p3', at: t0 - 23 * MIN, when: 'asap' }],
+    lines, payments: [], cart: [], filters: [], flags: {}, seq: 46, calls: 0,
+  };
+}
+function load() {
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.v === 1 && Date.now() - s.t0 < 5 * 3600e3) { D = s; lid = s.lid || 100; return; } } catch (e) {}
+  D = seed();
+}
+function save() { D.lid = lid; try { localStorage.setItem(KEY, JSON.stringify(D)); } catch (e) {} }
+
+/* booking timeline, anchored to when the demo started */
+const T = () => {
+  const r5 = t => Math.round(t / (5 * MIN)) * 5 * MIN;
+  const kick = r5(D.t0 - 20 * MIN);
+  const ext = (D.ext || 0) * MIN;
+  return { start: kick - 30 * MIN, kick, pause: kick + 47 * MIN, end: kick + 150 * MIN + ext, kitchen: kick + 120 * MIN + ext, next: kick + 240 * MIN };
+};
+const me = () => D.people.find(p => p.id === D.me);
+const person = id => D.people.find(p => p.id === id) || { name: '?', c: 1 };
+const avatar = (p, sm) => `<span class="av${sm ? ' sm' : ''}${p.id && p.id === D.me ? ' me' : ''}" aria-hidden="true">${esc((p.name || '?')[0].toUpperCase())}</span>`;
+const thumb = it => `<div class="thumb">${it.img ? `<img src="img/${it.img}.webp" alt="" loading="lazy" decoding="async">` : `<span class="ph">${esc(it.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2))}</span>`}</div>`;
+const tagIcons = it => it.tags.map(t => `<span class="tag" title="${TAGI[t][1]}" style="color:${TAGI[t][2]}">${ico(TAGI[t][0], 15)}</span>`).join('');
+
+/* ---------- allergy logic ---------- */
+function fit(it) {
+  // returns {show:boolean, need:[alts to auto-select]}
+  const need = new Set();
+  for (const fid of D.filters) {
+    if (fid === 'alko') { if (it.age) return { show: false }; continue; }
+    if (fid === 'veg') {
+      if (!FOODCATS.has(it.cat)) continue;
+      if (it.tags.includes('veg') || it.tags.includes('vegan')) continue;
+      if (it.alts.includes('Vegansk')) { need.add('Vegansk'); continue; }
+      return { show: false };
+    }
+    const f = FILTERS.find(x => x.id === fid); if (!f) continue;
+    if (!it.al.includes(f.has)) continue;
+    const alt = f.ok.find(a => it.alts.includes(a));
+    if (!alt) return { show: false };
+    need.add(alt);
+  }
+  // "Vegansk" covers laktose/egg needs; collapse duplicates
+  if (need.has('Vegansk')) { need.delete('Laktosefri'); need.delete('Eggfri'); }
+  return { show: true, need: [...need] };
+}
+
+/* ---------- money ---------- */
+const lineTotal = l => l.qty * l.unit;
+const amongOf = l => (l.among && l.among.length ? l.among.filter(id => D.people.some(p => p.id === id)) : D.people.map(p => p.id));
+function owed() {
+  const m = Object.fromEntries(D.people.map(p => [p.id, 0]));
+  for (const l of D.lines) {
+    const t = lineTotal(l);
+    if (l.prepaidBy) { m[l.prepaidBy] = (m[l.prepaidBy] || 0) + t; continue; }
+    if (!l.share) { m[l.by] = (m[l.by] || 0) + t; continue; }
+    const a = amongOf(l); a.forEach(id => m[id] = (m[id] || 0) + t / a.length);
+  }
+  return m;
+}
+function paid() { const m = Object.fromEntries(D.people.map(p => [p.id, 0])); D.payments.forEach(p => m[p.by] = (m[p.by] || 0) + p.amount); return m; }
+const total = () => D.lines.reduce((s, l) => s + lineTotal(l), 0);
+const paidSum = () => D.payments.reduce((s, p) => s + p.amount, 0);
+const remaining = () => Math.max(0, Math.round(total() - paidSum()));
+const myDue = id => { const o = owed()[id] || 0, p = paid()[id] || 0; return Math.max(0, Math.min(Math.round(o - p), remaining())); };
+const cartTotal = () => D.cart.reduce((s, c) => s + c.qty * BY[c.itemId].price, 0);
+const cartCount = () => D.cart.reduce((s, c) => s + c.qty, 0);
+
+/* ---------- order status (demo speed) ---------- */
+function status(o) {
+  const now = Date.now();
+  if (o.when !== 'asap' && now < o.due) return { i: -1, label: 'Kommer ' + hm(o.due), done: false };
+  const start = o.when === 'asap' ? o.at : o.due;
+  const s = (now - start) / 1000;
+  const drinksOnly = D.lines.filter(l => l.oid === o.id).every(l => isDrink(BY[l.itemId]));
+  const labels = ['Mottatt', drinksOnly ? 'Tappes og blandes' : 'Kjøkkenet lager', 'På vei til rommet', 'Servert'];
+  const i = s < 6 ? 0 : s < 16 ? 1 : s < 26 ? 2 : 3;
+  return { i, label: labels[i], labels, done: i === 3 };
+}
+const activeOrder = () => [...D.orders].reverse().find(o => o.by === D.me && !status(o).done);
+
+/* ---------- render: header ---------- */
+function renderHeader() {
+  const t = T(), m = me();
+  const chips = ui.view === 'menu' ? `<div class="wrap"><div class="chips" id="chips" role="tablist" aria-label="Kategorier">
+      <button class="chip flt${D.filters.length ? ' on' : ''}" data-act="filters">${ico('info', 16)}${D.filters.length ? 'Allergier (' + D.filters.length + ')' : 'Allergier'}</button>
+      ${CATS.filter(c => visibleItems(c.id).length).map(c => `<button class="chip" data-act="jump" data-cat="${c.id}" aria-current="${ui.cat === c.id}">${esc(c.short || c.name)}</button>`).join('')}
+    </div></div>` : '';
+  $('#top').innerHTML = `<div class="wrap hdr">
+      <img class="logo" src="img/logo-white.svg" alt="HUB">
+      <div class="room"><b>${ROOM.name}</b><span>Rom ${ROOM.no} · booket til ${hm(t.end)}</span></div>
+      ${m ? `<button class="who" data-act="meSheet" aria-label="Du er ${esc(m.name)}">${avatar(m)}</button>` : ''}
+    </div>${chips}`;
+}
+
+/* ---------- render: menu ---------- */
+const visibleItems = cat => ITEMS.filter(i => i.cat === cat && fit(i).show);
+let menuKey = '';
+function renderMenu(force) {
+  const key = D.filters.join(',') + '|' + D.me + '|' + D.orders.length;
+  if (!force && key === menuKey && $('#view').dataset.v === 'menu') { refreshMenuBits(); return; }
+  menuKey = key;
+  const m = me(), t = T();
+  const last = [...D.orders].reverse().find(o => { const ls = D.lines.filter(l => l.oid === o.id); return ls.length && ls.every(l => isDrink(BY[l.itemId])); });
+  const lastLines = last ? D.lines.filter(l => l.oid === last.id) : [];
+  const lastTxt = lastLines.map(l => l.qty + ' × ' + l.name).join(', ');
+  const lastSum = lastLines.reduce((s, l) => s + lineTotal(l), 0);
+  const hidden = ITEMS.filter(i => !fit(i).show).length;
+  let h = `<div class="hello"><span class="eyebrow">Bestill til rommet</span><h1>Hei, ${esc(m ? m.name : '')}!</h1>
+    <p>Bestill her, så kommer det på bordet. Alt havner på romregningen, og dere deler når dere vil.</p></div>`;
+  if (last) h += `<div class="again"><div class="t"><b>Samme runde igjen?</b><span>${esc(lastTxt)} · ${kr(lastSum)}</span></div><button class="mini on" data-act="again" data-oid="${last.id}">${ico('plus', 16)}Legg til</button></div>`;
+  if (Date.now() > t.kitchen - 25 * MIN) h += `<div class="notice">${ico('clock', 16)}<span>Kjøkkenet tar siste bestilling ${hm(t.kitchen)}.</span></div>`;
+  if (hidden) h += `<div class="notice">${ico('info', 16)}<span>${hidden} retter og drikker passer ikke med valgene dine og er skjult. Retter som kan tilpasses, bestilles automatisk riktig. <button class="link" data-act="filters">Endre</button></span></div>`;
+  for (const c of CATS) {
+    const its = visibleItems(c.id);
+    if (!its.length) continue;
+    const ageNote = c.id === 'drinks' ? '20 år' : (c.id === 'beer' || c.id === 'wine') ? '18 år' : '';
+    h += `<section class="cat" id="cat-${c.id}" data-cat="${c.id}"><h2>${esc(c.name)}${ageNote ? `<small>Fra ${ageNote}</small>` : ''}</h2>${c.note ? `<p class="note">${esc(c.note)}</p>` : ''}`;
+    for (const it of its) {
+      const f = fit(it);
+      h += `<div class="item" data-act="item" data-id="${it.id}" role="button" tabindex="0" aria-label="${esc(it.name)}, ${kr(it.price)}">
+        ${thumb(it)}
+        <div class="info"><div class="nm">${esc(it.name)}${tagIcons(it)}</div><div class="ds">${esc(it.desc)}</div>
+        ${it.origin ? `<div class="og">${esc(it.origin)}</div>` : ''}
+        ${f.need && f.need.length ? `<div class="fit">Lages ${esc(f.need.join(' og ').toLowerCase())}</div>` : ''}
+        <div class="pr num">${kr(it.price)}</div></div>
+        <div class="addc" data-addc="${it.id}"></div></div>`;
+    }
+    h += `</section>`;
+  }
+  h += `<p class="foot-note">Allergener står på hver rett. Si fra til personalet ved alvorlig allergi. Vi ber om legitimasjon ved servering av alkohol.</p>`;
+  const v = $('#view'); v.innerHTML = h; v.dataset.v = 'menu';
+  refreshMenuBits(); spy();
+}
+function qtyOf(id) { return D.cart.filter(c => c.itemId === id).reduce((s, c) => s + c.qty, 0); }
+function refreshMenuBits() {
+  document.querySelectorAll('[data-addc]').forEach(el => {
+    const id = el.dataset.addc, q = qtyOf(id), it = BY[id];
+    const html = q ? `<div class="step"><button data-act="dec" data-id="${id}" aria-label="Fjern én ${esc(it.name)}">${ico('minus', 18)}</button><span>${q}</span><button data-act="inc" data-id="${id}" aria-label="Legg til én ${esc(it.name)}">${ico('plus', 18)}</button></div>`
+      : `<button class="plus" data-act="inc" data-id="${id}" aria-label="Legg til ${esc(it.name)}">${ico('plus', 20)}</button>`;
+    if (el.dataset.q !== String(q)) { el.innerHTML = html; el.dataset.q = q; }
+  });
+}
+let io;
+function spy() {
+  if (io) io.disconnect();
+  if (!('IntersectionObserver' in window)) return;
+  io = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) { ui.cat = e.target.dataset.cat; document.querySelectorAll('#chips [data-cat]').forEach(b => { const on = b.dataset.cat === ui.cat; b.setAttribute('aria-current', on); if (on) b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); }); } });
+  }, { rootMargin: '-140px 0px -60% 0px' });
+  document.querySelectorAll('section.cat').forEach(s => io.observe(s));
+}
+
+/* ---------- render: tab (romregningen) ---------- */
+function renderTab() {
+  const tot = total(), pd = paidSum(), rem = remaining(), ow = owed(), pa = paid(), t = T();
+  const booker = D.people.find(p => p.booker);
+  const pct = tot ? Math.min(100, pd / tot * 100) : 0;
+  let h = `<div class="tab-hero"><span class="eyebrow">Romregningen</span>
+    <div class="big num">${kr(rem)}</div>
+    <div class="split"><span>${rem ? 'Gjenstår av ' + kr(tot) : 'Alt er betalt'}</span><span class="num">Betalt ${kr(pd)}</span></div>
+    <div class="bar" aria-hidden="true"><i style="width:${pct}%"></i></div>
+    <div class="btns"><button class="cta center" data-act="pay" ${rem ? '' : 'disabled'}>Gjør opp</button><button class="cta ghost center" data-act="invite" aria-label="Del regningen med gjengen">${ico('share', 18)}</button></div>
+  </div>`;
+  h += `<div class="h3">Per person <small>mat og drikke de har bestilt, pluss sin del av det som deles</small></div>`;
+  for (const p of D.people) {
+    const o = Math.round(ow[p.id] || 0), pp = Math.round(pa[p.id] || 0), due = Math.max(0, o - pp);
+    const st = !rem ? `<span class="st ok">Gjort opp</span>` : due <= 0 && (o > 0 || pp > 0) ? `<span class="st ok">Betalt</span>` : `<span class="st due num">${kr(Math.min(due, rem))}</span>`;
+    h += `<button class="prow" data-act="person" data-pid="${p.id}">${avatar(p)}<div class="t"><b>${esc(p.name)}${p.id === D.me ? ' (deg)' : ''}</b><span>${p.booker ? 'Booket rommet · ' : ''}${kr(o)} totalt${pp ? ' · betalt ' + kr(pp) : ''}</span></div>${st}</button>`;
+  }
+  const shared = D.lines.filter(l => l.share && !l.prepaidBy);
+  if (shared.length) {
+    h += `<div class="h3">Til deling <small>trykk for å velge hvem som deler</small></div>`;
+    for (const l of shared) {
+      const a = amongOf(l);
+      h += `<button class="lrow${l.claimed >= .999 ? ' paid' : ''}" data-act="among" data-lid="${l.id}"><span class="q">${l.qty}×</span><span class="t"><b>${esc(l.name)}</b><span>Delt på ${a.length}: ${a.map(id => esc(person(id).name)).join(', ')} · ${kr(lineTotal(l) / a.length)} hver</span></span><span class="p">${kr(lineTotal(l))}</span></button>`;
+    }
+  }
+  h += `<div class="h3">Bestillinger <small>${D.orders.length} i kveld</small></div>`;
+  for (const o of [...D.orders].reverse()) {
+    const ls = D.lines.filter(l => l.oid === o.id), s = status(o), p = person(o.by);
+    h += `<div class="ord"><div class="ord-h">${avatar(p, 1)}<span><b>${esc(p.name)}</b> · #${o.id} · ${hm(o.at)}</span><span class="st ${s.done ? 'ok' : 'due'}">${esc(s.label)}</span></div>
+      ${ls.map(l => `<div class="lrow"><span class="q">${l.qty}×</span><span class="t"><b>${esc(l.name)}</b>${l.opts ? `<span>${esc(l.opts)}</span>` : ''}${l.share ? '<span>Til deling</span>' : ''}${l.prepaidBy ? '<span>Betalt ved bestilling</span>' : ''}</span><span class="p">${kr(lineTotal(l))}</span></div>`).join('')}</div>`;
+  }
+  h += `<div class="rule">Rommet er booket til ${hm(t.end)}. Det som ikke er betalt da, trekkes fra kortet til ${esc(booker ? booker.name : 'den som booket')}, som booket rommet. Leien for rommet ble betalt ved booking og står ikke her.</div>
+    <p class="foot-note">Prototype: betaling, kjøkken og de andre gjestene er simulert, og statusen går fortere enn i virkeligheten. <button class="link" data-act="reset">Start demoen på nytt</button></p>`;
+  const v = $('#view'); v.innerHTML = h; v.dataset.v = 'tab';
+}
+
+/* ---------- render: dock ---------- */
+function renderDock() {
+  const n = cartCount(), a = activeOrder();
+  let h = '<div class="wrap">';
+  if (a) { const s = status(a); h += `<button class="pill" data-act="orderStatus" data-oid="${a.id}"><span class="dot"></span><span style="flex:1">Bestilling #${a.id} · <b>${esc(s.label)}</b></span>${ico('chev', 16)}</button>`; }
+  if (n) h += `<button class="cta" data-act="cart"><span><span class="cnt">${n}</span>Se bestillingen</span><span class="num">${kr(cartTotal())}</span></button>`;
+  h += `</div><nav class="nav" aria-label="Hovedmeny" style="padding-left:var(--gl);padding-right:var(--gr)">
+    <button data-act="view" data-v="menu" aria-current="${ui.view === 'menu'}">${ico('menu')}Meny</button>
+    <button data-act="view" data-v="tab" aria-current="${ui.view === 'tab'}">${ico('receipt')}<span>Regning <span class="amt">${kr(remaining())}</span></span></button>
+    <button data-act="call">${ico('bell')}Personalet</button></nav>`;
+  $('#dock').innerHTML = h;
+}
+
+function renderView() { if (ui.view === 'menu') renderMenu(); else renderTab(); }
+function renderAll() { renderHeader(); renderView(); renderDock(); renderSheet(); }
+
+/* ---------- join (first scan) ---------- */
+function renderJoin() {
+  const t = T(), j = $('#join'), booker = D.people.find(p => p.booker);
+  j.hidden = !!D.me;
+  if (D.me) return;
+  j.innerHTML = `<div class="jhero"><img class="bg" src="${ROOM.img}" alt=""><img class="logo" src="img/logo-white.svg" alt="HUB"><div class="wrap">
+      <span class="eyebrow">Rom ${ROOM.no} · ${ROOM.club}</span><h1>${ROOM.name}</h1></div></div>
+    <div class="wrap jbody">
+      <div class="jmeta"><span>${ico('users', 16)}${esc(booker.name)}s booking</span><span>${ico('clock', 16)}${hm(t.start)}–${hm(t.end)}</span><span>${ico('tv', 16)}${esc(ROOM.match)}</span></div>
+      <form class="jcard" id="joinForm" novalidate>
+        <label for="joinName">Hva heter du?</label>
+        <input type="text" id="joinName" autocomplete="given-name" placeholder="Fornavn" maxlength="20" enterkeyhint="go">
+        ${ui.joinErr ? `<div class="err">${esc(ui.joinErr)}</div>` : ''}
+        <button class="cta center" type="submit">Bli med og bestill</button>
+        <div><div class="lbl" style="margin-top:4px">Allerede med i rommet</div>
+        <div class="here">${D.people.map(p => `<button type="button" data-act="joinAs" data-pid="${p.id}">${avatar(p)}${esc(p.name)}</button>`).join('')}</div>
+        <p class="muted" style="font-size:13px;margin:8px 0 0">Er du en av dem på en ny telefon? Trykk på navnet ditt.</p></div>
+      </form>
+      <div class="how">
+        <div><b>1</b><span>Bestill fra telefonen. Maten og drikken kommer rett på bordet.</span></div>
+        <div><b>2</b><span>Alt dere bestiller havner på én felles romregning. Ingen må legge ut underveis.</span></div>
+        <div><b>3</b><span>Før dere går, deler dere regningen slik dere vil: hver sitt, likt eller én betaler alt.</span></div>
+      </div>
+      <p class="muted" style="font-size:12.5px;margin:0">Du kom hit ved å skanne QR-koden i rommet. Ingen app eller innlogging.</p>
+    </div>`;
+}
+function join(name) {
+  name = name.trim().replace(/\s+/g, ' ');
+  if (!name) { ui.joinErr = 'Skriv fornavnet ditt, så vet gjengen hvem som bestilte hva.'; renderJoin(); $('#joinName')?.focus(); return; }
+  const ex = D.people.find(p => p.name.toLowerCase() === name.toLowerCase());
+  if (ex) D.me = ex.id;
+  else { const id = 'p' + (D.people.length + 1) + Date.now() % 1000; D.people.push({ id, name: name[0].toUpperCase() + name.slice(1), c: (D.people.length % 6) + 1 }); D.me = id; }
+  D.flags.joinedAt = Date.now(); ui.joinErr = '';
+  save(); renderJoin(); renderAll(); window.scrollTo(0, 0);
+  toast(`Du er med i ${ROOM.name}. Alt du bestiller havner på romregningen.`);
+}
+
+/* ---------- cart ---------- */
+function addToCart(itemId, { qty = 1, choice = {}, alts = [], note = '', share } = {}) {
+  const it = BY[itemId];
+  const sh = share ?? it.share;
+  const opts = [...Object.values(choice), ...alts].join(' · ');
+  const key = [itemId, opts, note, sh].join('|');
+  const ex = D.cart.find(c => c.key === key);
+  if (ex) ex.qty += qty; else D.cart.push({ key, itemId, qty, opts, note, share: sh });
+  save(); refreshMenuBits(); renderDock();
+}
+function quickAdd(id) {
+  const it = BY[id];
+  if (it.choices.length) { openSheet({ type: 'item', id }); return; }
+  const f = fit(it);
+  addToCart(id, { alts: f.need || [] });
+  pulse();
+}
+function dec(id) {
+  const idx = D.cart.map(c => c.itemId).lastIndexOf(id);
+  if (idx < 0) return;
+  D.cart[idx].qty--; if (D.cart[idx].qty <= 0) D.cart.splice(idx, 1);
+  save(); refreshMenuBits(); renderDock();
+}
+function pulse() { try { navigator.vibrate && navigator.vibrate(12); } catch (e) {} }
+
+function placeOrder(prepaid) {
+  const sh = ui.sheet, t = T();
+  const when = sh.when || 'asap';
+  const due = when === 'pause' ? t.pause : when === 'time' ? sh.at : null;
+  const id = ++D.seq;
+  const o = { id, by: D.me, at: Date.now(), when, due };
+  D.orders.push(o);
+  for (const c of D.cart) {
+    const it = BY[c.itemId];
+    D.lines.push({ id: 'l' + (++lid), oid: id, by: D.me, itemId: c.itemId, name: it.name, opts: [c.opts, c.note && '«' + c.note + '»'].filter(Boolean).join(' · '), qty: c.qty, unit: it.price, share: c.share, among: null, claimed: prepaid ? 1 : 0, prepaidBy: prepaid ? D.me : undefined });
+  }
+  D.cart = [];
+  save();
+  return o;
+}
+
+/* ---------- sheets ---------- */
+function openSheet(s) { ui.sheet = { ...s, _new: true }; renderSheet(); }
+function closeSheet() { ui.sheet = null; renderSheet(); }
+function renderSheet() {
+  const root = $('#sheet'), s = ui.sheet;
+  if (!s) { root.innerHTML = ''; document.body.style.overflow = ''; return; }
+  const body = root.querySelector('.sh-body'); const st = body ? body.scrollTop : 0;
+  const r = SHEETS[s.type](s);
+  root.innerHTML = `<div class="scrim${s._new ? ' in' : ''}" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(r.title.replace(/<[^>]+>/g, '').trim())}">
+    <div class="sh-head"><h2>${r.title}</h2><button class="x" data-act="close" aria-label="Lukk">${ico('x', 22)}</button></div>
+    <div class="sh-body">${r.body}</div>${r.foot ? `<div class="sh-foot">${r.foot}</div>` : ''}</div></div>`;
+  document.body.style.overflow = 'hidden';
+  const nb = root.querySelector('.sh-body'); if (nb && !s._new) nb.scrollTop = st;
+  if (s._new) { s._new = false; setTimeout(() => root.querySelector('.x')?.focus({ preventScroll: true }), 30); }
+  r.after && r.after();
+}
+
+const SHEETS = {
+  /* --- item detail --- */
+  item(s) {
+    const it = BY[s.id], f = fit(it);
+    if (!s.init) { s.init = 1; s.qty = 1; s.choice = Object.fromEntries(it.choices.map(([k, v]) => [k, v[0]])); s.alts = new Set(f.need || []); s.share = it.share; s.note = ''; }
+    const price = it.price * s.qty;
+    let b = `<div class="hero-img">${it.img ? `<img src="img/${it.img}.webp" alt="${esc(it.name)}">` : `<div style="height:100%;width:100%;display:grid;place-items:center" class="thumb"><span class="ph" style="font-size:64px">${esc(it.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2))}</span></div>`}</div>
+      <p style="margin:0;color:var(--body)">${esc(it.desc)}</p>
+      ${it.origin ? `<p class="muted" style="margin:6px 0 0;font-size:13.5px">Oppkalt etter ${it.cat === 'pizza' ? 'derbyet ' : ''}${esc(it.origin)}.</p>` : ''}
+      ${it.al.length ? `<div class="allg">${it.al.map(a => `<span>${esc(a)}</span>`).join('')}</div>` : ''}
+      ${it.age ? `<p class="muted" style="font-size:13px;margin:10px 0 0">${it.age} års aldersgrense. Vi sjekker legitimasjon ved servering.</p>` : ''}`;
+    for (const [k, vals] of it.choices) b += `<div class="lbl">${esc(k)}</div><div class="seg">${vals.map(v => `<button data-act="choice" data-k="${esc(k)}" data-v="${esc(v)}" aria-pressed="${s.choice[k] === v}">${esc(v)}</button>`).join('')}</div>`;
+    if (it.alts.length) b += `<div class="lbl">Tilpass</div><div class="seg">${it.alts.map(a => `<button data-act="alt" data-v="${esc(a)}" aria-pressed="${s.alts.has(a)}">${s.alts.has(a) ? ico('check', 16) : ''}${esc(a === 'Vegansk' && it.name === 'Halloumiburger' ? 'Vegansk (plantebasert burger)' : a)}</button>`).join('')}</div>`;
+    b += `<button class="sw" role="switch" aria-checked="${s.share}" data-act="shareTog"><span class="t"><b>Til deling</b><span>${s.share ? 'Prisen deles på alle i rommet når dere gjør opp' : 'Bare til deg. Du betaler hele prisen'}</span></span><span class="tog"></span></button>
+      <div class="lbl">Beskjed til kjøkkenet</div><textarea id="itemNote" placeholder="F.eks. uten løk, ekstra servietter" maxlength="120">${esc(s.note)}</textarea>`;
+    const foot = `<div class="qtyrow"><div class="step" style="border-color:var(--line-2);background:none"><button data-act="sq" data-d="-1" aria-label="Færre">${ico('minus', 18)}</button><span>${s.qty}</span><button data-act="sq" data-d="1" aria-label="Flere">${ico('plus', 18)}</button></div>
+      <button class="cta" style="flex:1" data-act="addItem"><span>Legg til</span><span class="num">${kr(price)}</span></button></div>`;
+    return { title: `${esc(it.name)} ${tagIcons(it)}`, body: b, foot };
+  },
+
+  /* --- cart --- */
+  cart(s) {
+    const t = T(), now = Date.now();
+    if (!s.init) { s.init = 1; s.when = 'asap'; s.payNow = false; }
+    const hasFood = D.cart.some(c => !isDrink(BY[c.itemId])), hasAlc = D.cart.some(c => BY[c.itemId].age);
+    const maxAge = Math.max(0, ...D.cart.map(c => BY[c.itemId].age));
+    const pauseOk = t.pause > now + 10 * MIN;
+    const times = []; for (let x = Math.ceil((now + 30 * MIN) / (15 * MIN)) * 15 * MIN; x <= t.kitchen; x += 15 * MIN) times.push(x);
+    if (s.when === 'time' && !s.at) s.at = times[0];
+    let b = '';
+    if (!D.cart.length) b = `<p class="muted">Bestillingen er tom. Legg til noe fra menyen.</p>`;
+    for (const c of D.cart) {
+      const it = BY[c.itemId];
+      b += `<div class="cline">${thumb(it)}<div class="t"><b>${esc(it.name)}</b>${c.opts ? `<div class="o">${esc(c.opts)}</div>` : ''}${c.note ? `<div class="o">«${esc(c.note)}»</div>` : ''}
+        <div class="row2"><button class="mini${c.share ? ' on' : ''}" data-act="cshare" data-key="${esc(c.key)}">${c.share ? ico('users', 15) + 'Til deling' : 'Bare til meg'}</button>
+        <div class="step" style="border-color:var(--line-2);background:none"><button data-act="cq" data-key="${esc(c.key)}" data-d="-1" aria-label="Færre">${ico('minus', 16)}</button><span>${c.qty}</span><button data-act="cq" data-key="${esc(c.key)}" data-d="1" aria-label="Flere">${ico('plus', 16)}</button></div>
+        <b class="num">${kr(c.qty * it.price)}</b></div></div></div>`;
+    }
+    if (D.cart.length) {
+      b += `<button class="link" data-act="close">${ico('plus', 16)}&nbsp;Legg til mer</button>
+      <div class="lbl">Når skal det komme?</div>
+      <div class="seg col">
+        <button data-act="when" data-v="asap" aria-pressed="${s.when === 'asap'}"><span>Så fort som mulig<span class="sub">${hasFood ? 'Mat ca. 15–20 min. Drikke kommer med en gang.' : 'Ca. 5 min'}</span></span>${s.when === 'asap' ? ico('check', 18) : ''}</button>
+        ${pauseOk ? `<button data-act="when" data-v="pause" aria-pressed="${s.when === 'pause'}"><span>I pausen<span class="sub">Ca. ${hm(t.pause)}, når første omgang er ferdig</span></span>${s.when === 'pause' ? ico('check', 18) : ''}</button>` : ''}
+        ${times.length ? `<button data-act="when" data-v="time" aria-pressed="${s.when === 'time'}"><span>Velg klokkeslett<span class="sub">Kjøkkenet tar siste bestilling ${hm(t.kitchen)}</span></span>${s.when === 'time' ? ico('check', 18) : ''}</button>` : ''}
+      </div>
+      ${s.when === 'time' ? `<div class="seg" style="margin-top:8px">${times.map(x => `<button data-act="at" data-v="${x}" aria-pressed="${s.at === x}">${hm(x)}</button>`).join('')}</div>` : ''}
+      <div class="lbl">Betaling</div>
+      <div class="seg col">
+        <button data-act="payNow" data-v="0" aria-pressed="${!s.payNow}"><span>Legg på romregningen<span class="sub">Dere deler før dere går. ${kr(remaining())} står der nå.</span></span>${!s.payNow ? ico('check', 18) : ''}</button>
+        <button data-act="payNow" data-v="1" aria-pressed="${s.payNow}"><span>Betal nå<span class="sub">Vipps eller kort. Bra hvis du vil holde det for deg selv.</span></span>${s.payNow ? ico('check', 18) : ''}</button>
+      </div>
+      ${hasAlc ? `<div class="notice" style="margin-top:14px">${ico('info', 16)}<span>Vi ber om legitimasjon når vi kommer med drikken (${maxAge >= 20 ? '20 år for drinker med brennevin, 18 år for øl og vin' : '18 år'}).</span></div>` : ''}`;
+    }
+    const foot = D.cart.length ? `<button class="cta" data-act="send"><span>${s.payNow ? 'Gå til betaling' : 'Send bestillingen'}</span><span class="num">${kr(cartTotal())}</span></button>` : '';
+    return { title: 'Din bestilling', body: b, foot };
+  },
+
+  /* --- order status --- */
+  orderStatus(s) {
+    const o = D.orders.find(x => x.id === s.oid); if (!o) return { title: 'Bestilling', body: '' };
+    const st = status(o), ls = D.lines.filter(l => l.oid === o.id);
+    let b = `<p style="margin:0;color:var(--body)">${o.when === 'asap' ? 'Vi har fått den. Du trenger ikke gjøre noe mer.' : 'Kjøkkenet starter så det er klart ' + hm(o.due) + '.'}</p>`;
+    if (st.i >= 0) b += `<div class="steps">${st.labels.map((l, i) => `<div class="${i <= st.i ? 'on' : ''} ${i === st.i && !st.done ? 'now' : ''}">${i < st.i || st.done ? ico('check', 16) : ''}${esc(l)}</div>`).join('')}</div>`;
+    else b += `<div class="notice" style="margin-top:12px">${ico('clock', 16)}<span>Planlagt til ${hm(o.due)}. Vil du ha det tidligere, trykk på Personalet.</span></div>`;
+    b += `<div class="lbl">Bestilling #${o.id}</div>${ls.map(l => `<div class="lrow"><span class="q">${l.qty}×</span><span class="t"><b>${esc(l.name)}</b>${l.opts ? `<span>${esc(l.opts)}</span>` : ''}</span><span class="p">${kr(lineTotal(l))}</span></div>`).join('')}
+      <p class="muted" style="font-size:13px">${ls[0]?.prepaidBy ? 'Betalt.' : 'Lagt på romregningen.'}</p>`;
+    return { title: st.done ? 'Servert. Kos dere!' : 'Bestillingen er sendt', body: b, foot: `<button class="cta center" data-act="close">Tilbake til menyen</button>` };
+  },
+
+  /* --- pay / settle --- */
+  pay(s) {
+    const rem = remaining(), mine = myDue(D.me), unpaidPeople = D.people.filter(p => (paid()[p.id] || 0) === 0).length || 1;
+    if (!s.init) { s.init = 1; s.mode = s.order ? 'order' : (mine > 0 ? 'mine' : 'equal'); s.n = unpaidPeople; s.k = 1; s.sel = {}; s.tip = 0; s.method = 'Vipps'; s.step = 'choose'; }
+    if (s.step === 'processing') return { title: 'Betaling', body: `<div class="done"><div class="spin" aria-hidden="true"></div><h3 style="font-size:22px">${s.method === 'Vipps' ? 'Bekreft i Vipps' : s.method === 'Apple Pay' ? 'Bekreft med Apple Pay' : 'Godkjenner kortet'}</h3><p class="muted" style="margin:0">${kr(s.final)} til HUB · ${ROOM.name}</p></div>` };
+    if (s.step === 'done') return SHEETS.paid(s);
+    const amt = payAmount(s);
+    const opt = (mode, title, sub, a, inner = '', disabled = false) => `<div class="opt" role="radio" tabindex="0" aria-checked="${s.mode === mode}" aria-disabled="${disabled}" data-act="mode" data-v="${mode}" ${disabled ? 'data-dis="1" style="opacity:.5;cursor:not-allowed"' : 'style="cursor:pointer"'}><span class="rd"></span><span class="t"><b>${title}</b><span>${sub}</span>${s.mode === mode ? inner : ''}</span><span class="a${s.mode === mode ? '' : ' dim'}">${kr(a)}</span></div>`;
+    let b = '';
+    if (s.order) {
+      b += `<p style="margin:0 0 10px;color:var(--body)">Du betaler bestillingen nå. Den havner ikke på romregningen.</p>${D.cart.map(c => `<div class="lrow"><span class="q">${c.qty}×</span><span class="t"><b>${esc(BY[c.itemId].name)}</b></span><span class="p">${kr(c.qty * BY[c.itemId].price)}</span></div>`).join('')}`;
+    } else {
+      b += `<div class="total-line" style="margin-bottom:12px"><span>Gjenstår på romregningen</span><b class="num">${kr(rem)}</b></div><div role="radiogroup" aria-label="Hvordan vil du betale?">`;
+      const ow = Math.round(owed()[D.me] || 0);
+      b += opt('mine', 'Det jeg har bestilt', mine > 0 ? `Dine ting, pluss din del av det som deles (${kr(ow)} totalt${(paid()[D.me] || 0) ? ', du har betalt ' + kr(paid()[D.me]) : ''})` : 'Du har betalt din del', mine, mine > 0 ? `<span class="inner">${myBreakdown()}</span>` : '', mine <= 0);
+      b += opt('equal', 'Del likt', `Det som gjenstår, delt på ${s.n} ${s.n === 1 ? 'person' : 'personer'}`, Math.round(rem / s.n * s.k),
+        `<span class="inner" data-stop="1"><span class="stepper"><span>Antall som deler</span>${stepper('n', s.n)}</span><span class="stepper"><span>Jeg betaler for</span>${stepper('k', s.k)}</span></span>`);
+      b += opt('items', 'Velg hva du betaler for', 'Kryss av varene. Delte ting kan du ta en del av.', itemsAmount(s), `<span class="inner" data-stop="1">${claimList(s)}</span>`);
+      b += opt('all', 'Hele regningen', 'Spander på gjengen', rem);
+      b += `</div>`;
+    }
+    b += `<div class="lbl">Tips til de som jobber i kveld</div><div class="seg">${[0, 5, 10, 15].map(p => `<button data-act="tip" data-v="${p}" aria-pressed="${s.tip === p}">${p ? p + ' %' : 'Ingen'}</button>`).join('')}</div>
+      <div class="lbl">Betal med</div><div class="grid2" style="grid-template-columns:1fr 1fr 1fr">${['Vipps', 'Apple Pay', 'Kort'].map(m => `<button data-act="method" data-v="${m}" aria-pressed="${s.method === m}">${m}<span>${m === 'Kort' ? 'Visa, Mastercard' : m === 'Vipps' ? 'Raskest' : 'Med Face ID'}</span></button>`).join('')}</div>`;
+    const tip = Math.round(amt * s.tip / 100);
+    const foot = `${tip ? `<div class="total-line"><span>${kr(amt)} + tips ${kr(tip)}</span></div>` : ''}<button class="cta" data-act="doPay" ${amt > 0 ? '' : 'disabled'}><span>Betal med ${s.method}</span><span class="num">${kr(amt + tip)}</span></button>`;
+    return { title: s.order ? 'Betal bestillingen' : 'Gjør opp', body: b, foot };
+  },
+  paid(s) {
+    const rem = remaining(), ow = owed(), pa = paid();
+    const left = D.people.filter(p => Math.round((ow[p.id] || 0) - (pa[p.id] || 0)) > 0 && p.id !== D.me);
+    let b = `<div class="done"><div class="check">${ico('check', 34)}</div><h3 style="font-size:26px">Betalt ${kr(s.final)}</h3>
+      <p class="muted" style="margin:0">${s.order ? 'Bestillingen er sendt til kjøkkenet.' : 'Kvitteringen ligger i ' + (s.method === 'Vipps' ? 'Vipps' : 'e-posten din når du legger den inn under') + '.'}</p></div>`;
+    if (!s.order) {
+      b += rem ? `<div class="lbl">Romregningen</div><div class="total-line"><span>Gjenstår</span><b class="num">${kr(rem)}</b></div>
+        ${left.length ? `<p class="muted" style="font-size:13.5px">Har ikke betalt sin del ennå: ${left.map(p => esc(p.name)).join(', ')}.</p>` : ''}
+        <button class="cta ghost center" data-act="remind">${ico('share', 18)}&nbsp; Minn gjengen på det</button>`
+        : `<div class="notice" style="margin-top:14px">${ico('check', 16)}<span>Regningen er gjort opp. Takk for i kveld!</span></div>`;
+    }
+    b += `<div class="lbl">Kvittering til jobben?</div><div class="copy"><input type="email" id="rcpt" placeholder="E-postadresse" autocomplete="email"><button data-act="rcpt">Send</button></div>`;
+    return { title: 'Takk!', body: b, foot: `<button class="cta center" data-act="close">Ferdig</button>` };
+  },
+
+  /* --- share among --- */
+  among(s) {
+    const l = D.lines.find(x => x.id === s.lid);
+    if (!s.init) { s.init = 1; s.sel = new Set(amongOf(l)); }
+    const b = `<p style="margin:0 0 6px;color:var(--body)">${l.qty} × ${esc(l.name)} · ${kr(lineTotal(l))}. Velg hvem som spiste eller drakk av den.</p>
+      ${D.people.map(p => `<button class="sw" role="switch" aria-checked="${s.sel.has(p.id)}" data-act="amTog" data-pid="${p.id}">${avatar(p)}<span class="t" style="padding-left:10px"><b>${esc(p.name)}</b><span>${s.sel.has(p.id) ? kr(lineTotal(l) / s.sel.size) : 'Deler ikke'}</span></span><span class="tog"></span></button>`).join('')}`;
+    return { title: 'Hvem deler?', body: b, foot: `<button class="cta center" data-act="amSave" ${s.sel.size ? '' : 'disabled'}>Lagre</button>` };
+  },
+
+  /* --- person breakdown --- */
+  person(s) {
+    const p = person(s.pid), ow = owed(), pa = paid();
+    const own = D.lines.filter(l => (!l.share && l.by === p.id) || l.prepaidBy === p.id);
+    const sh = D.lines.filter(l => l.share && !l.prepaidBy && amongOf(l).includes(p.id));
+    const b = `${own.length ? `<div class="lbl">Bestilt selv</div>${own.map(l => `<div class="lrow"><span class="q">${l.qty}×</span><span class="t"><b>${esc(l.name)}</b>${l.opts ? `<span>${esc(l.opts)}</span>` : ''}</span><span class="p">${kr(lineTotal(l))}</span></div>`).join('')}` : ''}
+      ${sh.length ? `<div class="lbl">Sin del av det som deles</div>${sh.map(l => `<div class="lrow"><span class="q">1/${amongOf(l).length}</span><span class="t"><b>${l.qty} × ${esc(l.name)}</b></span><span class="p">${kr(lineTotal(l) / amongOf(l).length)}</span></div>`).join('')}` : ''}
+      <div class="lbl">Sum</div><div class="total-line"><span>Totalt</span><b class="num">${kr(ow[p.id] || 0)}</b></div><div class="total-line" style="margin-top:4px"><span>Betalt</span><b class="num">${kr(pa[p.id] || 0)}</b></div>`;
+    return { title: esc(p.name), body: b };
+  },
+
+  /* --- invite --- */
+  invite() {
+    const b = `<p style="margin:0;color:var(--body)">Alle som skanner koden, havner i samme rom og på samme regning. Koden står også ved skjermen og på bordet.</p>
+      <div class="qr" id="qrbox" aria-label="QR-kode til ${LINK}"></div>
+      <div class="copy"><input type="text" id="lnk" readonly value="https://${LINK}" aria-label="Lenke"><button data-act="copy" data-v="https://${LINK}">Kopier</button></div>
+      <p class="muted" style="font-size:12.5px">Koden gjelder bare under bookingen deres og slutter å virke ${hm(T().end)}.</p>`;
+    return {
+      title: 'Få med gjengen', body: b, after: () => {
+        const box = $('#qrbox'); if (!box || box.childElementCount) return;
+        try { new QRCode(box, { text: 'https://' + LINK, width: 360, height: 360, colorDark: '#17141a', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M }); } catch (e) { box.textContent = LINK; }
+      }
+    };
+  },
+
+  /* --- call staff --- */
+  call(s) {
+    if (s.sent) return { title: s.sentSub ? 'Forlenget' : 'Beskjed sendt', body: `<div class="done"><div class="check">${ico('check', 34)}</div><h3 style="font-size:22px">${esc(s.sent)}</h3><p class="muted" style="margin:0">${esc(s.sentSub || 'Noen kommer innom om ca. 2 minutter.')}</p></div>`, foot: `<button class="cta center" data-act="close">OK</button>` };
+    const opts = [['Kom innom', 'Vi kommer til rommet'], ['Vann til bordet', 'Kanne og glass'], ['Rydd bordet', 'Vi henter tomt'], ['Hjelp med skjermen', 'Bilde, lyd eller kanal'], ['Forleng rommet', 'Se ledig tid og pris'], ['Noe annet', 'Skriv under']];
+    const b = `<div class="grid2">${opts.map(([t, u]) => `<button data-act="callPick" data-v="${esc(t)}" aria-pressed="${s.pick === t}">${esc(t)}<span>${esc(u)}</span></button>`).join('')}</div>
+      ${s.pick === 'Forleng rommet' ? extBlock(s) : ''}
+      <div class="lbl">Melding (valgfritt)</div><textarea id="callNote" placeholder="F.eks. kan vi få kampen på storskjermen med kommentarlyd?" maxlength="140">${esc(s.note || '')}</textarea>`;
+    const isExt = s.pick === 'Forleng rommet';
+    const foot = isExt ? `<button class="cta" data-act="callSend" ${s.ext ? '' : 'disabled'}><span>${s.ext ? 'Forleng til ' + hm(T().end + s.ext * MIN) : 'Velg hvor lenge'}</span><span class="num">${s.ext ? kr(extPrice(s.ext)) : ''}</span></button>`
+      : `<button class="cta center" data-act="callSend" ${s.pick ? '' : 'disabled'}>Send beskjed</button>`;
+    return { title: 'Personalet', body: b, foot };
+  },
+
+  /* --- filters --- */
+  filters(s) {
+    if (!s.init) { s.init = 1; s.sel = new Set(D.filters); }
+    const b = `<p style="margin:0;color:var(--body)">Vi skjuler det som ikke passer. Retter som kan lages uten, får det riktige valget automatisk.</p>
+      <div class="lbl">Jeg tåler ikke</div><div class="seg">${FILTERS.map(f => `<button data-act="fTog" data-v="${f.id}" aria-pressed="${s.sel.has(f.id)}">${s.sel.has(f.id) ? ico('check', 16) : ''}${f.label}</button>`).join('')}</div>
+      <div class="lbl">Annet</div><div class="seg">${DIETS.map(f => `<button data-act="fTog" data-v="${f.id}" aria-pressed="${s.sel.has(f.id)}">${s.sel.has(f.id) ? ico('check', 16) : ''}${f.label}</button>`).join('')}</div>
+      <div class="notice" style="margin-top:16px">${ico('info', 16)}<span>Laktosefritt er ikke det samme som melkefritt. Ved melkeproteinallergi, velg Melkeprotein. Si alltid fra til personalet ved alvorlig allergi.</span></div>`;
+    const n = ITEMS.filter(it => { const keep = D.filters; D.filters = [...s.sel]; const r = fit(it).show; D.filters = keep; return r; }).length;
+    return { title: 'Allergier og valg', body: b, foot: `<div style="display:grid;grid-template-columns:auto 1fr;gap:8px"><button class="cta ghost center" data-act="fClear">Nullstill</button><button class="cta center" data-act="fSave">Vis ${n} retter og drikker</button></div>` };
+  },
+
+  /* --- me --- */
+  meSheet() {
+    const m = me();
+    const b = `<div style="display:flex;gap:12px;align-items:center">${avatar(m)}<div><b>${esc(m.name)}</b><div class="muted" style="font-size:13.5px">Du betaler ${kr(myDue(D.me))} hvis du tar det du har bestilt</div></div></div>
+      <div class="lbl">Endre navn</div><div class="copy"><input type="text" id="rename" value="${esc(m.name)}" maxlength="20" aria-label="Navn"><button data-act="rename">Lagre</button></div>
+      <button class="prow" data-act="invite">${ico('qr', 22)}<span class="t"><b>Få med flere</b><span>Vis QR-koden eller send lenken</span></span>${ico('chev', 18)}</button>
+      <button class="prow" data-act="switchUser">${ico('users', 22)}<span class="t"><b>Ikke ${esc(m.name)}?</b><span>Bytt til en annen i rommet</span></span>${ico('chev', 18)}</button>`;
+    return { title: 'Deg', body: b };
+  },
+};
+
+const extLabel = m => ({ 30: '30 min', 60: '1 time', 90: '1 t 30 min', 120: '2 timer' }[m] || m + ' min');
+const extPrice = m => Math.round(ROOM.perHour * m / 60);
+function extBlock(s) {
+  const t = T(), free = Math.round((t.next - t.end) / MIN);
+  if (free < 30) return `<div class="notice" style="margin-top:14px">${ico('info', 16)}<span>Rommet er booket av andre fra ${hm(t.next)}, så det kan ikke forlenges mer. Spør personalet om et annet rom er ledig.</span></div>`;
+  if (s.ext && s.ext > free) s.ext = 0;
+  return `<div class="lbl">Hvor mye ekstra tid?</div>
+    <div class="seg">${[30, 60, 90, 120].map(m => `<button data-act="ext" data-v="${m}" aria-pressed="${s.ext === m}" ${m > free ? 'disabled style="opacity:.4;cursor:not-allowed"' : ''}>${extLabel(m)}<span class="muted" style="font-weight:500;font-size:13px">${m > free ? 'Opptatt' : kr(extPrice(m))}</span></button>`).join('')}</div>
+    <p class="muted" style="font-size:13.5px;margin:10px 0 0">Booket til ${hm(t.end)}. Ledig til ${hm(t.next)}.${s.ext ? ` Med ${extLabel(s.ext)} ekstra blir det til ${hm(t.end + s.ext * MIN)}. Prisen legges på romregningen og deles på alle.` : ''}</p>`;
+}
+const stepper = (k, v) => `<span class="step"><button data-act="pstep" data-k="${k}" data-d="-1" aria-label="Færre">${ico('minus', 16)}</button><span>${v}</span><button data-act="pstep" data-k="${k}" data-d="1" aria-label="Flere">${ico('plus', 16)}</button></span>`;
+function myBreakdown() {
+  const own = D.lines.filter(l => !l.share && !l.prepaidBy && l.by === D.me);
+  const sh = D.lines.filter(l => l.share && !l.prepaidBy && amongOf(l).includes(D.me));
+  const rows = [...own.map(l => [l.qty + ' × ' + l.name, lineTotal(l)]), ...sh.map(l => [l.qty + ' × ' + l.name + ' (1/' + amongOf(l).length + ')', lineTotal(l) / amongOf(l).length])];
+  if (!rows.length) return '';
+  return rows.map(([t, a]) => `<span class="total-line"><span>${esc(t)}</span><span class="num">${kr(a)}</span></span>`).join('');
+}
+function claimable() { return D.lines.filter(l => !l.prepaidBy && (1 - (l.claimed || 0)) > 0.001); }
+function claimList(s) {
+  const ls = claimable();
+  if (!ls.length) return '<span class="muted">Alt er betalt.</span>';
+  return `<span class="claim">${ls.map(l => {
+    const left = 1 - (l.claimed || 0), sel = s.sel[l.id] || 0, a = amongOf(l).length;
+    const fr = l.share ? [[left, 'Alt som gjenstår'], [1 / 2, '½'], [1 / 3, '⅓'], [1 / 4, '¼'], [1 / a, 'Min del (1/' + a + ')']].filter(([f], i, arr) => f <= left + 1e-6 && arr.findIndex(x => Math.abs(x[0] - f) < 1e-6) === i) : [];
+    return `<span class="lrow" role="checkbox" tabindex="0" aria-checked="${!!sel}" data-act="claim" data-lid="${l.id}"><span class="cb">${sel ? ico('check', 14) : ''}</span><span class="t"><b>${l.qty} × ${esc(l.name)}</b><span>${esc(person(l.by).name)}${l.share ? ' · til deling' : ''}${left < 1 ? ' · ' + Math.round(left * 100) + ' % gjenstår' : ''}</span></span><span class="p">${kr(lineTotal(l) * (sel || left))}</span></span>
+      ${sel && fr.length > 1 ? `<span class="frac">${fr.map(([f, t]) => `<button data-act="frac" data-lid="${l.id}" data-v="${f}" aria-pressed="${Math.abs(sel - f) < 1e-6}">${t}</button>`).join('')}</span>` : ''}`;
+  }).join('')}</span>`;
+}
+const itemsAmount = s => Math.min(remaining(), Math.round(Object.entries(s.sel).reduce((sum, [id, f]) => { const l = D.lines.find(x => x.id === id); return sum + (l ? lineTotal(l) * f : 0); }, 0)));
+function payAmount(s) {
+  if (s.mode === 'order') return cartTotal();
+  if (s.mode === 'mine') return myDue(D.me);
+  if (s.mode === 'equal') return Math.min(remaining(), Math.round(remaining() / s.n * s.k));
+  if (s.mode === 'items') return itemsAmount(s);
+  return remaining();
+}
+function recordPayment(by, amount, mode, s) {
+  if (mode === 'mine') {
+    D.lines.forEach(l => { if (l.prepaidBy) return; if (!l.share && l.by === by) l.claimed = 1; else if (l.share && amongOf(l).includes(by)) l.claimed = Math.min(1, (l.claimed || 0) + 1 / amongOf(l).length); });
+  } else if (mode === 'items' && s) {
+    Object.entries(s.sel).forEach(([id, f]) => { const l = D.lines.find(x => x.id === id); if (l) l.claimed = Math.min(1, (l.claimed || 0) + f); });
+  } else if (mode === 'all') D.lines.forEach(l => l.claimed = 1);
+  D.payments.push({ by, amount, mode, at: Date.now() });
+  if (remaining() === 0) D.lines.forEach(l => l.claimed = 1);
+}
+
+/* ---------- toast ---------- */
+let tt;
+function toast(msg) { const el = $('#toast'); el.innerHTML = `<div>${ico('check', 18)}<span>${esc(msg)}</span></div>`; clearTimeout(tt); tt = setTimeout(() => el.innerHTML = '', 3600); }
+async function copy(text, okMsg) {
+  try { await navigator.clipboard.writeText(text); toast(okMsg || 'Kopiert'); }
+  catch (e) { const i = $('#lnk') || $('#rcpt'); if (i) { i.value = text; i.select(); } toast('Marker teksten og kopier den'); }
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const a = el.dataset.act, s = ui.sheet;
+  if (a === 'scrim') { if (e.target === el) closeSheet(); return; }
+  if (el.closest('[data-stop]') && a === 'mode') return;
+  switch (a) {
+    case 'joinAs': { const p = D.people.find(x => x.id === el.dataset.pid); join(p.name); break; }
+    case 'close': closeSheet(); break;
+    case 'view': ui.view = el.dataset.v; renderHeader(); renderView(); renderDock(); window.scrollTo(0, 0); break;
+    case 'jump': { const sec = $('#cat-' + el.dataset.cat); sec && sec.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); break; }
+    case 'item': openSheet({ type: 'item', id: el.dataset.id }); break;
+    case 'inc': quickAdd(el.dataset.id); break;
+    case 'dec': dec(el.dataset.id); break;
+    case 'again': {
+      const ls = D.lines.filter(l => l.oid === +el.dataset.oid);
+      ls.forEach(l => addToCart(l.itemId, { qty: l.qty, share: l.share }));
+      toast('Lagt til: ' + ls.map(l => l.qty + ' × ' + l.name).join(', ')); pulse(); break;
+    }
+    case 'cart': openSheet({ type: 'cart' }); break;
+    case 'filters': openSheet({ type: 'filters' }); break;
+    case 'call': openSheet({ type: 'call' }); break;
+    case 'meSheet': openSheet({ type: 'meSheet' }); break;
+    case 'invite': openSheet({ type: 'invite' }); break;
+    case 'pay': openSheet({ type: 'pay' }); break;
+    case 'person': openSheet({ type: 'person', pid: el.dataset.pid }); break;
+    case 'among': openSheet({ type: 'among', lid: el.dataset.lid }); break;
+    case 'orderStatus': openSheet({ type: 'orderStatus', oid: +el.dataset.oid }); break;
+    /* item sheet */
+    case 'choice': s.choice[el.dataset.k] = el.dataset.v; renderSheet(); break;
+    case 'alt': { const v = el.dataset.v; s.alts.has(v) ? s.alts.delete(v) : s.alts.add(v); renderSheet(); break; }
+    case 'shareTog': s.share = !s.share; renderSheet(); break;
+    case 'sq': s.qty = Math.max(1, Math.min(20, s.qty + +el.dataset.d)); renderSheet(); break;
+    case 'addItem': {
+      const it = BY[s.id];
+      addToCart(s.id, { qty: s.qty, choice: s.choice, alts: it.alts.filter(x => s.alts.has(x)), note: ($('#itemNote')?.value || '').trim(), share: s.share });
+      closeSheet(); toast(`${s.qty} × ${it.name} lagt til`); pulse(); break;
+    }
+    /* cart */
+    case 'cshare': { const c = D.cart.find(x => x.key === el.dataset.key); c.share = !c.share; save(); renderSheet(); break; }
+    case 'cq': { const c = D.cart.find(x => x.key === el.dataset.key); c.qty += +el.dataset.d; if (c.qty <= 0) D.cart.splice(D.cart.indexOf(c), 1); save(); refreshMenuBits(); renderDock(); renderSheet(); break; }
+    case 'when': s.when = el.dataset.v; renderSheet(); break;
+    case 'at': s.at = +el.dataset.v; renderSheet(); break;
+    case 'payNow': s.payNow = el.dataset.v === '1'; renderSheet(); break;
+    case 'send': {
+      if (s.payNow) { ui.sheet = { type: 'pay', order: true, when: s.when, at: s.at, _new: false }; renderSheet(); break; }
+      const o = placeOrder(false);
+      ui.sheet = { type: 'orderStatus', oid: o.id }; renderAll(); pulse(); break;
+    }
+    /* pay */
+    case 'mode': if (el.dataset.dis) break; s.mode = el.dataset.v; renderSheet(); break;
+    case 'pstep': {
+      const k = el.dataset.k, d = +el.dataset.d;
+      if (k === 'n') { s.n = Math.max(1, Math.min(20, s.n + d)); s.k = Math.min(s.k, s.n); } else s.k = Math.max(1, Math.min(s.n, s.k + d));
+      renderSheet(); break;
+    }
+    case 'claim': { const id = el.dataset.lid, l = D.lines.find(x => x.id === id); if (s.sel[id]) delete s.sel[id]; else { const left = 1 - (l.claimed || 0); s.sel[id] = l.share ? Math.min(left, 1 / amongOf(l).length) : left; } renderSheet(); break; }
+    case 'frac': s.sel[el.dataset.lid] = +el.dataset.v; renderSheet(); break;
+    case 'tip': s.tip = +el.dataset.v; renderSheet(); break;
+    case 'method': s.method = el.dataset.v; renderSheet(); break;
+    case 'doPay': {
+      const amt = payAmount(s); if (amt <= 0) break;
+      s.final = amt + Math.round(amt * s.tip / 100); s.step = 'processing'; renderSheet();
+      setTimeout(() => {
+        if (ui.sheet !== s) return;
+        if (s.order) { const o = placeOrder(true); D.payments.push({ by: D.me, amount: amt, mode: 'order', at: Date.now() }); s.oid = o.id; }
+        else recordPayment(D.me, amt, s.mode, s);
+        if (s.tip) D.flags.tips = (D.flags.tips || 0) + (s.final - amt);
+        save(); s.step = 'done'; renderAll(); pulse();
+        if (!s.order) scheduleGuestPayment();
+      }, 1700);
+      break;
+    }
+    case 'remind': copy(`Romregningen fra ${ROOM.name} står på ${kr(remaining())}. Betal din del her: https://${LINK}`, 'Melding kopiert. Lim den inn i gruppechatten.'); break;
+    case 'rcpt': { const v = ($('#rcpt')?.value || '').trim(); if (!/^\S+@\S+\.\S+$/.test(v)) { toast('Skriv en gyldig e-postadresse'); break; } toast('Kvittering sendes til ' + v); break; }
+    /* among */
+    case 'amTog': { const id = el.dataset.pid; s.sel.has(id) ? s.sel.delete(id) : s.sel.add(id); renderSheet(); break; }
+    case 'amSave': { const l = D.lines.find(x => x.id === s.lid); l.among = s.sel.size === D.people.length ? null : [...s.sel]; save(); closeSheet(); renderView(); renderDock(); toast('Lagret. Delt på ' + s.sel.size); break; }
+    /* call */
+    case 'callPick': s.note = $('#callNote')?.value || ''; s.pick = el.dataset.v; renderSheet(); break;
+    case 'callSend': {
+      s.note = $('#callNote')?.value || '';
+      if (s.pick === 'Forleng rommet') {
+        if (!s.ext) break;
+        const newEnd = T().end + s.ext * MIN;
+        D.lines.push({ id: 'l' + (++lid), oid: null, by: D.me, itemId: 'forlengelse', name: 'Forlenget rom, ' + extLabel(s.ext), opts: 'Til ' + hm(newEnd), qty: 1, unit: extPrice(s.ext), share: true, among: null, claimed: 0 });
+        D.ext = (D.ext || 0) + s.ext;
+        s.sent = 'Rommet er forlenget til ' + hm(newEnd);
+        s.sentSub = kr(extPrice(s.ext)) + ' er lagt på romregningen og deles på alle i rommet. QR-koden virker til samme tid.';
+        save(); renderAll(); break;
+      }
+      s.sent = s.pick === 'Noe annet' ? 'Vi har fått meldingen' : s.pick; D.calls++; save(); renderSheet(); break;
+    }
+    case 'ext': s.note = $('#callNote')?.value || ''; s.ext = +el.dataset.v; renderSheet(); break;
+    /* filters */
+    case 'fTog': { const v = el.dataset.v; s.sel.has(v) ? s.sel.delete(v) : s.sel.add(v); renderSheet(); break; }
+    case 'fClear': s.sel.clear(); renderSheet(); break;
+    case 'fSave': D.filters = [...s.sel]; save(); closeSheet(); renderHeader(); renderMenu(true); renderDock(); break;
+    /* me */
+    case 'rename': { const v = ($('#rename')?.value || '').trim(); if (v) { me().name = v[0].toUpperCase() + v.slice(1); save(); renderAll(); toast('Navnet er endret'); } break; }
+    case 'switchUser': D.me = null; save(); closeSheet(); renderJoin(); break;
+    case 'copy': copy(el.dataset.v, 'Lenken er kopiert'); break;
+    case 'reset': try { localStorage.removeItem(KEY); } catch (e) {} D = seed(); ui.view = 'menu'; ui.sheet = null; menuKey = ''; renderJoin(); renderAll(); window.scrollTo(0, 0); break;
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && ui.sheet) closeSheet();
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.opt[role=radio],.lrow[role=checkbox]')) { e.preventDefault(); e.target.click(); }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.item[role=button]')) { e.preventDefault(); openSheet({ type: 'item', id: e.target.dataset.id }); }
+});
+document.addEventListener('submit', e => { if (e.target.id === 'joinForm') { e.preventDefault(); join($('#joinName').value); } });
+document.addEventListener('input', e => { if (e.target.id === 'itemNote' && ui.sheet) ui.sheet.note = e.target.value; if (e.target.id === 'callNote' && ui.sheet) ui.sheet.note = e.target.value; });
+
+/* ---------- simulated room life ---------- */
+function scheduleGuestPayment() {
+  if (D.flags.guestPaid) return;
+  setTimeout(() => {
+    const p = D.people.find(x => x.id !== D.me && !x.booker && myDue(x.id) > 0);
+    if (!p || D.flags.guestPaid) return;
+    const amt = myDue(p.id); recordPayment(p.id, amt, 'mine'); D.flags.guestPaid = 1; save();
+    toast(`${p.name} betalte sin del: ${kr(amt)}`);
+    if (ui.view === 'tab') renderView(); renderDock(); if (ui.sheet && ui.sheet.type === 'pay' && ui.sheet.step === 'done') renderSheet();
+  }, 9000);
+}
+setInterval(() => {
+  if (!D.me) return;
+  // a friend orders on their own phone after a while
+  if (!D.flags.guestOrder && D.flags.joinedAt && Date.now() - D.flags.joinedAt > 35000) {
+    const p = D.people.find(x => x.id === 'p2'); D.flags.guestOrder = 1;
+    if (p && remaining() > 0) {
+      const id = ++D.seq; D.orders.push({ id, by: p.id, at: Date.now(), when: 'asap' });
+      D.lines.push({ id: 'l' + (++lid), oid: id, by: p.id, itemId: 'guinness', name: 'Guinness', opts: '', qty: 2, unit: 129, share: false, among: null, claimed: 0 });
+      save(); toast(`${p.name} bestilte 2 × Guinness fra sin telefon`);
+      if (ui.view === 'tab') renderView(); else renderMenu(true);
+    }
+  }
+  // live order status
+  renderDock();
+  if (ui.sheet && ui.sheet.type === 'orderStatus') renderSheet();
+  const sig = D.orders.map(o => status(o).i).join() + '|' + D.payments.length + '|' + D.lines.length;
+  if (ui.view === 'tab' && !ui.sheet && sig !== ui.sig) { const y = window.scrollY; renderView(); window.scrollTo(0, y); }
+  ui.sig = sig;
+}, 2000);
+
+/* ---------- boot ---------- */
+load();
+renderJoin();
+renderAll();
+})();
+</script>
+
+</body></html>

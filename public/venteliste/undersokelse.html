@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hjelp oss å bygge HUB</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" href="assets/logo/hub-logo-pink-square.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap"><style>/* HUB venteliste. Mobil først: én kolonne, bredere oppsett fra 760 px. Mørk ink-flate, rosa merkeramme, kvadratisk. */
+:root {
+  --bg: #17141a; --surface: #241f27; --raised: #332c36; --line: #5a4e57;
+  --fg: #f6f2ee; --body: #cfc6cc; --muted: #9a8f97; --eyebrow: #e8668b;
+  --pink: #d0426a; --pink-hover: #a8304f; --on-pink: #f6f2ee; --error: #ff8a8a; --ok: #7fd6a0;
+  --display: 'Bricolage Grotesque', 'Archivo', system-ui, sans-serif;
+  --text: 'DM Sans', system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 72px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; background: var(--bg); color: var(--body); font-family: var(--text); font-size: 17px; line-height: 1.55; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+img { max-width: 100%; display: block; }
+[hidden] { display: none !important; }
+a { color: var(--eyebrow); }
+:focus-visible { outline: 2px solid var(--pink); outline-offset: 2px; }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); color: var(--fg); letter-spacing: -0.025em; line-height: 1.04; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(44px, 11vw, 88px); font-weight: 800; }
+h2 { font-size: clamp(32px, 7vw, 48px); font-weight: 800; }
+h3 { font-size: 24px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.2; }
+p { margin: 0; }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--eyebrow); }
+.lead { font-size: 19px; color: var(--body); max-width: 34ch; }
+section { padding-block: 56px; border-bottom: 1px solid var(--line); }
+.head { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.note { margin-top: 16px; font-size: 14px; color: var(--muted); max-width: 60ch; }
+
+/* Knapper */
+.btns { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 0 24px; background: var(--pink); color: var(--on-pink); font-family: var(--text); font-size: 17px; font-weight: 700; text-decoration: none; border: 0; cursor: pointer; transition: background 120ms; }
+.btn:hover { background: var(--pink-hover); }
+.btn.ghost { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 2px var(--fg); }
+.btn.ghost:hover { background: rgba(246, 242, 238, 0.1); }
+.btn.sm { min-height: 44px; padding: 0 16px; font-size: 15px; }
+.btn.full { width: 100%; }
+.btn[disabled] { opacity: 0.6; cursor: wait; }
+
+/* Topplinje */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 10px; }
+.logo, .boxes { display: flex; gap: 4px; text-decoration: none; }
+.logo span, .boxes span { width: 30px; height: 30px; border: 2px solid var(--pink); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 16px; color: var(--fg); }
+.boxes span { width: 40px; height: 40px; border-width: 3px; font-size: 20px; }
+.boxes span.x { background: var(--pink); color: var(--on-pink); }
+
+/* Hero */
+.hero { position: relative; padding-block: 0; overflow: hidden; }
+.hero-img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(23, 20, 26, 0.35) 0%, rgba(23, 20, 26, 0.7) 45%, var(--bg) 100%); }
+.hero-text { position: relative; display: flex; flex-direction: column; gap: 18px; padding-block: 200px 48px; }
+.illu { position: absolute; right: 12px; top: 12px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg); background: rgba(23, 20, 26, 0.7); padding: 3px 7px; }
+
+/* USP */
+.usp { padding-block: 32px; }
+.usp-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; border: 3px solid var(--pink); }
+.usp-list li { padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid var(--line); }
+.usp-list li:last-child { border-bottom: 0; }
+.usp-list b { font-family: var(--display); font-size: 20px; color: var(--fg); letter-spacing: -0.01em; }
+.usp-list span { font-size: 15px; color: var(--body); }
+
+/* Rom */
+.rooms { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.room { background: var(--surface); display: flex; flex-direction: column; }
+.room-img { position: relative; aspect-ratio: 4 / 3; max-width: 100%; overflow: hidden; background: var(--raised); }
+.room-img img { width: 100%; height: 100%; object-fit: cover; }
+.room-body { padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 8px; }
+.room-body p:last-child { font-size: 16px; }
+
+/* Steg */
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; display: grid; gap: 0; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 52px 1fr; column-gap: 16px; row-gap: 4px; padding: 18px 0; border-top: 1px solid var(--line); }
+.steps li::before { content: counter(s); grid-row: span 2; width: 44px; height: 44px; border: 3px solid var(--pink); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 20px; color: var(--fg); }
+.steps b { font-family: var(--display); font-size: 20px; color: var(--fg); }
+.steps span { font-size: 16px; }
+
+/* Tags */
+.tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.tags li { padding: 8px 12px; border: 1px solid var(--line); color: var(--fg); font-size: 15px; font-weight: 500; }
+
+/* Bedrift */
+.biz { background: var(--surface); }
+.grid2 { display: grid; grid-template-columns: 1fr; gap: 28px; }
+
+/* Venteliste */
+.signup { background: var(--bg); }
+.perks { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.perks li { padding-left: 28px; position: relative; color: var(--fg); }
+.perks li::before { content: ""; position: absolute; left: 0; top: 5px; width: 14px; height: 14px; background: var(--pink); }
+.form { background: var(--surface); border: 3px solid var(--pink); padding: 24px 20px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.field { display: flex; flex-direction: column; gap: 6px; border: 0; margin: 0; padding: 0; min-width: 0; }
+label, legend { color: var(--fg); font-weight: 500; font-size: 15px; padding: 0; }
+.opt { color: var(--muted); font-weight: 400; font-size: 13px; }
+input[type="email"], input[type="text"], input[type="tel"] { width: 100%; min-height: 48px; padding: 10px 12px; background: var(--bg); color: var(--fg); border: 2px solid var(--line); border-radius: 0; font: inherit; font-size: 16px; }
+input::placeholder { color: var(--muted); }
+input:focus { border-color: var(--pink); outline: none; }
+input[aria-invalid="true"] { border-color: var(--error); }
+.row2 { display: grid; grid-template-columns: 1fr; gap: 18px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.chip { position: relative; cursor: pointer; }
+.chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.chip span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border: 2px solid var(--line); color: var(--fg); font-weight: 500; font-size: 15px; }
+.chip input:checked + span { background: var(--pink); border-color: var(--pink); color: var(--on-pink); }
+.chip input:focus-visible + span { outline: 2px solid var(--pink); outline-offset: 2px; }
+.consent { display: grid; grid-template-columns: 24px 1fr; gap: 12px; align-items: start; font-weight: 400; font-size: 14px; color: var(--body); cursor: pointer; }
+.consent input { appearance: none; width: 24px; height: 24px; margin: 0; border: 2px solid var(--pink); background: transparent; display: grid; place-items: center; cursor: pointer; }
+.consent input:checked { background: var(--pink); }
+.consent input:checked::after { content: ""; width: 11px; height: 6px; border-left: 2px solid var(--on-pink); border-bottom: 2px solid var(--on-pink); transform: rotate(-45deg) translate(1px, -1px); }
+.err { color: var(--error); font-size: 14px; }
+.status { font-size: 14px; color: var(--muted); min-height: 1em; }
+.status.bad { color: var(--error); }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.done { background: var(--surface); border: 3px solid var(--pink); padding: 28px 20px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+
+/* FAQ */
+.faq details { border-top: 1px solid var(--line); }
+.faq details:last-child { border-bottom: 1px solid var(--line); }
+.faq summary { cursor: pointer; list-style: none; padding: 18px 40px 18px 0; position: relative; font-family: var(--display); font-weight: 700; font-size: 20px; color: var(--fg); min-height: 44px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 4px; top: 14px; font-size: 26px; color: var(--eyebrow); font-family: var(--text); }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { padding: 0 0 20px; max-width: 62ch; }
+
+/* Bunn */
+.foot { padding-block: 48px 64px; }
+.foot .wrap { display: flex; flex-direction: column; gap: 14px; }
+.foot .small { font-size: 14px; color: var(--muted); }
+
+/* Grunnleggerkort */
+.founder { background: var(--surface); }
+.card-founder { background: var(--bg); border: 3px solid var(--pink); padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; }
+.founder-check { background: var(--bg); border: 2px solid var(--line); padding: 14px; }
+.founder-check b { color: var(--fg); }
+
+/* Samarbeid */
+select, textarea { width: 100%; min-height: 48px; padding: 10px 12px; background: var(--bg); color: var(--fg); border: 2px solid var(--line); border-radius: 0; font: inherit; font-size: 16px; }
+select:focus, textarea:focus { border-color: var(--pink); outline: none; }
+textarea { min-height: 140px; resize: vertical; }
+.who { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.who li { padding: 16px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+.who b { font-family: var(--display); font-size: 20px; color: var(--fg); letter-spacing: -0.01em; }
+.who span { font-size: 16px; }
+
+/* Undersøkelse */
+.top .stepcount { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.progress { height: 4px; background: var(--raised); }
+.progress span { display: block; height: 100%; width: 0; background: var(--pink); transition: width 200ms; }
+.survey { padding-block: 32px 64px; }
+.survey .wrap, .results .wrap { max-width: 640px; }
+.survey form { display: flex; flex-direction: column; gap: 24px; }
+.step { display: flex; flex-direction: column; gap: 28px; }
+.intro { gap: 18px; padding-top: 16px; }
+.intro h1 { font-size: clamp(36px, 9vw, 56px); }
+.facts { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.facts li { padding: 8px 12px; border: 1px solid var(--line); color: var(--fg); font-size: 15px; font-weight: 500; }
+.q { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.q legend { font-family: var(--display); font-size: clamp(24px, 6vw, 30px); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; color: var(--fg); margin-bottom: 4px; }
+.q legend:focus { outline: none; }
+.hint { font-size: 14px; color: var(--muted); }
+.opts { display: flex; flex-direction: column; gap: 8px; }
+.opt-row { position: relative; cursor: pointer; }
+.opt-row input, .scale-opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.opt-row span { display: flex; align-items: center; min-height: 52px; padding: 12px 16px 12px 48px; border: 2px solid var(--line); background: var(--surface); color: var(--fg); font-size: 16px; line-height: 1.35; position: relative; }
+.opt-row span::before { content: ""; position: absolute; left: 16px; top: 50%; width: 18px; height: 18px; margin-top: -9px; border: 2px solid var(--muted); }
+.opt-row input[type="radio"] + span::before { border-radius: 50%; }
+.opt-row input:checked + span { border-color: var(--pink); }
+.opt-row input:checked + span::before { border-color: var(--pink); background: var(--pink); box-shadow: inset 0 0 0 3px var(--surface); }
+.opt-row input:focus-visible + span, .scale-opt input:focus-visible + span { outline: 2px solid var(--pink); outline-offset: 2px; }
+.opt-row input:disabled + span, .chip input:disabled + span { opacity: 0.45; cursor: not-allowed; }
+.scale { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.scale-opt { cursor: pointer; position: relative; }
+.scale-opt span { display: grid; place-items: center; height: 56px; border: 2px solid var(--line); background: var(--surface); font-family: var(--display); font-weight: 800; font-size: 22px; color: var(--fg); }
+.scale-opt input:checked + span { background: var(--pink); border-color: var(--pink); color: var(--on-pink); }
+.scale-ends { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
+.q textarea { width: 100%; min-height: 110px; padding: 10px 12px; background: var(--bg); color: var(--fg); border: 2px solid var(--line); border-radius: 0; font: inherit; font-size: 16px; resize: vertical; }
+.q textarea:focus { border-color: var(--pink); outline: none; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.nav { display: flex; gap: 12px; position: sticky; bottom: 0; padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)); background: var(--bg); border-top: 1px solid var(--line); }
+.nav .btn { flex: 1; }
+.nav #back { flex: 0 0 auto; }
+.survey .done h2 { font-size: clamp(32px, 8vw, 44px); }
+
+/* Resultater */
+.results { padding-block: 32px 64px; }
+.login { max-width: 420px; margin: 32px auto 0; }
+.res-title { font-size: clamp(36px, 8vw, 52px); }
+.res-head { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+.chip-link { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border: 2px solid var(--line); color: var(--fg); text-decoration: none; font-weight: 500; font-size: 15px; }
+.chip-link.on { background: var(--pink); border-color: var(--pink); color: var(--on-pink); }
+.res-q { padding-block: 28px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+.res-q h2 { font-size: 22px; line-height: 1.2; letter-spacing: -0.015em; }
+.avg { font-family: var(--display); font-weight: 800; font-size: 28px; color: var(--fg); }
+.bars { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.bars li { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "label num" "track track"; gap: 4px 12px; font-size: 15px; }
+.bar-label { grid-area: label; color: var(--fg); }
+.bar-num { grid-area: num; font-variant-numeric: tabular-nums; color: var(--fg); font-weight: 700; }
+.bar-num small { color: var(--muted); font-weight: 400; }
+.bar-track { grid-area: track; height: 10px; background: var(--raised); }
+.bar-fill { display: block; height: 100%; background: var(--pink); }
+.quotes { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.quotes li { padding: 12px 14px; background: var(--surface); border-left: 3px solid var(--pink); color: var(--fg); }
+
+/* Personvernside */
+.legal { padding-block: 48px 64px; }
+.legal .wrap { max-width: 760px; display: flex; flex-direction: column; gap: 16px; }
+.legal h2 { font-size: 26px; margin-top: 16px; }
+.legal ul { margin: 0; padding-left: 20px; }
+
+@media (min-width: 760px) {
+  section { padding-block: 80px; }
+  .hero-text { padding-block: 280px 72px; }
+  .usp-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .usp-list li { border-bottom: 0; border-right: 1px solid var(--line); }
+  .usp-list li:last-child { border-right: 0; }
+  .rooms { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .grid2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 56px; align-items: start; }
+  .row2 { grid-template-columns: 1fr 1fr; }
+  .form { padding: 32px; }
+  .card-founder { padding: 32px; }
+}
+
+/* Logo: kun de offisielle logofilene i assets/logo */
+.logo { display: inline-flex; align-items: center; }
+.logo img { display: block; height: 30px; width: auto; }
+.logo-mark { display: block; height: 40px; width: auto; align-self: flex-start; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <span class="logo"><img src="assets/logo/hub-logo-pink.svg" alt="HUB" width="99" height="30"></span>
+    <p class="stepcount" id="stepcount" aria-live="polite"></p>
+  </div>
+  <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+</header>
+
+<main class="survey">
+  <div class="wrap">
+    <form id="survey-form" novalidate>
+      <div class="step intro" data-intro>
+        <p class="eyebrow">Undersøkelse</p>
+        <h1>Hvordan ser du kamp og spiller med venner?</h1>
+        <p class="lead">Vi vil vite hvordan folk i Oslo ser sport, gamer og kjører simracing sammen med andre i dag, og hva de savner.</p>
+        <ul class="facts">
+          <li>Rundt to minutter</li>
+          <li>Svarene er anonyme</li>
+        </ul>
+      </div>
+
+      <div class="step" hidden>
+        <fieldset class="q" data-key="segment" data-type="multi" data-required>
+          <legend>Hva kjenner du deg igjen i?</legend>
+          <p class="hint">Velg alt som passer.</p>
+          <div class="opts">
+            <label class="opt-row"><input type="checkbox" name="segment" value="sport"><span>Jeg ser fotball eller annen sport på pub eller hos venner</span></label>
+            <label class="opt-row"><input type="checkbox" name="segment" value="gaming"><span>Jeg gamer, alene eller med venner</span></label>
+            <label class="opt-row"><input type="checkbox" name="segment" value="sim"><span>Jeg er interessert i simracing eller motorsport</span></label>
+            <label class="opt-row"><input type="checkbox" name="segment" value="arr"><span>Jeg arrangerer ting for venner eller jobb, som bursdag, utdrikningslag eller firmatur</span></label>
+          </div>
+          <p class="err" hidden>Velg minst ett svar.</p>
+        </fieldset>
+      </div>
+      <div class="step" data-if="sport" hidden>
+        <fieldset class="q" data-key="sport_ute" data-type="single" data-required>
+          <legend>Hvor ofte ser du sport ute, på pub eller lignende?</legend>
+          <div class="opts">
+            <label class="opt-row"><input type="radio" name="sport_ute" value="ukentlig"><span>Hver uke</span></label>
+            <label class="opt-row"><input type="radio" name="sport_ute" value="maanedlig"><span>Et par ganger i måneden</span></label>
+            <label class="opt-row"><input type="radio" name="sport_ute" value="sjelden"><span>Noen ganger i året</span></label>
+            <label class="opt-row"><input type="radio" name="sport_ute" value="aldri"><span>Sjelden eller aldri</span></label>
+          </div>
+          <p class="err" hidden>Velg et svar.</p>
+        </fieldset>
+        <fieldset class="q" data-key="innhold" data-type="multi">
+          <legend>Hva ser du helst?</legend>
+          <p class="hint">Velg alt som passer.</p>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="innhold" value="pl"><span>Premier League</span></label>
+            <label class="chip"><input type="checkbox" name="innhold" value="cl"><span>Champions League</span></label>
+            <label class="chip"><input type="checkbox" name="innhold" value="eliteserien"><span>Eliteserien</span></label>
+            <label class="chip"><input type="checkbox" name="innhold" value="laliga"><span>LaLiga</span></label>
+            <label class="chip"><input type="checkbox" name="innhold" value="bundesliga"><span>Bundesliga</span></label>
+            <label class="chip"><input type="checkbox" name="innhold" value="landslag"><span>Landskamper</span></label>
+            <label class="chip"><input type="checkbox" name="innhold" value="f1"><span>Formel 1</span></label>
+            <label class="chip"><input type="checkbox" name="innhold" value="nhl"><span>NHL</span></label>
+            <label class="chip"><input type="checkbox" name="innhold" value="ufc"><span>UFC og MMA</span></label>
+            <label class="chip"><input type="checkbox" name="innhold" value="dart"><span>Dart</span></label>
+            <label class="chip"><input type="checkbox" name="innhold" value="golf"><span>Golf</span></label>
+            <label class="chip"><input type="checkbox" name="innhold" value="tennis"><span>Tennis</span></label>
+            <label class="chip"><input type="checkbox" name="innhold" value="sykkel"><span>Sykkel</span></label>
+            <label class="chip"><input type="checkbox" name="innhold" value="esport"><span>E-sport</span></label>
+          </div>
+        </fieldset>
+      </div>
+      <div class="step" data-if="sport" hidden>
+        <fieldset class="q" data-key="pub_problem" data-type="multi" data-max="3">
+          <legend>Hva er det verste med å se kamp på pub i dag?</legend>
+          <p class="hint">Velg opptil tre.</p>
+          <div class="opts">
+            <label class="opt-row"><input type="checkbox" name="pub_problem" value="fullt"><span>Fullt, vanskelig å få plass</span></label>
+            <label class="opt-row"><input type="checkbox" name="pub_problem" value="skjerm"><span>Ser dårlig skjermen</span></label>
+            <label class="opt-row"><input type="checkbox" name="pub_problem" value="feil_kamp"><span>De viser ikke kampen jeg vil se</span></label>
+            <label class="opt-row"><input type="checkbox" name="pub_problem" value="lyd"><span>Hører ikke lyden</span></label>
+            <label class="opt-row"><input type="checkbox" name="pub_problem" value="brak"><span>For mye bråk eller fyll</span></label>
+            <label class="opt-row"><input type="checkbox" name="pub_problem" value="dyrt"><span>Det blir dyrt</span></label>
+            <label class="opt-row"><input type="checkbox" name="pub_problem" value="gjengen"><span>Vanskelig å samle hele gjengen</span></label>
+            <label class="opt-row"><input type="checkbox" name="pub_problem" value="ingenting"><span>Ingenting, jeg trives på pub</span></label>
+          </div>
+        </fieldset>
+      </div>
+      <div class="step" data-if="gaming,sim" hidden>
+        <fieldset class="q" data-key="spill" data-type="multi">
+          <legend>Hva spiller dere når dere er samlet?</legend>
+          <p class="hint">Velg alt som passer.</p>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="spill" value="eafc"><span>EA FC / FIFA</span></label>
+            <label class="chip"><input type="checkbox" name="spill" value="nintendo"><span>Mario Kart og Nintendo</span></label>
+            <label class="chip"><input type="checkbox" name="spill" value="skyte"><span>Skytespill</span></label>
+            <label class="chip"><input type="checkbox" name="spill" value="fortnite"><span>Fortnite</span></label>
+            <label class="chip"><input type="checkbox" name="spill" value="fighting"><span>Fighting, som Street Fighter og Tekken</span></label>
+            <label class="chip"><input type="checkbox" name="spill" value="retro"><span>Retro</span></label>
+            <label class="chip"><input type="checkbox" name="spill" value="racing"><span>Racing og simracing</span></label>
+            <label class="chip"><input type="checkbox" name="spill" value="party"><span>Partyspill</span></label>
+            <label class="chip"><input type="checkbox" name="spill" value="ingen"><span>Vi spiller ikke sammen</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="q" data-key="spill_hvor" data-type="single">
+          <legend>Hvor spiller dere sammen i dag?</legend>
+          <div class="opts">
+            <label class="opt-row"><input type="radio" name="spill_hvor" value="hjemme"><span>Hjemme hos noen</span></label>
+            <label class="opt-row"><input type="radio" name="spill_hvor" value="online"><span>Online, hver for oss</span></label>
+            <label class="opt-row"><input type="radio" name="spill_hvor" value="ute"><span>På gamingbar eller LAN</span></label>
+            <label class="opt-row"><input type="radio" name="spill_hvor" value="ikke"><span>Vi spiller ikke sammen</span></label>
+          </div>
+        </fieldset>
+      </div>
+      <div class="step" hidden>
+        <fieldset class="q" data-key="viktigst" data-type="multi" data-required data-max="3">
+          <legend>Hva er viktigst for deg når du ser kamp eller spiller sammen med andre?</legend>
+          <p class="hint">Velg opptil tre.</p>
+          <div class="opts">
+            <label class="opt-row"><input type="checkbox" name="viktigst" value="skjerm"><span>Stor skjerm og god lyd</span></label>
+            <label class="opt-row"><input type="checkbox" name="viktigst" value="velge"><span>Å få se det jeg vil se</span></label>
+            <label class="opt-row"><input type="checkbox" name="viktigst" value="egen_plass"><span>Å ha plassen for oss selv</span></label>
+            <label class="opt-row"><input type="checkbox" name="viktigst" value="stemning"><span>Stemning og mye folk</span></label>
+            <label class="opt-row"><input type="checkbox" name="viktigst" value="mat"><span>God mat</span></label>
+            <label class="opt-row"><input type="checkbox" name="viktigst" value="ol"><span>Øl og drikke</span></label>
+            <label class="opt-row"><input type="checkbox" name="viktigst" value="utstyr"><span>Godt utstyr til gaming eller simracing</span></label>
+            <label class="opt-row"><input type="checkbox" name="viktigst" value="sentralt"><span>Sentral beliggenhet</span></label>
+            <label class="opt-row"><input type="checkbox" name="viktigst" value="pris"><span>Lav pris</span></label>
+            <label class="opt-row"><input type="checkbox" name="viktigst" value="gjengen"><span>At hele gjengen får plass</span></label>
+          </div>
+          <p class="err" hidden>Velg minst ett svar.</p>
+        </fieldset>
+      </div>
+      <div class="step" hidden>
+        <fieldset class="q" data-key="gruppe" data-type="single" data-required>
+          <legend>Hvor mange er dere vanligvis når dere ser kamp eller spiller sammen?</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="gruppe" value="2-3"><span>2–3</span></label>
+            <label class="chip"><input type="radio" name="gruppe" value="4-6"><span>4–6</span></label>
+            <label class="chip"><input type="radio" name="gruppe" value="7-10"><span>7–10</span></label>
+            <label class="chip"><input type="radio" name="gruppe" value="11+"><span>11 eller flere</span></label>
+          </div>
+          <p class="err" hidden>Velg et svar.</p>
+        </fieldset>
+        <fieldset class="q" data-key="tider" data-type="multi">
+          <legend>Når pleier dere å samles?</legend>
+          <p class="hint">Velg alt som passer.</p>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="tider" value="hverdag_dag"><span>Hverdag ettermiddag</span></label>
+            <label class="chip"><input type="checkbox" name="tider" value="hverdag_kveld"><span>Hverdag kveld</span></label>
+            <label class="chip"><input type="checkbox" name="tider" value="fredag"><span>Fredag</span></label>
+            <label class="chip"><input type="checkbox" name="tider" value="lordag"><span>Lørdag</span></label>
+            <label class="chip"><input type="checkbox" name="tider" value="sondag"><span>Søndag</span></label>
+          </div>
+        </fieldset>
+      </div>
+      <div class="step" hidden>
+        <fieldset class="q" data-key="forbruk" data-type="single" data-required>
+          <legend>Hva bruker du omtrent på en kveld ute med kamp eller spill, mat og drikke inkludert?</legend>
+          <div class="opts">
+            <label class="opt-row"><input type="radio" name="forbruk" value="&lt;200"><span>Under 200 kr</span></label>
+            <label class="opt-row"><input type="radio" name="forbruk" value="200-399"><span>200–399 kr</span></label>
+            <label class="opt-row"><input type="radio" name="forbruk" value="400-599"><span>400–599 kr</span></label>
+            <label class="opt-row"><input type="radio" name="forbruk" value="600-799"><span>600–799 kr</span></label>
+            <label class="opt-row"><input type="radio" name="forbruk" value="800+"><span>800 kr eller mer</span></label>
+          </div>
+          <p class="err" hidden>Velg et svar.</p>
+        </fieldset>
+        <fieldset class="q" data-key="lavpris" data-type="single">
+          <legend>Hvis det var halv pris en vanlig tirsdag klokken 17, ville du og gjengen gått ut da?</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="lavpris" value="ja"><span>Ja</span></label>
+            <label class="chip"><input type="radio" name="lavpris" value="kanskje"><span>Kanskje</span></label>
+            <label class="chip"><input type="radio" name="lavpris" value="nei"><span>Nei</span></label>
+          </div>
+        </fieldset>
+      </div>
+      <div class="step" hidden>
+        <fieldset class="q" data-key="fornoyd" data-type="scale" data-required>
+          <legend>Hvor fornøyd er du med stedene du ser kamp eller spiller sammen med andre i dag?</legend>
+          <div class="scale">
+            <label class="scale-opt"><input type="radio" name="fornoyd" value="1"><span>1</span></label>
+            <label class="scale-opt"><input type="radio" name="fornoyd" value="2"><span>2</span></label>
+            <label class="scale-opt"><input type="radio" name="fornoyd" value="3"><span>3</span></label>
+            <label class="scale-opt"><input type="radio" name="fornoyd" value="4"><span>4</span></label>
+            <label class="scale-opt"><input type="radio" name="fornoyd" value="5"><span>5</span></label>
+          </div>
+          <div class="scale-ends"><span>Lite fornøyd</span><span>Svært fornøyd</span></div>
+          <p class="err" hidden>Velg et svar.</p>
+        </fieldset>
+        <fieldset class="q" data-key="savner" data-type="text">
+          <legend>Hva savner du når du ser kamp eller spiller sammen med andre i dag?</legend>
+          <p class="hint">Valgfritt.</p>
+          <textarea name="savner" maxlength="500" rows="4" aria-label="Hva savner du når du ser kamp eller spiller sammen med andre i dag?"></textarea>
+        </fieldset>
+      </div>
+      <div class="step" hidden>
+        <fieldset class="q" data-key="alder" data-type="single" data-required>
+          <legend>Hvor gammel er du?</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="alder" value="u18"><span>Under 18</span></label>
+            <label class="chip"><input type="radio" name="alder" value="18-24"><span>18–24</span></label>
+            <label class="chip"><input type="radio" name="alder" value="25-34"><span>25–34</span></label>
+            <label class="chip"><input type="radio" name="alder" value="35-44"><span>35–44</span></label>
+            <label class="chip"><input type="radio" name="alder" value="45-54"><span>45–54</span></label>
+            <label class="chip"><input type="radio" name="alder" value="55+"><span>55 eller eldre</span></label>
+          </div>
+          <p class="err" hidden>Velg et svar.</p>
+        </fieldset>
+        <fieldset class="q" data-key="kjonn" data-type="single">
+          <legend>Kjønn</legend>
+          <p class="hint">Valgfritt.</p>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="kjonn" value="mann"><span>Mann</span></label>
+            <label class="chip"><input type="radio" name="kjonn" value="kvinne"><span>Kvinne</span></label>
+            <label class="chip"><input type="radio" name="kjonn" value="annet"><span>Annet</span></label>
+            <label class="chip"><input type="radio" name="kjonn" value="vil_ikke"><span>Vil ikke svare</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="q" data-key="bosted" data-type="single">
+          <legend>Hvor bor du?</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="bosted" value="oslo_indre"><span>Oslo, innenfor Ring 3</span></label>
+            <label class="chip"><input type="radio" name="bosted" value="oslo_ytre"><span>Oslo, utenfor Ring 3</span></label>
+            <label class="chip"><input type="radio" name="bosted" value="akershus"><span>Akershus</span></label>
+            <label class="chip"><input type="radio" name="bosted" value="annet"><span>Andre steder</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="step" data-last hidden>
+        <fieldset class="q">
+          <legend>Vil du høre fra oss?</legend>
+          <p class="hint">Valgfritt. Legg igjen e-post, så sier vi fra når vi har noe å vise deg. E-posten lagres for seg, ikke sammen med svarene dine.</p>
+          <label class="sr" for="s-email">E-post</label>
+          <input id="s-email" type="email" autocomplete="email" inputmode="email" maxlength="120" placeholder="navn@eksempel.no">
+          <p class="err" id="s-email-err" hidden>E-postadressen ser ikke riktig ut.</p>
+          <label class="consent" for="s-consent">
+            <input id="s-consent" type="checkbox">
+            <span>Ja, HUB kan sende meg e-post om dette. Les <a href="personvern.html">personvernerklæringen</a>.</span>
+          </label>
+          <p class="err" id="s-consent-err" hidden>Kryss av for å få e-post fra oss, eller la e-postfeltet stå tomt.</p>
+        </fieldset>
+      </div>
+
+      <div class="hp" aria-hidden="true">
+        <label for="s-website">La dette feltet stå tomt</label>
+        <input id="s-website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="nav">
+        <button class="btn ghost" type="button" id="back" hidden>Tilbake</button>
+        <button class="btn" type="submit" id="next">Start</button>
+      </div>
+      <p class="status" id="s-status" role="status" aria-live="polite"></p>
+    </form>
+
+    <div class="done" id="s-done" hidden tabindex="-1">
+      <img class="logo-mark" src="assets/logo/hub-logo-pink.svg" alt="" width="132" height="40">
+      <h2>Takk for hjelpen.</h2>
+      <p id="s-done-text">Svarene dine hjelper oss mye.</p>
+      <p class="status" id="s-preview"></p>
+      <div class="btns">
+        <button class="btn" type="button" id="s-share">Del undersøkelsen</button>
+      </div>
+      <p class="status" id="s-share-status" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</main>
+<script>window.HUB_PREVIEW = true;</script>
+<script>(function () {
+  var form = document.getElementById('survey-form');
+  if (!form) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var all = Array.prototype.slice.call(form.querySelectorAll('.step'));
+  var next = $('next'), back = $('back'), bar = $('bar'), count = $('stepcount'), status = $('s-status');
+  var isPreview = location.protocol === 'file:' || /claude\.(ai|com)$|claudeusercontent/.test(location.hostname) || window.HUB_PREVIEW === true;
+  var params = new URLSearchParams(location.search);
+  var source = params.get('ref') || params.get('utm_content') || '';
+  var current = 0;
+
+  function segments() {
+    return Array.prototype.slice.call(form.querySelectorAll('input[name="segment"]:checked')).map(function (i) { return i.value; });
+  }
+  // Stegene som gjelder for denne personen, ut fra hva de svarte i første spørsmål.
+  function active() {
+    var seg = segments();
+    return all.filter(function (s) {
+      var cond = s.getAttribute('data-if');
+      if (!cond) return true;
+      return cond.split(',').some(function (c) { return seg.indexOf(c) !== -1; });
+    });
+  }
+
+  function show(i) {
+    var steps = active();
+    current = Math.max(0, Math.min(i, steps.length - 1));
+    all.forEach(function (s) { s.hidden = true; });
+    var step = steps[current];
+    step.hidden = false;
+    var questions = steps.length - 1; // introen teller ikke
+    var isIntro = step.hasAttribute('data-intro');
+    var isLast = current === steps.length - 1;
+    back.hidden = isIntro;
+    next.textContent = isIntro ? 'Start' : isLast ? 'Send svarene' : 'Neste';
+    count.textContent = isIntro ? '' : current + ' av ' + questions;
+    bar.style.width = isIntro ? '0%' : Math.round((current / questions) * 100) + '%';
+    status.textContent = ''; status.classList.remove('bad');
+    window.scrollTo(0, 0);
+    if (!isIntro) {
+      var legend = step.querySelector('legend');
+      if (legend) { legend.setAttribute('tabindex', '-1'); legend.focus({ preventScroll: true }); }
+    }
+  }
+
+  function answered(q) {
+    if (q.getAttribute('data-type') === 'text') return q.querySelector('textarea').value.trim() !== '';
+    return !!q.querySelector('input:checked');
+  }
+
+  function validStep(step) {
+    var first = null;
+    Array.prototype.forEach.call(step.querySelectorAll('.q[data-required]'), function (q) {
+      var ok = answered(q);
+      q.querySelector('.err').hidden = ok;
+      if (!ok && !first) first = q;
+    });
+    if (step.hasAttribute('data-last')) {
+      var email = $('s-email').value.trim();
+      var badEmail = email !== '' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+      var noConsent = email !== '' && !badEmail && !$('s-consent').checked;
+      $('s-email-err').hidden = !badEmail;
+      $('s-consent-err').hidden = !noConsent;
+      if (badEmail) { $('s-email').focus(); return false; }
+      if (noConsent) { $('s-consent').focus(); return false; }
+    }
+    if (first) { var input = first.querySelector('input, textarea'); if (input) input.focus(); return false; }
+    return true;
+  }
+
+  // Opptil N valg: lås resten når grensen er nådd.
+  Array.prototype.forEach.call(form.querySelectorAll('.q[data-max]'), function (q) {
+    var max = parseInt(q.getAttribute('data-max'), 10);
+    q.addEventListener('change', function () {
+      var boxes = q.querySelectorAll('input[type="checkbox"]');
+      var n = q.querySelectorAll('input:checked').length;
+      Array.prototype.forEach.call(boxes, function (b) { b.disabled = !b.checked && n >= max; });
+    });
+  });
+  form.addEventListener('change', function (e) {
+    var q = e.target.closest('.q');
+    if (q && q.hasAttribute('data-required') && answered(q)) q.querySelector('.err').hidden = true;
+  });
+
+  function collect() {
+    var answers = {};
+    active().forEach(function (step) {
+      Array.prototype.forEach.call(step.querySelectorAll('.q[data-key]'), function (q) {
+        var key = q.getAttribute('data-key'), type = q.getAttribute('data-type');
+        if (type === 'text') answers[key] = q.querySelector('textarea').value.trim();
+        else if (type === 'multi') answers[key] = Array.prototype.slice.call(q.querySelectorAll('input:checked')).map(function (i) { return i.value; });
+        else { var c = q.querySelector('input:checked'); answers[key] = c ? c.value : ''; }
+      });
+    });
+    return answers;
+  }
+
+  function post(url, data) {
+    return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+      .then(function (r) { return r.json().catch(function () { return { ok: false }; }); });
+  }
+
+  function finish(joined) {
+    form.hidden = true;
+    bar.style.width = '100%';
+    count.textContent = '';
+    if (joined) $('s-done-text').textContent = 'Svarene dine hjelper oss mye. Vi sier fra når vi har noe å vise deg.';
+    $('s-done').hidden = false;
+    $('s-done').focus();
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var steps = active();
+    var step = steps[current];
+    if (!validStep(step)) return;
+    if (current < steps.length - 1) { show(current + 1); return; }
+
+    var email = $('s-email').value.trim();
+    var join = email !== '' && $('s-consent').checked;
+    var map = { sport: 'kamp', gaming: 'gaming', sim: 'simracing', arr: 'selskap' };
+
+    if (isPreview) {
+      finish(join);
+      $('s-preview').textContent = 'Dette er en forhåndsvisning. Svarene lagres først når siden ligger på hubrom.no.';
+      return;
+    }
+
+    next.disabled = true; next.textContent = 'Sender …';
+    post('api/undersokelse.php', { answers: collect(), source: source, website: $('s-website').value })
+      .then(function (res) {
+        if (!res || !res.ok) throw new Error('feil');
+        if (!join) return false;
+        // Ventelisten lagres for seg, slik at svarene forblir anonyme.
+        return post('api/venteliste.php', {
+          email: email, consent: true, website: '',
+          interests: segments().map(function (s) { return map[s]; }).filter(Boolean),
+          source: 'undersokelse' + (source ? ':' + source : '')
+        }).then(function (r) { return !!(r && r.ok); }).catch(function () { return false; });
+      })
+      .then(finish)
+      .catch(function () {
+        status.textContent = 'Vi fikk ikke sendt svarene. Prøv igjen om litt.';
+        status.classList.add('bad');
+        next.disabled = false; next.textContent = 'Send svarene';
+      });
+  });
+
+  back.addEventListener('click', function () { show(current - 1); });
+
+  var share = $('s-share');
+  share.addEventListener('click', function () {
+    var url = location.protocol.indexOf('http') === 0 ? location.origin + location.pathname : 'https://hubrom.no/undersokelse.html';
+    var text = 'Har du to minutter? En kort undersøkelse om hvordan du ser kamp og spiller med venner.';
+    if (navigator.share) { navigator.share({ title: 'Sport og spill i Oslo', text: text, url: url }).catch(function () {}); return; }
+    var out = $('s-share-status');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () { out.textContent = 'Lenken er kopiert.'; }).catch(function () { out.textContent = 'Del denne lenken: ' + url; });
+    } else { out.textContent = 'Del denne lenken: ' + url; }
+  });
+
+  show(0);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+:root{
+--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:24px;--space-6:32px;--space-7:48px;--space-8:64px;--space-9:96px;--space-10:128px;
+--page-margin:clamp(20px,6.67vw,128px); /* pitch: 128px on 1920 */
+--content-max:1200px;
+--gutter:var(--space-4);
+
+/* Shape: HUB is square. Zero radius everywhere. */
+--radius-none:0;--radius-pill:999px;
+--border-thin:1px;--border-frame:3px;--border-accent:4px;
+--frame-brand:var(--border-frame) solid var(--hub-pink);
+
+/* Elevation: flat. Shadows only for floating layers (dialog, toast). */
+--shadow-none:none;
+--shadow-float:0 12px 32px rgba(23,20,26,.28);
+--shadow-glow:0 0 24px rgba(208,66,106,.45); /* neon-sign motif, use sparingly on ink */
+
+--ease-out:cubic-bezier(.2,.7,.2,1); /* @kind other */
+--duration-fast:120ms; /* @kind other */
+--duration-base:200ms; /* @kind other */
+--duration-slow:360ms; /* @kind other */
+
+--control-h-sm:36px;--control-h-md:44px;--control-h-lg:56px;
+}

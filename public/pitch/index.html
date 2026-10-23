@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>HUB pitch</title>
+<link rel="icon" href="../assets/logo/hub-logo-pink-square.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#0e0c10;color:#f6f2ee;font-family:'DM Sans',system-ui,sans-serif}
+body{display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:12px;padding:10px max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid #332c36;flex:none}
+.bar a.home{color:#cfc6cc;text-decoration:none;font-size:14px;font-weight:500;min-height:40px;display:flex;align-items:center;gap:8px}
+.bar a.home:hover{color:#f6f2ee}
+.bar img{height:20px}
+.bar .sp{flex:1}
+.bar button{font:inherit;font-size:14px;font-weight:700;color:#f6f2ee;background:#241f27;border:1px solid #5a4e57;min-width:44px;min-height:40px;cursor:pointer}
+.bar button:hover{border-color:#d0426a}
+.bar .n{font-size:14px;color:#9a8f97;font-variant-numeric:tabular-nums;min-width:56px;text-align:center}
+:focus-visible{outline:2px solid #d0426a;outline-offset:2px}
+.stage{flex:1;position:relative;overflow:hidden}
+.deck{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0}
+.slide{position:absolute!important;inset:0;width:1920px;height:1080px;box-sizing:border-box;display:none!important;overflow:hidden}
+.slide.on{display:flex!important}
+.slide p,.slide h1,.slide h2,.slide h3{margin:0}
+.slide table{border-collapse:collapse;width:100%}
+.slide th,.slide td{text-align:left;padding:14px 20px}
+.slide aside{display:none}
+.notes{flex:none;max-height:22vh;overflow:auto;padding:12px max(16px,env(safe-area-inset-left,0px));border-top:1px solid #332c36;font-size:15px;line-height:1.5;color:#cfc6cc}
+</style>
+</head>
+<body>
+<div class="bar">
+<a class="home" href="../"><img src="img/hub-logo-pink.svg" alt="HUB"> Til prosjektsiden</a>
+<span class="sp"></span>
+<button type="button" id="notes" aria-pressed="false">Notater</button>
+<button type="button" id="prev" aria-label="Forrige lysbilde">←</button>
+<span class="n" id="n"></span>
+<button type="button" id="next" aria-label="Neste lysbilde">→</button>
+</div>
+<div class="stage" id="stage"><div class="deck" id="deck">
+<section class="slide" id="cover" data-transition="fade" style="background:#F6F2EE;color:#17141A;font-family:'DM Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;justify-content:center;align-items:start;gap:56px">
+<img src="img/hub-logo-pink.svg" alt="HUB-logo: bokstavene H, U og B i hver sin rute, som på tippekupongen" style="width:940px;height:302px;object-fit:contain">
+<p style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:700;line-height:1.1;letter-spacing:-1px;width:1400px">Ditt eget kamprom. Book det med gjengen.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1000px;font-size:24px;color:#6B6168">Pitch · Kristian · [dato]</p>
+<aside>Start med logoen og la folk se kupong-referansen selv før du forklarer den. Én setning: HUB er karaokerommet, bare for sport.</aside>
+</section>
+<section class="slide" id="ide" data-transition="fade" style="background:#17141A;color:#F6F2EE;font-family:'DM Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;justify-content:center;gap:48px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#E8668B">Idéen</p>
+<h2 style="font-family:'Archivo', Arial, sans-serif;font-size:120px;font-weight:800;line-height:1.02;letter-spacing:-2px;width:1600px">Karaokerommet, bare for sport.</h2>
+<p style="font-size:40px;line-height:1.4;color:#CFC6CC;width:1350px">Private rom for vennegjenger med storskjerm, god lyd, gode sofaer og mat servert på rommet. Booket på forhånd, bare for dere.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:600px;font-size:24px;color:#9A8F97">HUB · 2</p>
+<aside>Karaoke har allerede vist at folk betaler for et privat rom med vennene sine. HUB bytter mikrofonen med en storskjerm.</aside>
+</section>
+<section class="slide" id="fasade" data-transition="fade" style="background:#17141A;color:#F6F2EE;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column">
+<img src="img/fasade.avif" alt="Illustrasjon av HUB-fasaden en regnfull kveld, med det rosa HUB-skiltet over inngangen og resepsjonen synlig innenfor" style="position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover">
+<div style="position:absolute;left:0;top:760px;width:1920px;height:320px;background:linear-gradient(180deg, rgba(23,20,26,0) 0%, rgba(23,20,26,0.92) 100%)"></div>
+<p style="position:absolute;left:128px;top:920px;width:1300px;font-family:'Archivo', Arial, sans-serif;font-size:44px;font-weight:700;line-height:1.2">Slik kan HUB se ut fra gata</p>
+<p style="position:absolute;left:1500px;top:934px;width:292px;font-size:24px;color:#CFC6CC;text-align:right">Illustrasjon</p>
+<aside>La bildet stå et øyeblikk. Det viser stemningen: mørkt, varmt og eksklusivt, med logoen som lyser opp gata.</aside>
+</section>
+<section class="slide" id="navn" data-transition="fade" style="background:#F6F2EE;color:#17141A;font-family:'DM Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#A8304F">Navnet</p>
+<h2 style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px">Rett fra tippekupongen</h2>
+</div>
+<div style="display:flex;gap:40px">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="width:200px;height:200px;border:16px solid #D0426A;display:flex;align-items:center;justify-content:center"><p style="font-family:'Archivo', Arial, sans-serif;font-size:120px;font-weight:700;line-height:1;color:#D0426A">H</p></div>
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:44px;font-weight:700">Hjemme</h3>
+<p style="font-size:30px;line-height:1.4;color:#4A4249">Et sted som føles som din egen stue</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="width:200px;height:200px;border:16px solid #D0426A;display:flex;align-items:center;justify-content:center"><p style="font-family:'Archivo', Arial, sans-serif;font-size:120px;font-weight:700;line-height:1;color:#D0426A">U</p></div>
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:44px;font-weight:700">Uavgjort</h3>
+<p style="font-size:30px;line-height:1.4;color:#4A4249">Nøytral grunn der begge lag kan møtes</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="width:200px;height:200px;border:16px solid #D0426A;display:flex;align-items:center;justify-content:center"><p style="font-family:'Archivo', Arial, sans-serif;font-size:120px;font-weight:700;line-height:1;color:#D0426A">B</p></div>
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:44px;font-weight:700">Borte</h3>
+<p style="font-size:30px;line-height:1.4;color:#4A4249">En kveld ute, borte fra hverdagen</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:600px;font-size:24px;color:#6B6168">HUB · 4</p>
+<aside>For de fleste betyr hub et samlingssted. For alle som har fylt ut en tippekupong er det i tillegg en liten aha-opplevelse. Rommene kan hete H, U og B: «Vi har booket B på lørdag».</aside>
+</section>
+<section class="slide" id="rommene" data-transition="fade" style="background:#17141A;color:#F6F2EE;font-family:'DM Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#E8668B">Rommene</p>
+<h2 style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px">Oppkalt etter stadioner fra tippekampen</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;border:6px solid #D0426A;padding:28px"><h3 style="font-family:'Archivo', Arial, sans-serif;font-size:36px;font-weight:700">Highfield Road</h3><p style="font-size:26px;color:#CFC6CC">Coventry · til 2005</p></div>
+<div style="display:flex;flex-direction:column;gap:10px;border:6px solid #D0426A;padding:28px"><h3 style="font-family:'Archivo', Arial, sans-serif;font-size:36px;font-weight:700">Filbert Street</h3><p style="font-size:26px;color:#CFC6CC">Leicester · til 2002</p></div>
+<div style="display:flex;flex-direction:column;gap:10px;border:6px solid #D0426A;padding:28px"><h3 style="font-family:'Archivo', Arial, sans-serif;font-size:36px;font-weight:700">Roker Park</h3><p style="font-size:26px;color:#CFC6CC">Sunderland · til 1997</p></div>
+<div style="display:flex;flex-direction:column;gap:10px;border:6px solid #D0426A;padding:28px"><h3 style="font-family:'Archivo', Arial, sans-serif;font-size:36px;font-weight:700">Plough Lane</h3><p style="font-size:26px;color:#CFC6CC">Wimbledon · til 1991</p></div>
+<div style="display:flex;flex-direction:column;gap:10px;border:6px solid #D0426A;padding:28px"><h3 style="font-family:'Archivo', Arial, sans-serif;font-size:36px;font-weight:700">Maine Road</h3><p style="font-size:26px;color:#CFC6CC">Man City · til 2003</p></div>
+<div style="display:flex;flex-direction:column;gap:10px;border:6px solid #D0426A;padding:28px"><h3 style="font-family:'Archivo', Arial, sans-serif;font-size:36px;font-weight:700">Upton Park</h3><p style="font-size:26px;color:#CFC6CC">West Ham · til 2016</p></div>
+<div style="display:flex;flex-direction:column;gap:10px;border:6px solid #D0426A;padding:28px"><h3 style="font-family:'Archivo', Arial, sans-serif;font-size:36px;font-weight:700">The Dell</h3><p style="font-size:26px;color:#CFC6CC">Southampton · til 2001</p></div>
+<div style="display:flex;flex-direction:column;justify-content:center;gap:10px;border:6px dashed #5A4E57;padding:28px"><p style="font-size:26px;color:#9A8F97">Flere rom etter hvert</p></div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#CFC6CC">Hvert rom får en messingplate ved døra med stadionets historie.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:600px;font-size:24px;color:#9A8F97">HUB · 5</p>
+<aside>Navnene vekker nostalgi hos alle som husker tippekampen på lørdager. Klubbene er spredt, så HUB holder seg nøytral. Piloten starter med de tre første rommene.</aside>
+</section>
+<section class="slide" id="pilotrom" data-transition="fade" style="background:#17141A;color:#F6F2EE;font-family:'DM Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#E8668B">De tre første</p>
+<h2 style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px">Hvert rom har sin egen historie</h2>
+</div>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<img src="img/room-highfield-road.avif" alt="Illustrasjon av rommet Highfield Road med storskjerm, mørke sofaer og stadionbilde på veggen" style="width:533px;height:400px;object-fit:cover">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:36px;font-weight:700"><span style="color:#E8668B">1</span> Highfield Road</h3>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<img src="img/room-filbert-street.avif" alt="Illustrasjon av rommet Filbert Street med storskjerm, innrammede bilder og drakt på veggen" style="width:533px;height:400px;object-fit:cover">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:36px;font-weight:700"><span style="color:#E8668B">2</span> Filbert Street</h3>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<img src="img/room-roker-park.avif" alt="Illustrasjon av rommet Roker Park med storskjerm, skinnsofaer og bildevegg" style="width:533px;height:400px;object-fit:cover">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:36px;font-weight:700"><span style="color:#E8668B">3</span> Roker Park</h3>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:600px;font-size:24px;color:#9A8F97">HUB · 6 · Illustrasjoner</p>
+<aside>Hvert rom får farger, bilder og detaljer fra sitt stadion, men samme komfort: storskjerm, god lyd, store sofaer og servering.</aside>
+</section>
+<section class="slide" id="problem" data-section="Hvorfor folk vil booke, og hvordan det føles" data-transition="fade" style="background:#F6F2EE;color:#17141A;font-family:'DM Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#A8304F">Muligheten</p>
+<h2 style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px">Å se kamp med gjengen er vanskeligere enn det burde være</h2>
+</div>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#EDE6E0;padding:40px;border-left:8px solid #D0426A">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Sportsbaren</h3>
+<p style="font-size:30px;line-height:1.4;color:#4A4249">Fullt, bråkete og vanskelig å få bord. Du ser kampen, men hører den ikke.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#EDE6E0;padding:40px;border-left:8px solid #D0426A">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Hjemme hos noen</h3>
+<p style="font-size:30px;line-height:1.4;color:#4A4249">Én må være vert, rydde og handle. Plassen og skjermen strekker ikke til.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#17141A;padding:40px;border-left:8px solid #D0426A">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700;color:#E8668B">HUB</h3>
+<p style="font-size:30px;line-height:1.4;color:#F6F2EE">Eget rom, stor skjerm og mat på bordet. Ingen må rydde etterpå.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:600px;font-size:24px;color:#6B6168">HUB · 7</p>
+<aside>Gjør det gjenkjennelig. De fleste har opplevd begge varianter, og HUB tar det beste fra begge.</aside>
+</section>
+<section class="slide" id="opplevelse" data-transition="fade" style="background:#17141A;color:#F6F2EE;font-family:'DM Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#E8668B">Opplevelsen</p>
+<h2 style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px">Fra booking til sluttsignal</h2>
+</div>
+<div style="display:flex;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;border-top:8px solid #D0426A;padding:32px 0 0 0">
+<p style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1;color:#E8668B">1</p>
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Book</h3>
+<p style="font-size:28px;line-height:1.4;color:#CFC6CC">Velg kamp, rom og matpakke på nett. Del regningen i appen.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;border-top:8px solid #D0426A;padding:32px 0 0 0">
+<p style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1;color:#E8668B">2</p>
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Kom inn</h3>
+<p style="font-size:28px;line-height:1.4;color:#CFC6CC">Rommet står klart med kampen på skjermen og drikke på bordet.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;border-top:8px solid #D0426A;padding:32px 0 0 0">
+<p style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1;color:#E8668B">3</p>
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Pause</h3>
+<p style="font-size:28px;line-height:1.4;color:#CFC6CC">Maten kommer inn i pausen. Bestill mer med ett trykk.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;border-top:8px solid #D0426A;padding:32px 0 0 0">
+<p style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1;color:#E8668B">4</p>
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Etterpå</h3>
+<p style="font-size:28px;line-height:1.4;color:#CFC6CC">Bli for høydepunkter, eller gå. Ingen rydder etter dere.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:600px;font-size:24px;color:#9A8F97">HUB · 8</p>
+<aside>Servering i pausen er en liten ting som gjør opplevelsen helhetlig. Delt betaling ved booking fjerner også et vanlig irritasjonsmoment.</aside>
+</section>
+<section class="slide" id="uka" data-section="Hvordan HUB tjener penger hele uka" data-transition="fade" style="background:#F6F2EE;color:#17141A;font-family:'DM Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#A8304F">Hele uka</p>
+<h2 style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px">Kampene fyller helgene. Resten fyller hverdagene.</h2>
+</div>
+<table style="font-size:28px;color:#17141A;font-family:'DM Sans', Arial, sans-serif;padding:14px 20px">
+<tr><th style="width:24%;color:#A8304F">Når</th><th style="width:38%;color:#A8304F">Hva</th><th style="width:38%;color:#A8304F">Hvem</th></tr>
+<tr><td><b>Helg</b></td><td>Fotball, F1, håndball, ishockey</td><td>Vennegjenger og supportere</td></tr>
+<tr style="background:#EDE6E0"><td><b>Kampkvelder</b></td><td>Champions League, landskamper</td><td>Vennegjenger</td></tr>
+<tr><td><b>Hverdag kveld</b></td><td>Gaming, simracing, quiz</td><td>Gjenger og lag</td></tr>
+<tr style="background:#EDE6E0"><td><b>Hverdag dag</b></td><td>Møter og teambuilding</td><td>Bedrifter</td></tr>
+<tr><td><b>Når som helst</b></td><td>Bursdager og utdrikningslag</td><td>Private selskap</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;width:600px;font-size:24px;color:#6B6168">HUB · 9</p>
+<aside>Den største risikoen er tomme rom på hverdager. Svaret er å selge rommene til andre bruksområder enn sport når det ikke går kamper.</aside>
+</section>
+<section class="slide" id="inntekt" data-transition="fade" style="background:#17141A;color:#F6F2EE;font-family:'DM Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#E8668B">Inntektsmodell</p>
+<h2 style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px">Betalt på forhånd, før kampen starter</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#241F27;padding:36px;border-left:8px solid #D0426A">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Romleie</h3>
+<p style="font-size:28px;line-height:1.4;color:#CFC6CC">[kr __] per time, høyere pris på store kamper</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#241F27;padding:36px;border-left:8px solid #D0426A">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Mat og drikke</h3>
+<p style="font-size:28px;line-height:1.4;color:#CFC6CC">Matpakker ved booking og bestilling underveis</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#241F27;padding:36px;border-left:8px solid #D0426A">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Bedrift og selskap</h3>
+<p style="font-size:28px;line-height:1.4;color:#CFC6CC">Faste avtaler, teambuilding og private arrangementer</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#241F27;padding:36px;border-left:8px solid #D0426A">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Partnere</h3>
+<p style="font-size:28px;line-height:1.4;color:#CFC6CC">Utstyr og drikke fra sponsorer mot eksponering</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:600px;font-size:24px;color:#9A8F97">HUB · 10</p>
+<aside>Forhåndsbetaling gir forutsigbar inntekt og færre no-shows. Mat og drikke er der marginen ligger, så matpakker bør være standard i bookingen.</aside>
+</section>
+<section class="slide" id="krav" data-section="Hva som må på plass, pilot og neste steg" data-transition="fade" style="background:#F6F2EE;color:#17141A;font-family:'DM Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#A8304F">Før åpning</p>
+<h2 style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px">Fire ting som må på plass</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#EDE6E0;padding:36px;border-left:8px solid #D0426A">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Lokale</h3>
+<p style="font-size:28px;line-height:1.4;color:#4A4249">Sentralt, nær kollektivtrafikk, med åpning på kveld og helg</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#EDE6E0;padding:36px;border-left:8px solid #D0426A">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Skjenkebevilling</h3>
+<p style="font-size:28px;line-height:1.4;color:#4A4249">Forventet av gjestene. Søknaden tar tid, så den starter tidlig.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#EDE6E0;padding:36px;border-left:8px solid #D0426A">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Visningsrettigheter</h3>
+<p style="font-size:28px;line-height:1.4;color:#4A4249">Bedriftsavtaler med rettighetshaverne, en fast kostnad fra dag én</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#EDE6E0;padding:36px;border-left:8px solid #D0426A">
+<h3 style="font-family:'Archivo', Arial, sans-serif;font-size:40px;font-weight:700">Lydisolering</h3>
+<p style="font-size:28px;line-height:1.4;color:#4A4249">Full jubel i ett rom skal ikke høres i det neste</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:600px;font-size:24px;color:#6B6168">HUB · 11</p>
+<aside>Vis at du kjenner de praktiske hindrene. Det bygger tillit hos utleiere og investorer.</aside>
+</section>
+<section class="slide" id="pilot" data-transition="fade" style="background:#D0426A;color:#F6F2EE;font-family:'DM Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#F6F2EE">Piloten</p>
+<h2 style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#F6F2EE">Tre rom: Highfield Road, Filbert Street og Roker Park</h2>
+</div>
+<div style="display:flex;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#F6F2EE;padding:36px">
+<p style="font-size:26px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#A8304F">Hvor</p>
+<p style="font-size:32px;line-height:1.35;color:#17141A">[Område], [__] m²</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#F6F2EE;padding:36px">
+<p style="font-size:26px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#A8304F">Når</p>
+<p style="font-size:32px;line-height:1.35;color:#17141A">Åpning [måned år]</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#F6F2EE;padding:36px">
+<p style="font-size:26px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#A8304F">Kapital</p>
+<p style="font-size:32px;line-height:1.35;color:#17141A">[kr __] til innredning og oppstart</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#F6F2EE;padding:36px">
+<p style="font-size:26px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#A8304F">Vi måler</p>
+<p style="font-size:32px;line-height:1.35;color:#17141A">Belegg, snittkvittering og gjenkjøp</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:600px;font-size:24px;color:#F6F2EE">HUB · 12</p>
+<aside>Rommene er oppkalt etter nedlagte stadioner fra tippekampenes tid. Hvert rom kan ha en liten plate med stadionets historie. Tre rom er nok til å teste modellen. Belegg på hverdager er det viktigste tallet å følge.</aside>
+</section>
+<section class="slide" id="neste" data-transition="fade" style="background:#17141A;color:#F6F2EE;font-family:'DM Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<h2 style="font-family:'Archivo', Arial, sans-serif;font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px">Neste steg</h2>
+<div style="display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;gap:40px;align-items:center"><div style="width:88px;height:88px;border:8px solid #D0426A;display:flex;align-items:center;justify-content:center"><p style="font-family:'Archivo', Arial, sans-serif;font-size:44px;font-weight:700;line-height:1;color:#E8668B">1</p></div><p style="font-size:40px;line-height:1.3">Teste interessen med en enkel påmeldingsside</p></div>
+<div style="display:flex;gap:40px;align-items:center"><div style="width:88px;height:88px;border:8px solid #D0426A;display:flex;align-items:center;justify-content:center"><p style="font-family:'Archivo', Arial, sans-serif;font-size:44px;font-weight:700;line-height:1;color:#E8668B">2</p></div><p style="font-size:40px;line-height:1.3">Finne lokale og avklare rettigheter og bevilling</p></div>
+<div style="display:flex;gap:40px;align-items:center"><div style="width:88px;height:88px;border:8px solid #D0426A;display:flex;align-items:center;justify-content:center"><p style="font-family:'Archivo', Arial, sans-serif;font-size:44px;font-weight:700;line-height:1;color:#E8668B">3</p></div><p style="font-size:40px;line-height:1.3">Åpne de tre første rommene [dato]</p></div>
+</div>
+<div style="flex:1"></div>
+<div style="display:flex;justify-content:space-between;align-items:end">
+<p style="font-size:32px;color:#CFC6CC">Kristian · [e-post] · [telefon]</p>
+<img src="img/hub-logo-pink.svg" alt="HUB-logo" style="width:360px;height:116px;object-fit:contain">
+</div>
+<aside>Avslutt med et konkret spørsmål til den du pitcher for, for eksempel om lokaler, kapital eller partnerskap.</aside>
+</section>
+</div></div>
+<div class="notes" id="nt" hidden></div>
+<script>
+(function(){
+var S=[].slice.call(document.querySelectorAll('.slide')),deck=document.getElementById('deck'),stage=document.getElementById('stage'),i=0;
+var h=location.hash.slice(1);S.forEach(function(s,k){if(s.id===h)i=k});
+function fit(){var r=stage.getBoundingClientRect(),k=Math.min(r.width/1920,r.height/1080);deck.style.transform='scale('+k+') translate(-50%,-50%)';}
+function show(n){i=Math.max(0,Math.min(S.length-1,n));S.forEach(function(s,k){s.classList.toggle('on',k===i)});document.getElementById('n').textContent=(i+1)+' / '+S.length;var a=S[i].querySelector('aside');document.getElementById('nt').textContent=a?a.textContent:'';try{history.replaceState(null,'','#'+S[i].id)}catch(e){}}
+document.getElementById('prev').onclick=function(){show(i-1)};
+document.getElementById('next').onclick=function(){show(i+1)};
+document.getElementById('notes').onclick=function(){var nt=document.getElementById('nt');nt.hidden=!nt.hidden;this.setAttribute('aria-pressed',String(!nt.hidden));fit()};
+stage.onclick=function(e){var r=stage.getBoundingClientRect();show(e.clientX-r.left<r.width/3?i-1:i+1)};
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();show(i+1)}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}else if(e.key==='Home')show(0);else if(e.key==='End')show(S.length-1)});
+window.addEventListener('resize',fit);fit();show(i);
+})();
+</script>
+</body>
+</html>
