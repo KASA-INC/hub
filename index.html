@@ -111,6 +111,16 @@ section { padding-block: 48px; border-bottom: 1px solid var(--line); }
 .card .go svg { width: 16px; height: 16px; }
 .card.lead-card .vis { aspect-ratio: 16 / 9; }
 
+/* Menyutdrag */
+.menu { display: flex; flex-direction: column; }
+.menu h5 { font-family: var(--display); font-size: 20px; font-weight: 700; letter-spacing: -0.015em; color: var(--fg); margin: 0; padding-bottom: 8px; border-bottom: 3px solid var(--pink); display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.menu h5 small { font-family: var(--text); font-size: 13px; font-weight: 500; letter-spacing: 0; color: var(--muted); }
+.menu ul { list-style: none; margin: 0; padding: 0; }
+.menu li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.menu li b { color: var(--fg); font-weight: 500; font-size: 15px; }
+.menu li span { color: var(--fg); font-size: 15px; white-space: nowrap; }
+.menu li small { grid-column: 1 / -1; font-size: 13px; color: var(--muted); line-height: 1.35; }
+
 /* Navnebanken */
 .names { display: grid; grid-template-columns: 1fr; gap: 16px; }
 .names > div { border-top: 3px solid var(--pink); padding-top: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
@@ -285,15 +295,24 @@ footer .small { font-size: 14px; color: var(--muted); }
         </a>
         <div class="panel" style="align-self:start">
           <p class="eyebrow">Fra menyen</p>
-          <div class="tbl"><table>
-            <tbody>
-              <tr><td>El Clásico</td><td class="r">kr 179</td></tr>
-              <tr><td>Derby della Madonnina</td><td class="r">kr 199</td></tr>
-              <tr><td>Old Firm</td><td class="r">kr 229</td></tr>
-              <tr><td>Superclásico</td><td class="r">kr 239</td></tr>
-              <tr><td>Red Devils</td><td class="r">kr 159</td></tr>
-            </tbody>
-          </table></div>
+          <div class="menu">
+            <h5>Pizza <small>30 cm, holder til to</small></h5>
+            <ul>
+              <li><b>El Clásico</b><span class="num">kr 179</span><small>Tomatsaus, mozzarella og basilikum</small></li>
+              <li><b>Derby della Madonnina</b><span class="num">kr 199</span><small>Salami Milano, mozzarella og chili</small></li>
+              <li><b>Old Firm</b><span class="num">kr 229</span><small>Pulled pork, whisky-BBQ, rødløk og cheddar</small></li>
+              <li><b>Superclásico</b><span class="num">kr 239</span><small>Biff, chimichurri, rødløk og mozzarella</small></li>
+            </ul>
+          </div>
+          <div class="menu">
+            <h5>Drinker <small>fra 20 år</small></h5>
+            <ul>
+              <li><b>Red Devils</b><span class="num">kr 159</span><small>Tequila, blodappelsin, lime og chili</small></li>
+              <li><b>Sky Blues</b><span class="num">kr 149</span><small>Vodka, blå curaçao, sitron og tonic</small></li>
+              <li><b>The Magpies</b><span class="num">kr 159</span><small>Vodka, kaffelikør og espresso med hvitt skum</small></li>
+              <li><b>La Vecchia Signora</b><span class="num">kr 169</span><small>Old fashioned med bourbon, bitter og appelsin</small></li>
+            </ul>
+          </div>
           <p class="src">Pizzaene heter etter derbyer, drinkene etter klubber.</p>
         </div>
       </div>
